@@ -1,1 +1,22 @@
-﻿
+﻿@model EmployeeViewModel
+
+<p></p>
+
+<form>
+
+    <view-group name="FirstName" label="Имя" value="@Model.FirstName"></view-group>
+
+    <view-group name="Surname" label="Фамилия" value="@Model.Surname"></view-group>
+
+    <view-group name="Patronymic" label="Отчество" value="@Model.Patronymic"></view-group>
+
+</form>
+
+<a class="btn btn-primary" href="@(Url.Action<EmployeeController>(c => c.Edit(Model.Id)))">Редактировать</a>
+
+<p></p>
+
+<form asp-action="Delete">
+    <input type="hidden" name="Id" value="@Model.Id">
+    <input type="submit" class="btn btn-primary" value="Удалить">
+</form>

@@ -1,1 +1,30 @@
-﻿
+﻿@model IEnumerable<EmployeeViewModel>
+
+<p></p>
+
+@if (Model?.Any() != true)
+{
+    <span>Список сотрудников пуст.</span>
+}
+else
+{
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th scope="col" style="width: 80px">Id</th>
+                <th scope="col">ФИО</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (EmployeeViewModel employee in Model)
+            {
+                <tr>
+                    <th scope="row">@employee.Id</th>
+                    <td>
+                        <a href="@(Url.Action<EmployeeController>(c => c.View(employee.Id)))">@($"{employee.Surname} {employee.FirstName} {employee.Patronymic}")</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

@@ -4,7 +4,7 @@
 
 
 
-    public class EditEmployeeForm
+    public class EditEmployeeForm : IForm
     {
         [Required]
         public int Id { get; set; }

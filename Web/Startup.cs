@@ -14,6 +14,13 @@
 
     public class Startup
     {
+        public Startup(IConfiguration configuration)
+        {
+            Configuration = configuration;
+        }
+
+
+
         public IConfiguration Configuration { get; set; }
 
         public IContainer Container { get; set; }
@@ -22,7 +29,9 @@
 
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc();
+            services
+                .AddMvc()
+                .AddTypedRouting();
 
             ContainerBuilder containerBuilder = new ContainerBuilder();
             containerBuilder.Populate(services);
@@ -39,7 +48,7 @@
 
             app.UseStaticFiles();
 
-            app.UseMvc(routes => routes.MapRoute("default", "{controller=Client}/{action=List}/{id?}"));
+            app.UseMvc(routes => routes.MapRoute("default", "{controller=Employee}/{action=List}/{id?}"));
         }
     }
 }

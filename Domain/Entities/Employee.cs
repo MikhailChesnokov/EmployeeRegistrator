@@ -31,7 +31,7 @@
 
 
 
-        private void SetFirstName(string firstName)
+        public void SetFirstName(string firstName)
         {
             if (string.IsNullOrWhiteSpace(firstName))
                 throw new ArgumentException("Value cannot be null or whitespace.", nameof(firstName));
@@ -39,7 +39,7 @@
             FirstName = firstName;
         }
 
-        private void SetSurname(string surname)
+        public void SetSurname(string surname)
         {
             if (string.IsNullOrWhiteSpace(surname))
                 throw new ArgumentException("Value cannot be null or whitespace.", nameof(surname));
@@ -47,7 +47,7 @@
             Surname = surname;
         }
 
-        private void SetPatronymic(string patronymic)
+        public void SetPatronymic(string patronymic)
         {
             if (string.IsNullOrWhiteSpace(patronymic))
                 throw new ArgumentException("Value cannot be null or whitespace.", nameof(patronymic));

@@ -5,7 +5,7 @@
 
 
 
-    internal sealed class DefaultContext : DbContext
+    public sealed class DefaultContext : DbContext
     {
         public DefaultContext()
         {

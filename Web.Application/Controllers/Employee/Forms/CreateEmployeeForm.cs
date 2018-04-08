@@ -4,7 +4,7 @@
 
 
 
-    public class CreateEmployeeForm
+    public class CreateEmployeeForm : IForm
     {
         [Required]
         public string FirstName { get; set; }
