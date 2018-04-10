@@ -1,10 +1,15 @@
 ﻿namespace Web.Application.Controllers.EmployeeRegistration
 {
+    using System.Collections.Generic;
+    using System.Linq;
+    using AutoMapper;
     using Domain.Entities;
     using Domain.Repository;
     using Domain.Services;
     using Forms;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Mvc.ActionConstraints;
+    using ViewModels;
 
 
 
@@ -14,14 +19,22 @@
 
         private readonly IRepository<Employee> _employeeRepository;
 
+        private readonly IRepository<EmployeeRegistration> _registrationRepository;
+
+        private readonly IMapper _mapper;
+
 
 
         public EmployeeRegistrationController(
             IRegistrationService registrationService,
-            IRepository<Employee> employeeRepository)
+            IRepository<Employee> employeeRepository,
+            IRepository<EmployeeRegistration> registrationRepository,
+            IMapper mapper)
         {
             _registrationService = registrationService;
             _employeeRepository = employeeRepository;
+            _registrationRepository = registrationRepository;
+            _mapper = mapper;
         }
 
 
@@ -56,6 +69,17 @@
 
                 }
             }
+        }
+
+
+        [HttpGet]
+        public IActionResult List()
+        {
+            IEnumerable<EmployeeRegistration> registrations = _registrationRepository.All();
+
+            IEnumerable<EmployeeRegistrationViewModel> registrationsViewModels = _mapper.Map<IEnumerable<EmployeeRegistrationViewModel>>(registrations);
+
+            return View(registrationsViewModels);
         }
     }
 }
