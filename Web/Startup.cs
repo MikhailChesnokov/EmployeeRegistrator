@@ -9,6 +9,7 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Modules;
+    using Newtonsoft.Json;
 
 
 
@@ -42,13 +43,15 @@
             return new AutofacServiceProvider(Container);
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IApplicationLifetime lifetime)
         {
             if (env.IsDevelopment()) app.UseDeveloperExceptionPage();
 
             app.UseStaticFiles();
 
             app.UseMvc(routes => routes.MapRoute("default", "{controller=Employee}/{action=List}/{id?}"));
+
+            lifetime.ApplicationStopping.Register(() => Container.Dispose());
         }
     }
 }

@@ -11,10 +11,9 @@
 
         public EmployeeRegistration(
             Employee employee,
-            DateTime dateTime,
             RegistrationEventType eventType)
         {
-            SetDateTime(dateTime);
+            SetDateTime();
             SetEventType(eventType);
             SetEmployee(employee);
         }
@@ -31,9 +30,9 @@
 
 
 
-        private void SetDateTime(DateTime dateTime)
+        private void SetDateTime()
         {
-            DateTime = dateTime;
+            DateTime = DateTime.Now;
         }
 
         private void SetEventType(RegistrationEventType eventType)
