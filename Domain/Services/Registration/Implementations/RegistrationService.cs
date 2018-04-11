@@ -1,20 +1,21 @@
-﻿namespace Domain.Services
+﻿namespace Domain.Services.Registration.Implementations
 {
     using Entities;
+    using Exceptions;
     using Repository;
 
 
 
     public class RegistrationService : IRegistrationService
     {
-        public readonly IRepository<EmployeeRegistration> EmployeeRegistrationRepository;
+        public readonly IRepository<Registration> EmployeeRegistrationRepository;
 
         public readonly IRepository<Employee> EmployeeRepository;
 
 
 
         public RegistrationService(
-            IRepository<EmployeeRegistration> employeeRegistrationRepository,
+            IRepository<Registration> employeeRegistrationRepository,
             IRepository<Employee> employeeRepository)
         {
             EmployeeRegistrationRepository = employeeRegistrationRepository;
@@ -27,7 +28,10 @@
         {
             Employee employee = EmployeeRepository.FindById(employeeId);
 
-            EmployeeRegistration registration = new EmployeeRegistration(
+            if (employee is null)
+                throw new EmployeeNotFoundException($"Employee with id \"{employeeId}\" not found.");
+
+            Registration registration = new Registration(
                 employee,
                 RegistrationEventType.Coming);
 
@@ -38,7 +42,10 @@
         {
             Employee employee = EmployeeRepository.FindById(employeeId);
 
-            EmployeeRegistration registration = new EmployeeRegistration(
+            if (employee is null)
+                throw new EmployeeNotFoundException($"Employee with id \"{employeeId}\" not found.");
+
+            Registration registration = new Registration(
                 employee,
                 RegistrationEventType.Leaving);
 

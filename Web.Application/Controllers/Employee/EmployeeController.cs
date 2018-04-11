@@ -59,7 +59,6 @@
         public IActionResult Create(CreateEmployeeForm form)
         {
             if (ModelState.IsValid)
-            {
                 try
                 {
                     int employeeId = new CreateEmployeeFormHandler(_employeeRepository).Execute(form);
@@ -70,7 +69,6 @@
                 {
                     ModelState.AddModelError(string.Empty, e.Message);
                 }
-            }
 
             return View(form);
         }
@@ -89,7 +87,6 @@
         public IActionResult Edit(EditEmployeeForm form)
         {
             if (ModelState.IsValid)
-            {
                 try
                 {
                     new EditEmployeeFormHandler(_employeeRepository).Execute(form);
@@ -100,7 +97,6 @@
                 {
                     ModelState.AddModelError(string.Empty, e.Message);
                 }
-            }
 
             return View(form);
         }

@@ -4,33 +4,27 @@
 
 <form method="post">
 
-    @Html.Partial("RootErrors")
-    
+    <root-errors/>
+
     <input type="hidden" name="Id" value="@Model.Id">
 
     <input-group
         name="FirstName"
         label="Имя"
         invalid-feedback="Некорректное имя сотрудника"
-        value="@(ViewContext.ModelState["FirstName"]?.AttemptedValue ?? Model.FirstName)"
-        is-invalid="@(ViewContext.ModelState["FirstName"]?.Errors?.Count > 0)">
-    </input-group>
+        value="@Model.FirstName"/>
 
     <input-group
         name="Surname"
         label="Фамилия"
         invalid-feedback="Некорректая фамилия сотрудника"
-        value="@(ViewContext.ModelState["Surname"]?.AttemptedValue ?? Model.Surname)"
-        is-invalid="@(ViewContext.ModelState["Surname"]?.Errors?.Count > 0)">
-    </input-group>
+        value="@Model.Surname"/>
 
     <input-group
         name="Patronymic"
         label="Отчество"
         invalid-feedback="Некорректное отчество сотрудника"
-        value="@(ViewContext.ModelState["Patronymic"]?.AttemptedValue ?? Model.Patronymic)"
-        is-invalid="@(ViewContext.ModelState["Patronymic"]?.Errors?.Count > 0)">
-    </input-group>
+        value="@Model.Patronymic"/>
 
     <button type="submit" class="btn btn-primary">Сохранить</button>
 </form>

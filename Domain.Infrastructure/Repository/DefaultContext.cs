@@ -16,7 +16,7 @@
 
         public DbSet<Employee> Employees { get; set; }
 
-        public DbSet<EmployeeRegistration> EmployeeRegistrations { get; set; }
+        public DbSet<Registration> EmployeeRegistrations { get; set; }
 
 
 

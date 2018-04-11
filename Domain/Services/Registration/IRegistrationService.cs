@@ -1,4 +1,4 @@
-﻿namespace Domain.Services
+﻿namespace Domain.Services.Registration
 {
     public interface IRegistrationService : IDomainService
     {

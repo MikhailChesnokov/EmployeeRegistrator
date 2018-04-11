@@ -1,6 +1,7 @@
 ﻿namespace Web
 {
     using System;
+    using Application.Infrastructure.Filters;
     using Autofac;
     using global::Autofac;
     using global::Autofac.Extensions.DependencyInjection;
@@ -9,7 +10,6 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Modules;
-    using Newtonsoft.Json;
 
 
 
@@ -31,7 +31,10 @@
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             services
-                .AddMvc()
+                .AddScoped<ExceptionFilter>();
+
+            services
+                .AddMvc(options => options.Filters.AddService<ExceptionFilter>())
                 .AddTypedRouting();
 
             ContainerBuilder containerBuilder = new ContainerBuilder();

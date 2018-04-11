@@ -1,0 +1,40 @@
+﻿namespace Web.TagHelpers
+{
+    using Extensions;
+    using Microsoft.AspNetCore.Mvc.Rendering;
+    using Microsoft.AspNetCore.Mvc.ViewFeatures;
+    using Microsoft.AspNetCore.Razor.TagHelpers;
+
+
+
+    [HtmlTargetElement(
+        "file-group",
+        Attributes = "name, label",
+        TagStructure = TagStructure.NormalOrSelfClosing)]
+    public class FileGroupTagHelper : TagHelper
+    {
+        [ViewContext]
+        [HtmlAttributeNotBound]
+        public ViewContext ViewContext { get; set; }
+
+        public string Name { get; set; }
+
+        public string Label { get; set; }
+
+        public string Placeholder { get; set; }
+
+        public string InvalidFeedback { get; set; }
+
+
+
+        public override void Process(TagHelperContext context, TagHelperOutput output)
+        {
+            output.TagName = "div";
+            output.Attributes.Add("class", "form-group row");
+            output.TagMode = TagMode.StartTagAndEndTag;
+            output
+                .AddLabel($"{Name}Wrapper", Label)
+                .AddFile(Name, Label, Placeholder, InvalidFeedback, ViewContext);
+        }
+    }
+}

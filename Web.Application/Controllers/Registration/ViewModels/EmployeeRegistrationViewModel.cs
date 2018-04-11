@@ -1,4 +1,4 @@
-﻿namespace Web.Application.Controllers.EmployeeRegistration.ViewModels
+﻿namespace Web.Application.Controllers.Registration.ViewModels
 {
     using System;
     using Domain.Entities;
@@ -12,6 +12,8 @@
         public RegistrationEventType EventType { get; set; }
 
         public int EmployeeId { get; set; }
+
+        public string EmployeeFio { get; set; }
 
         public int Id { get; set; }
     }

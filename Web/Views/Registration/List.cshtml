@@ -1,0 +1,60 @@
+﻿@model IEnumerable<EmployeeRegistrationViewModel>
+
+<p></p>
+
+@if (Model?.Any() != true)
+{
+    <span>Список регистраций пуст.</span>
+}
+else
+{
+    foreach (IGrouping<string, EmployeeRegistrationViewModel> registrationGroup in Model.GroupBy(x => x.EmployeeFio))
+    {
+        <h5>@registrationGroup.Key</h5>
+
+        TimeSpan total = default(TimeSpan);
+
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th scope="col">Дата и время</th>
+                <th scope="col" style="width: 200px">Событие</th>
+                <th scope="col" style="width: 200px">Отработано за день</th>
+            </tr>
+            </thead>
+            <tbody>
+
+            @foreach (IGrouping<int, EmployeeRegistrationViewModel> dayRegistrations in registrationGroup.OrderBy(x => x.DateTime).GroupBy(x => x.DateTime.DayOfYear))
+            {
+                DateTime coming = default(DateTime);
+
+                foreach (EmployeeRegistrationViewModel registration in dayRegistrations)
+                {
+
+                    if (registration.EventType == RegistrationEventType.Coming)
+                    {
+                        coming = registration.DateTime;
+                        continue;
+                    }
+
+                    DateTime leaving = registration.DateTime;
+
+                    <tr>
+                        <td>@coming.ToLongDateString() @coming.ToLongTimeString()</td>
+                        <td>Приход</td>
+                        <td rowspan="2">@(leaving - coming)</td>
+                    </tr>
+                    <tr>
+                        <td>@leaving.ToLongDateString() @leaving.ToLongTimeString()</td>
+                        <td>Уход</td>
+                    </tr>
+
+                    total += (leaving - coming);
+                }
+            }
+            </tbody>
+        </table>
+
+        <h5>Всего отработано: @total.Days д., @total.Hours ч., @total.Minutes мин.</h5>
+    }
+}

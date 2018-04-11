@@ -27,6 +27,8 @@
 
         public string Patronymic { get; protected set; }
 
+        public string Fio => $"{Surname} {FirstName} {Patronymic}";
+
         public int Id { get; protected set; }
 
 

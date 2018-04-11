@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using Web.Application.Controllers.Registration
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -26,6 +27,14 @@
                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                     <a class="dropdown-item" href="@(Url.Action<EmployeeController>(c => c.List()))">Список сотрудников</a>
                     <a class="dropdown-item" href="@(Url.Action<EmployeeController>(c => c.Create(With.No<CreateEmployeeForm>())))">Добавить сотрудника</a>
+                </div>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    События
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                    <a class="dropdown-item" href="@(Url.Action<RegistrationController>(c => c.List()))">Список событий</a>
                 </div>
             </li>
         </ul>

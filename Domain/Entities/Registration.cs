@@ -4,12 +4,12 @@
 
 
 
-    public class EmployeeRegistration : IEntity
+    public class Registration : IEntity
     {
         [Obsolete("only for reflection", true)]
-        public EmployeeRegistration() { }
+        public Registration() { }
 
-        public EmployeeRegistration(
+        public Registration(
             Employee employee,
             RegistrationEventType eventType)
         {

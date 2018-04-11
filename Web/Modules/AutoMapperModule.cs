@@ -11,8 +11,8 @@
         protected override void Load(ContainerBuilder containerBuilder)
         {
             containerBuilder
-                .Register(c =>new MapperConfiguration(options => options.AddProfiles(typeof(EmployeeProfile).Assembly))
-                                  .CreateMapper())
+                .Register(c => new MapperConfiguration(options => options.AddProfiles(typeof(EmployeeProfile).Assembly))
+                              .CreateMapper())
                 .As<IMapper>()
                 .SingleInstance();
         }
