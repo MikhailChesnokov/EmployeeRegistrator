@@ -4,17 +4,16 @@
 
 
 
-    public class EmployeeRegistration : IEntity
+    public class Registration : IEntity
     {
         [Obsolete("only for reflection", true)]
-        public EmployeeRegistration() { }
+        public Registration() { }
 
-        public EmployeeRegistration(
+        public Registration(
             Employee employee,
-            DateTime dateTime,
             RegistrationEventType eventType)
         {
-            SetDateTime(dateTime);
+            SetDateTime();
             SetEventType(eventType);
             SetEmployee(employee);
         }
@@ -31,9 +30,9 @@
 
 
 
-        private void SetDateTime(DateTime dateTime)
+        private void SetDateTime()
         {
-            DateTime = dateTime;
+            DateTime = DateTime.Now;
         }
 
         private void SetEventType(RegistrationEventType eventType)

@@ -8,7 +8,7 @@
 
 
 
-    internal class EntityFrameworkCoreRepository<TEntity> : IRepository<TEntity>
+    public class EntityFrameworkCoreRepository<TEntity> : IRepository<TEntity>
         where TEntity : class, IEntity, new()
     {
         private readonly DbContext _context;

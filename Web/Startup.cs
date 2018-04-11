@@ -1,6 +1,7 @@
 ﻿namespace Web
 {
     using System;
+    using Application.Infrastructure.Filters;
     using Autofac;
     using global::Autofac;
     using global::Autofac.Extensions.DependencyInjection;
@@ -14,6 +15,13 @@
 
     public class Startup
     {
+        public Startup(IConfiguration configuration)
+        {
+            Configuration = configuration;
+        }
+
+
+
         public IConfiguration Configuration { get; set; }
 
         public IContainer Container { get; set; }
@@ -22,7 +30,12 @@
 
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc();
+            services
+                .AddScoped<ExceptionFilter>();
+
+            services
+                .AddMvc(options => options.Filters.AddService<ExceptionFilter>())
+                .AddTypedRouting();
 
             ContainerBuilder containerBuilder = new ContainerBuilder();
             containerBuilder.Populate(services);
@@ -33,13 +46,15 @@
             return new AutofacServiceProvider(Container);
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IApplicationLifetime lifetime)
         {
             if (env.IsDevelopment()) app.UseDeveloperExceptionPage();
 
             app.UseStaticFiles();
 
-            app.UseMvc(routes => routes.MapRoute("default", "{controller=Client}/{action=List}/{id?}"));
+            app.UseMvc(routes => routes.MapRoute("default", "{controller=Employee}/{action=List}/{id?}"));
+
+            lifetime.ApplicationStopping.Register(() => Container.Dispose());
         }
     }
 }

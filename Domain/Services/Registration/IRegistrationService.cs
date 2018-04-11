@@ -1,6 +1,6 @@
-﻿namespace Domain.Services
+﻿namespace Domain.Services.Registration
 {
-    internal interface IRegistrationService : IDomainService
+    public interface IRegistrationService : IDomainService
     {
         void RegisterEmployeeComing(int employeeId);
 

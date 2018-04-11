@@ -1,1 +1,28 @@
 ﻿@model CreateEmployeeForm
+
+<p></p>
+
+<form method="post">
+
+    <root-errors/>
+
+    <input-group
+        name="Surname"
+        label="Фамилия"
+        invalid-feedback="Некорректая фамилия сотрудника"
+        value="@Model.Surname"/>
+
+    <input-group
+        name="FirstName"
+        label="Имя"
+        invalid-feedback="Некорректное имя сотрудника"
+        value="@Model.FirstName"/>
+
+    <input-group
+        name="Patronymic"
+        label="Отчество"
+        invalid-feedback="Некорректное отчество сотрудника"
+        value="@Model.Patronymic"/>
+
+    <button type="submit" class="btn btn-primary">Сохранить</button>
+</form>

@@ -1,6 +1,7 @@
 ﻿namespace Web.Modules
 {
     using Domain.Services;
+    using Domain.Services.Registration.Implementations;
     using global::Autofac;
 
 
