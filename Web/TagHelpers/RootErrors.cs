@@ -21,13 +21,15 @@
             if (ViewContext.ModelState.Root?.Errors?.Count > 0)
             {
                 output.TagName = "div";
+                output.Attributes.Add("class","my-4");
                 output.TagMode = TagMode.StartTagAndEndTag;
                 output.Content.AppendHtml(
-                    ViewContext.ModelState.Root.Errors.Aggregate(
-                        string.Empty, (_, error) => $"<div class=\"alert alert-danger\" role=\"alert\">{error.ErrorMessage}</div>\n"));
+                    ViewContext.ModelState.Root.Errors.Aggregate(string.Empty, (_, error) => $"<div class=\"alert alert-danger\" role=\"alert\">{error.ErrorMessage}</div>\n"));
             }
             else
+            {
                 output.SuppressOutput();
+            }
         }
     }
 }

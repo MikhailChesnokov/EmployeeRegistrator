@@ -1,9 +1,0 @@
-﻿@if (ViewContext.ModelState.Root?.Errors?.Count > 0)
-{
-    foreach (ModelError modelError in ViewContext.ModelState.Root.Errors)
-    {
-        <div class="alert alert-danger" role="alert">
-            @modelError.ErrorMessage
-        </div>
-    }
-}

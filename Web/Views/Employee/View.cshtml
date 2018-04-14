@@ -1,6 +1,8 @@
 ﻿@model EmployeeViewModel
 
-<p></p>
+@{ViewBag.Title = "Сотрудник";}
+
+<h4>Сотрудник</h4>
 
 <form>
 
@@ -22,8 +24,6 @@
 </form>
 
 <a class="btn btn-primary" href="@(Url.Action<EmployeeController>(c => c.Edit(Model.Id)))">Редактировать</a>
-
-<p></p>
 
 <form asp-action="Delete">
     <input type="hidden" name="Id" value="@Model.Id">

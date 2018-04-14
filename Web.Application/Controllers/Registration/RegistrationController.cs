@@ -14,7 +14,7 @@
 
 
 
-    public class RegistrationController : Controller
+    public class RegistrationController : FormControllerBase
     {
         private readonly IRepository<Employee> _employeeRepository;
 
@@ -27,10 +27,11 @@
 
 
         public RegistrationController(
+            IFormHandlerFactory formHandlerFactory,
             IRegistrationService registrationService,
             IRepository<Employee> employeeRepository,
             IRepository<Registration> registrationRepository,
-            IMapper mapper)
+            IMapper mapper) : base(formHandlerFactory)
         {
             _registrationService = registrationService;
             _employeeRepository = employeeRepository;

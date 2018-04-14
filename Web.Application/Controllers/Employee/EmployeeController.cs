@@ -5,13 +5,12 @@
     using Domain.Entities;
     using Domain.Repository;
     using Forms;
-    using Forms.Handlers;
     using Microsoft.AspNetCore.Mvc;
     using ViewModels;
 
 
 
-    public class EmployeeController : Controller
+    public class EmployeeController : FormControllerBase
     {
         private readonly IRepository<Employee> _employeeRepository;
 
@@ -20,8 +19,10 @@
 
 
         public EmployeeController(
+            IFormHandlerFactory formHandlerFactory,
             IRepository<Employee> employeeRepository,
             IMapper mapper)
+            : base(formHandlerFactory)
         {
             _employeeRepository = employeeRepository;
             _mapper = mapper;
@@ -58,19 +59,10 @@
         [HttpPost]
         public IActionResult Create(CreateEmployeeForm form)
         {
-            if (ModelState.IsValid)
-                try
-                {
-                    int employeeId = new CreateEmployeeFormHandler(_employeeRepository).Execute(form);
-
-                    return this.RedirectToAction(c => c.View(employeeId));
-                }
-                catch (FormException e)
-                {
-                    ModelState.AddModelError(string.Empty, e.Message);
-                }
-
-            return View(form);
+            return Form(
+                form,
+                (int employeeId) => this.RedirectToAction(c => c.View(employeeId)),
+                () => View(form));
         }
 
         [HttpGet]
@@ -86,27 +78,19 @@
         [HttpPost]
         public IActionResult Edit(EditEmployeeForm form)
         {
-            if (ModelState.IsValid)
-                try
-                {
-                    new EditEmployeeFormHandler(_employeeRepository).Execute(form);
-
-                    return this.RedirectToAction(c => c.View(form.Id));
-                }
-                catch (FormException e)
-                {
-                    ModelState.AddModelError(string.Empty, e.Message);
-                }
-
-            return View(form);
+            return Form(
+                form,
+                () => this.RedirectToAction(c => c.View(form.Id)),
+                () => View(form));
         }
 
         [HttpPost]
         public IActionResult Delete(DeleteEmployeeForm form)
         {
-            new DeleteEmployeeFormHandler(_employeeRepository).Execute(form);
-
-            return this.RedirectToAction(c => c.List());
+            return Form(
+                form,
+                () => this.RedirectToAction(c => c.List()),
+                () => this.RedirectToAction(c => c.View(form.Id)));
         }
     }
 }

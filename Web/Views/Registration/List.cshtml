@@ -1,10 +1,12 @@
 ﻿@model IEnumerable<EmployeeRegistrationViewModel>
 
-<p></p>
+@{ViewBag.Title = "Список регистраций";}
+
+<h4>Список регистраций</h4>
 
 @if (Model?.Any() != true)
 {
-    <span>Список регистраций пуст.</span>
+    <p>Список регистраций пуст</p>
 }
 else
 {
