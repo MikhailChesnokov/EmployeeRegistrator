@@ -11,5 +11,9 @@
         public string Patronymic { get; set; }
 
         public string Fio { get; set; }
+
+        public string PersonnelNumber { get; set; }
+
+        public bool WorkplacePresenceRequired { get; set; }
     }
 }

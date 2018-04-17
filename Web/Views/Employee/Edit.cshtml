@@ -9,6 +9,13 @@
     <root-errors/>
 
     <input type="hidden" name="Id" value="@Model.Id">
+    
+    <input-group
+        name="Surname"
+        label="Фамилия"
+        invalid-feedback="Некорректая фамилия сотрудника"
+        placeholder="Введите фамилию ..."
+        value="@Model.Surname"/>
 
     <input-group
         name="FirstName"
@@ -17,16 +24,22 @@
         value="@Model.FirstName"/>
 
     <input-group
-        name="Surname"
-        label="Фамилия"
-        invalid-feedback="Некорректая фамилия сотрудника"
-        value="@Model.Surname"/>
-
-    <input-group
         name="Patronymic"
         label="Отчество"
         invalid-feedback="Некорректное отчество сотрудника"
         value="@Model.Patronymic"/>
+    
+    <input-group
+        name="PersonnelNumber"
+        label="Табельный номер"
+        value="@Model.PersonnelNumber"/>
+    
+    <div class="form-check">
+        <input class="form-check-input" type="checkbox" id="WorkplacePresenceRequired" name="WorkplacePresenceRequired" @(Model.WorkplacePresenceRequired ? "checked" : string.Empty)>
+        <label class="form-check-label" for="WorkplacePresenceRequired">
+            Обязательно присутсвие на рабочем месте в любой момент рабочего времени
+        </label>
+    </div>
 
-    <button type="submit" class="btn btn-primary">Сохранить</button>
+    <button type="submit" class="btn btn-primary lower-button">Сохранить</button>
 </form>

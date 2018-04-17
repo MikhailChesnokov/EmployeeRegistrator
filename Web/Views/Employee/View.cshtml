@@ -20,12 +20,25 @@
         name="Patronymic"
         label="Отчество"
         value="@Model.Patronymic"/>
+    
+    <view-group
+        name="PersonnelNumber"
+        label="Табельный номер"
+        value="@Model.PersonnelNumber"/>
+    
+    <view-group
+        name="WorkplacePresenceRequired"
+        label="Обязательно присутсвие на рабочем месте"
+        value="@(Model.WorkplacePresenceRequired? "Да" : "Нет")"/>
 
 </form>
 
-<a class="btn btn-primary" href="@(Url.Action<EmployeeController>(c => c.Edit(Model.Id)))">Редактировать</a>
+
 
 <form asp-action="Delete">
     <input type="hidden" name="Id" value="@Model.Id">
-    <input type="submit" class="btn btn-primary" value="Удалить">
+    
+    <a class="btn btn-primary lower-button" href="@(Url.Action<EmployeeController>(c => c.Edit(Model.Id)))">Редактировать</a>
+
+    <input type="submit" class="btn btn-primary lower-button" value="Удалить">
 </form>

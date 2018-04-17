@@ -1,4 +1,5 @@
-﻿@model IEnumerable<EmployeeViewModel>
+﻿
+@model IEnumerable<EmployeeViewModel>
 
 @{ ViewBag.Title = "Список сотрудников"; }
 
@@ -16,6 +17,7 @@ else
             <th scope="col" style="width: 80px">Id</th>
             <th scope="col">ФИО</th>
             <th scope="col">Табельный номер</th>
+            <th></th>
         </tr>
         </thead>
         <tbody>
@@ -28,6 +30,10 @@ else
                 </td>
                 <td>
                     @employee.PersonnelNumber
+                </td>
+                <td>
+                    <a class="btn btn-light" href="@(Url.Action<RegistrationController>(c => c.RegisterComing(employee.Id)))">Впустить</a>
+                    <a class="btn btn-light" href="@(Url.Action<RegistrationController>(c => c.RegisterLeaving(employee.Id)))">Выпустить</a>
                 </td>
             </tr>
         }

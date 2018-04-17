@@ -6,6 +6,7 @@
     using Domain.Entities;
     using Domain.Repository;
     using Domain.Services.Registration;
+    using Employee;
     using Exceptions;
     using Forms;
     using Forms.Handlers;
@@ -51,17 +52,30 @@
         }
 
         [HttpPost]
-        public void RegisterLeaving([FromBody] RegisterComingForm form)
+        public void RegisterLeaving([FromBody] RegisterLeavingForm form)
         {
             if (!ModelState.IsValid)
                 throw new InvalidRequestParameterException("Invalid request parameters.");
 
-            new RegisterComingFormHandler(_registrationService).Execute(form);
+            new RegisterLeavingFormHandler(_registrationService).Execute(form);
         }
 
+        public IActionResult RegisterComing(int id)
+        {
+            new RegisterComingFormHandler(_registrationService).Execute(new RegisterComingForm{EmployeeId = id});
+
+            return this.RedirectToAction<EmployeeController>(c => c.Registration());
+        }
+
+        public IActionResult RegisterLeaving(int id)
+        {
+            new RegisterLeavingFormHandler(_registrationService).Execute(new RegisterLeavingForm{EmployeeId = id});
+
+            return this.RedirectToAction<EmployeeController>(c => c.Registration());
+        }
 
         [HttpGet]
-        public IActionResult List()
+        public IActionResult Report()
         {
             IEnumerable<Registration> registrations = _registrationRepository.All();
 

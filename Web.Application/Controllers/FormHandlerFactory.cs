@@ -1,22 +1,29 @@
 ﻿namespace Web.Application.Controllers
 {
     using System;
-    using Domain.Repository;
+    using Domain.Services.Employee;
+    using Domain.Services.Registration;
     using Employee.Forms;
     using Employee.Forms.Handlers;
+    using Registration.Forms;
+    using Registration.Forms.Handlers;
 
 
 
     public class FormHandlerFactory : IFormHandlerFactory
     {
-        private readonly IRepository<Domain.Entities.Employee> _employeeRepository;
+        private readonly IEmployeeService _employeeService;
+
+        private readonly IRegistrationService _registrationService;
 
 
 
         public FormHandlerFactory(
-            IRepository<Domain.Entities.Employee> employeeRepository)
+            IEmployeeService employeeService,
+            IRegistrationService registrationService)
         {
-            _employeeRepository = employeeRepository;
+            _employeeService = employeeService;
+            _registrationService = registrationService;
         }
 
 
@@ -25,9 +32,16 @@
             where TForm : IForm
         {
             if (typeof(TForm) == typeof(EditEmployeeForm))
-                return new EditEmployeeFormHandler(_employeeRepository) as IFormHandler<TForm>;
+                return new EditEmployeeFormHandler(_employeeService) as IFormHandler<TForm>;
             if (typeof(TForm) == typeof(DeleteEmployeeForm))
-                return new DeleteEmployeeFormHandler(_employeeRepository) as IFormHandler<TForm>;
+                return new DeleteEmployeeFormHandler(_employeeService) as IFormHandler<TForm>;
+
+            if (typeof(TForm) == typeof(RegisterComingForm))
+                return new RegisterComingFormHandler(_registrationService) as IFormHandler<TForm>;
+            if (typeof(TForm) == typeof(RegisterLeavingForm))
+                return new RegisterLeavingFormHandler(_registrationService) as IFormHandler<TForm>;
+
+
 
             throw new InvalidOperationException("Undefined type.");
         }
@@ -36,8 +50,9 @@
             where TForm : IForm
         {
             if (typeof(TForm) == typeof(CreateEmployeeForm))
-                return new CreateEmployeeFormHandler(_employeeRepository) as IFormHandler<TForm, TFormResult>;
+                return new CreateEmployeeFormHandler(_employeeService) as IFormHandler<TForm, TFormResult>;
             
+
 
             throw new InvalidOperationException("Undefined type");
         }

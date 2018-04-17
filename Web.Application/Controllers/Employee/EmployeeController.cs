@@ -41,6 +41,16 @@
         }
 
         [HttpGet]
+        public IActionResult Registration()
+        {
+            IEnumerable<Employee> employees = _employeeRepository.All();
+
+            IEnumerable<EmployeeViewModel> employeeViewModels = _mapper.Map<IEnumerable<EmployeeViewModel>>(employees);
+
+            return View(employeeViewModels);
+        }
+
+        [HttpGet]
         public IActionResult View(int id)
         {
             Employee employee = _employeeRepository.FindById(id);
