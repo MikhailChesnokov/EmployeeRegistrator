@@ -1,0 +1,23 @@
+﻿@model SignInForm
+
+@{ ViewBag.Title = "Вход"; }
+
+<h4>Вход</h4>
+
+<form method="post">
+
+    <root-errors/>
+
+    <input-group
+        name="Login"
+        label="Логин"
+        value="@Model.Login"/>
+
+    <input-group
+        name="Password"
+        label="Пароль"
+        value="@Model.Password"
+        is-password="true"/>
+
+    <button type="submit" class="btn btn-primary">Войти</button>
+</form>

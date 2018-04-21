@@ -134,7 +134,6 @@
             return output;
 
 
-
             void SetDefaultOption()
             {
                 TagBuilder defaultOptioin = new TagBuilder("option");
@@ -195,7 +194,6 @@
             return output;
 
 
-
             void SetInput()
             {
                 wrapperTag.InnerHtml.AppendHtml(new TagBuilder("input")
@@ -204,7 +202,7 @@
                     {
                         {"type", "file"},
                         {"class", $"custom-file-input {(viewContext.ModelState[name]?.Errors?.Count > 0 ? "is-invalid" : string.Empty)}"},
-                        {"id",name},
+                        {"id", name},
                         {"name", name}
                     }
                 });
@@ -232,7 +230,7 @@
                 {
                     Attributes =
                     {
-                        { "class", "invalid-feedback"}
+                        {"class", "invalid-feedback"}
                     }
                 };
 

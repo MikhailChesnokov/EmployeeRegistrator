@@ -1,6 +1,6 @@
 ﻿namespace Web.Application.Controllers.Employee.Forms.Handlers
 {
-    using Domain.Entities;
+    using Domain.Entities.Employee;
     using Domain.Services.Employee;
 
 

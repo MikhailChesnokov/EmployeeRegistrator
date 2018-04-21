@@ -26,12 +26,12 @@
         label="Отчество"
         invalid-feedback="Некорректное отчество сотрудника"
         value="@Model.Patronymic"/>
-    
+
     <input-group
         name="PersonnelNumber"
         label="Табельный номер"
         value="@Model.PersonnelNumber"/>
-    
+
     <div class="form-check">
         <input class="form-check-input" type="checkbox" id="WorkplacePresenceRequired" value="false" name="WorkplacePresenceRequired" @(Model.WorkplacePresenceRequired ? "checked" : string.Empty)>
         <label class="form-check-label" for="WorkplacePresenceRequired">
@@ -44,7 +44,7 @@
 
 @section Scripts{
     <script type="text/javascript">
-        $('#employee-form').submit(function () {
+        $('#employee-form').submit(function() {
             var checkbox = $('#WorkplacePresenceRequired');
 
             if (checkbox.prop('checked')) {

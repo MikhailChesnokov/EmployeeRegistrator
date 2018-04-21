@@ -1,6 +1,6 @@
 ﻿@model EmployeeViewModel
 
-@{ViewBag.Title = "Сотрудник";}
+@{ ViewBag.Title = "Сотрудник"; }
 
 <h4>Сотрудник</h4>
 
@@ -20,24 +20,23 @@
         name="Patronymic"
         label="Отчество"
         value="@Model.Patronymic"/>
-    
+
     <view-group
         name="PersonnelNumber"
         label="Табельный номер"
         value="@Model.PersonnelNumber"/>
-    
+
     <view-group
         name="WorkplacePresenceRequired"
         label="Обязательно присутсвие на рабочем месте"
-        value="@(Model.WorkplacePresenceRequired? "Да" : "Нет")"/>
+        value="@(Model.WorkplacePresenceRequired ? "Да" : "Нет")"/>
 
 </form>
 
 
-
 <form asp-action="Delete">
     <input type="hidden" name="Id" value="@Model.Id">
-    
+
     <a class="btn btn-primary lower-button" href="@(Url.Action<EmployeeController>(c => c.Edit(Model.Id)))">Редактировать</a>
 
     <input type="submit" class="btn btn-primary lower-button" value="Удалить">

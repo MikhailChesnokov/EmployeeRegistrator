@@ -28,6 +28,7 @@
                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                     <a class="dropdown-item" href="@(Url.Action<EmployeeController>(c => c.List()))">Список сотрудников</a>
                     <a class="dropdown-item" href="@(Url.Action<EmployeeController>(c => c.Create(With.No<CreateEmployeeForm>())))">Добавить сотрудника</a>
+                    <a class="dropdown-item" href="@(Url.Action<EmployeeController>(c => c.Registration()))">Регистрация сотрудников</a>
                 </div>
             </li>
             <li class="nav-item dropdown">

@@ -1,7 +1,7 @@
 ﻿namespace Web.Application.Controllers.Registration.Profiles
 {
     using AutoMapper;
-    using Domain.Entities;
+    using Domain.Entities.Registration;
     using ViewModels;
 
 

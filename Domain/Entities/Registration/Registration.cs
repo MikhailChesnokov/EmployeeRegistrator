@@ -1,6 +1,7 @@
-﻿namespace Domain.Entities
+﻿namespace Domain.Entities.Registration
 {
     using System;
+    using Employee;
 
 
 

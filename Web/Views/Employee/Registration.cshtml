@@ -1,5 +1,4 @@
-﻿
-@model IEnumerable<EmployeeViewModel>
+﻿@model IEnumerable<EmployeeViewModel>
 
 @{ ViewBag.Title = "Список сотрудников"; }
 
@@ -14,24 +13,22 @@ else
     <table class="table table-bordered">
         <thead>
         <tr>
-            <th scope="col" style="width: 80px">Id</th>
             <th scope="col">ФИО</th>
-            <th scope="col">Табельный номер</th>
-            <th></th>
+            <th scope="col" style="width: 170px">Табельный номер</th>
+            <th style="width: 225px"></th>
         </tr>
         </thead>
         <tbody>
         @foreach (EmployeeViewModel employee in Model)
         {
             <tr>
-                <th scope="row">@employee.Id</th>
                 <td>
-                    <a href="@(Url.Action<EmployeeController>(c => c.View(employee.Id)))">@employee.Fio</a>
+                    @employee.Fio
                 </td>
-                <td>
+                <td style="text-align: center">
                     @employee.PersonnelNumber
                 </td>
-                <td>
+                <td style="text-align: center" class="py-1">
                     <a class="btn btn-light" href="@(Url.Action<RegistrationController>(c => c.RegisterComing(employee.Id)))">Впустить</a>
                     <a class="btn btn-light" href="@(Url.Action<RegistrationController>(c => c.RegisterLeaving(employee.Id)))">Выпустить</a>
                 </td>

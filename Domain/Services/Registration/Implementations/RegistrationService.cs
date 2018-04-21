@@ -1,6 +1,7 @@
 ﻿namespace Domain.Services.Registration.Implementations
 {
-    using Entities;
+    using Entities.Employee;
+    using Entities.Registration;
     using Exceptions;
     using Repository;
 

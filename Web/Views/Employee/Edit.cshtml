@@ -9,31 +9,27 @@
     <root-errors/>
 
     <input type="hidden" name="Id" value="@Model.Id">
-    
-    <input-group
-        name="Surname"
-        label="Фамилия"
-        invalid-feedback="Некорректая фамилия сотрудника"
-        placeholder="Введите фамилию ..."
-        value="@Model.Surname"/>
 
-    <input-group
-        name="FirstName"
-        label="Имя"
-        invalid-feedback="Некорректное имя сотрудника"
-        value="@Model.FirstName"/>
+    <input-group name="Surname"
+                 label="Фамилия"
+                 invalid-feedback="Некорректая фамилия сотрудника"
+                 placeholder="Введите фамилию ..."
+                 value="@Model.Surname"/>
 
-    <input-group
-        name="Patronymic"
-        label="Отчество"
-        invalid-feedback="Некорректное отчество сотрудника"
-        value="@Model.Patronymic"/>
-    
-    <input-group
-        name="PersonnelNumber"
-        label="Табельный номер"
-        value="@Model.PersonnelNumber"/>
-    
+    <input-group name="FirstName"
+                 label="Имя"
+                 invalid-feedback="Некорректное имя сотрудника"
+                 value="@Model.FirstName"/>
+
+    <input-group name="Patronymic"
+                 label="Отчество"
+                 invalid-feedback="Некорректное отчество сотрудника"
+                 value="@Model.Patronymic"/>
+
+    <input-group name="PersonnelNumber"
+                 label="Табельный номер"
+                 value="@Model.PersonnelNumber"/>
+
     <div class="form-check">
         <input class="form-check-input" type="checkbox" id="WorkplacePresenceRequired" name="WorkplacePresenceRequired" @(Model.WorkplacePresenceRequired ? "checked" : string.Empty)>
         <label class="form-check-label" for="WorkplacePresenceRequired">
@@ -43,3 +39,17 @@
 
     <button type="submit" class="btn btn-primary lower-button">Сохранить</button>
 </form>
+
+@section Scripts{
+    <script type="text/javascript">
+        $('#employee-form').submit(function() {
+            var checkbox = $('#WorkplacePresenceRequired');
+
+            if (checkbox.prop('checked')) {
+                checkbox.attr('value', "true");
+            } else {
+                checkbox.attr('value', "false");
+            }
+        });
+    </script>
+}

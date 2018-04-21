@@ -1,6 +1,6 @@
 ﻿namespace Domain.Services.Employee
 {
-    using Entities;
+    using Entities.Employee;
 
 
 

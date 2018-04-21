@@ -3,18 +3,21 @@
     using System.Collections.Generic;
     using System.Linq;
     using AutoMapper;
-    using Domain.Entities;
+    using Domain.Entities.Employee;
+    using Domain.Entities.Registration;
     using Domain.Repository;
     using Domain.Services.Registration;
     using Employee;
     using Exceptions;
     using Forms;
     using Forms.Handlers;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using ViewModels;
 
 
 
+    [Authorize]
     public class RegistrationController : FormControllerBase
     {
         private readonly IRepository<Employee> _employeeRepository;
@@ -60,16 +63,18 @@
             new RegisterLeavingFormHandler(_registrationService).Execute(form);
         }
 
+        [HttpGet]
         public IActionResult RegisterComing(int id)
         {
-            new RegisterComingFormHandler(_registrationService).Execute(new RegisterComingForm{EmployeeId = id});
+            new RegisterComingFormHandler(_registrationService).Execute(new RegisterComingForm {EmployeeId = id});
 
             return this.RedirectToAction<EmployeeController>(c => c.Registration());
         }
 
+        [HttpGet]
         public IActionResult RegisterLeaving(int id)
         {
-            new RegisterLeavingFormHandler(_registrationService).Execute(new RegisterLeavingForm{EmployeeId = id});
+            new RegisterLeavingFormHandler(_registrationService).Execute(new RegisterLeavingForm {EmployeeId = id});
 
             return this.RedirectToAction<EmployeeController>(c => c.Registration());
         }

@@ -2,7 +2,7 @@
 {
     using System;
     using System.Linq;
-    using Entities;
+    using Entities.Employee;
     using Exceptions;
     using Repository;
 

@@ -1,6 +1,9 @@
 ﻿namespace Domain.Infrastructure.Repository
 {
-    using Entities;
+    using Components.Password;
+    using Entities.Employee;
+    using Entities.Registration;
+    using Entities.User;
     using Microsoft.EntityFrameworkCore;
 
 
@@ -16,7 +19,11 @@
 
         public DbSet<Employee> Employees { get; set; }
 
-        public DbSet<Registration> EmployeeRegistrations { get; set; }
+        public DbSet<Registration> Registrations { get; set; }
+
+        public DbSet<User> Users { get; set; }
+
+        public DbSet<Password> Passwords { get; set; }
 
 
 
@@ -27,6 +34,12 @@
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+
+            modelBuilder.Entity<User>().HasOne(x => x.Password);
+
+            modelBuilder.Entity<Password>().Property(x => x.Salt).IsRequired().HasColumnType("MEDIUMBLOB").HasMaxLength(40);
+            modelBuilder.Entity<Password>().Property(x => x.Hash).IsRequired().HasColumnType("MEDIUMBLOB").HasMaxLength(256);
+
             base.OnModelCreating(modelBuilder);
         }
     }

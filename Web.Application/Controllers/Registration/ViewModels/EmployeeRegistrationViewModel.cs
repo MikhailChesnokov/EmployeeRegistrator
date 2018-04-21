@@ -1,7 +1,7 @@
 ﻿namespace Web.Application.Controllers.Registration.ViewModels
 {
     using System;
-    using Domain.Entities;
+    using Domain.Entities.Registration;
 
 
 

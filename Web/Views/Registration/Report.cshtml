@@ -1,6 +1,7 @@
-﻿@model IEnumerable<EmployeeRegistrationViewModel>
+﻿@using Domain.Entities.Registration
+@model IEnumerable<EmployeeRegistrationViewModel>
 
-@{ViewBag.Title = "Список регистраций";}
+@{ ViewBag.Title = "Список регистраций"; }
 
 <h4>Список регистраций</h4>
 
@@ -20,8 +21,9 @@ else
             <thead>
             <tr>
                 <th scope="col">Дата и время</th>
-                <th scope="col" style="width: 200px">Событие</th>
+                <th scope="col" style="width: 8rem">Событие</th>
                 <th scope="col" style="width: 200px">Отработано за день</th>
+                <th scope="col" style="width: 200px">Опоздание</th>
             </tr>
             </thead>
             <tbody>
@@ -29,10 +31,10 @@ else
             @foreach (IGrouping<int, EmployeeRegistrationViewModel> dayRegistrations in registrationGroup.OrderBy(x => x.DateTime).GroupBy(x => x.DateTime.DayOfYear))
             {
                 DateTime coming = default(DateTime);
+                DateTime dayStart = new DateTime(2000, 1, 1, 10, 00, 00);
 
                 foreach (EmployeeRegistrationViewModel registration in dayRegistrations)
                 {
-
                     if (registration.EventType == RegistrationEventType.Coming)
                     {
                         coming = registration.DateTime;
@@ -44,19 +46,24 @@ else
                     <tr>
                         <td>@coming.ToLongDateString() @coming.ToLongTimeString()</td>
                         <td>Приход</td>
-                        <td rowspan="2">@(leaving - coming)</td>
+
+                        @{ TimeSpan workTime = leaving - coming; }
+                        <td rowspan="2" style="text-align: center">@($"{workTime.Hours} ч. {workTime.Minutes} мин.")</td>
+
+                        @{ TimeSpan late = coming - dayStart; }
+                        <td rowspan="2" style="text-align: center">@(late.Minutes > 0 ? $"{late.Hours} ч. {late.Minutes} мин." : "-")</td>
                     </tr>
                     <tr>
                         <td>@leaving.ToLongDateString() @leaving.ToLongTimeString()</td>
                         <td>Уход</td>
                     </tr>
 
-                    total += (leaving - coming);
+                    total += leaving - coming;
                 }
             }
             </tbody>
         </table>
 
-        <h5>Всего отработано: @total.Days д., @total.Hours ч., @total.Minutes мин.</h5>
+        <h5 class="mb-5">Всего отработано: @total.Days д., @total.Hours ч., @total.Minutes мин.</h5>
     }
 }

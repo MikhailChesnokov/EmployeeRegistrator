@@ -1,7 +1,7 @@
 ﻿namespace Web.Application.Controllers.Employee.Profiles
 {
     using AutoMapper;
-    using Domain.Entities;
+    using Domain.Entities.Employee;
     using Forms;
     using ViewModels;
 

@@ -2,14 +2,16 @@
 {
     using System.Collections.Generic;
     using AutoMapper;
-    using Domain.Entities;
+    using Domain.Entities.Employee;
     using Domain.Repository;
     using Forms;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using ViewModels;
 
 
 
+    [Authorize]
     public class EmployeeController : FormControllerBase
     {
         private readonly IRepository<Employee> _employeeRepository;
