@@ -24,7 +24,7 @@
 
         [Obsolete("Only for reflection", true)]
         public Password() { }
-        
+
         public Password(string password)
         {
             SetSalt();

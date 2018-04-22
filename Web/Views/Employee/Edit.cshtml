@@ -4,31 +4,35 @@
 
 <h4>Изменить сотрудника</h4>
 
-<form method="post">
+<form method="post" id="employee-form">
 
     <root-errors/>
 
     <input type="hidden" name="Id" value="@Model.Id">
 
-    <input-group name="Surname"
-                 label="Фамилия"
-                 invalid-feedback="Некорректая фамилия сотрудника"
-                 placeholder="Введите фамилию ..."
-                 value="@Model.Surname"/>
+    <input-group
+        name="Surname"
+        label="Фамилия"
+        invalid-feedback="Некорректая фамилия сотрудника"
+        placeholder="Введите фамилию ..."
+        value="@Model.Surname"/>
 
-    <input-group name="FirstName"
-                 label="Имя"
-                 invalid-feedback="Некорректное имя сотрудника"
-                 value="@Model.FirstName"/>
+    <input-group
+        name="FirstName"
+        label="Имя"
+        invalid-feedback="Некорректное имя сотрудника"
+        value="@Model.FirstName"/>
 
-    <input-group name="Patronymic"
-                 label="Отчество"
-                 invalid-feedback="Некорректное отчество сотрудника"
-                 value="@Model.Patronymic"/>
+    <input-group
+        name="Patronymic"
+        label="Отчество"
+        invalid-feedback="Некорректное отчество сотрудника"
+        value="@Model.Patronymic"/>
 
-    <input-group name="PersonnelNumber"
-                 label="Табельный номер"
-                 value="@Model.PersonnelNumber"/>
+    <input-group
+        name="PersonnelNumber"
+        label="Табельный номер"
+        value="@Model.PersonnelNumber"/>
 
     <div class="form-check">
         <input class="form-check-input" type="checkbox" id="WorkplacePresenceRequired" name="WorkplacePresenceRequired" @(Model.WorkplacePresenceRequired ? "checked" : string.Empty)>

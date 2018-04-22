@@ -34,7 +34,6 @@
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-
             modelBuilder.Entity<User>().HasOne(x => x.Password);
 
             modelBuilder.Entity<Password>().Property(x => x.Salt).IsRequired().HasColumnType("MEDIUMBLOB").HasMaxLength(40);

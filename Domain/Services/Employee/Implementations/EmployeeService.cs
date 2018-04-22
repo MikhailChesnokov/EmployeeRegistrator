@@ -1,6 +1,7 @@
 ﻿namespace Domain.Services.Employee.Implementations
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using Entities.Employee;
     using Exceptions;
@@ -27,7 +28,7 @@
                 throw new ArgumentNullException(nameof(employee));
 
             if (_employeeRepository.All().SingleOrDefault(x => x.PersonnelNumber == employee.PersonnelNumber) != null)
-                throw new EmployeeAlreadyExistsException($"Employee with the personnel number \"{employee.PersonnelNumber}\" already exists.");
+                throw new EmployeeAlreadyExistsException($"Сотрудник с табельным номером \"{employee.PersonnelNumber}\" уже существует.");
 
             _employeeRepository.Add(employee);
 
@@ -39,8 +40,10 @@
             if (employee == null)
                 throw new ArgumentNullException(nameof(employee));
 
-            if (_employeeRepository.All().SingleOrDefault(x => x.PersonnelNumber == employee.PersonnelNumber) != null)
-                throw new EmployeeAlreadyExistsException($"Employee with the personnel number \"{employee.PersonnelNumber}\" already exists.");
+            if (_employeeRepository.All().SingleOrDefault(x =>
+                                                              x.PersonnelNumber == employee.PersonnelNumber &&
+                                                              x.Id != employee.Id) != null)
+                throw new EmployeeAlreadyExistsException($"Сотрудник с табельным номером \"{employee.PersonnelNumber}\" уже существует.");
 
             _employeeRepository.Update(employee);
         }
@@ -58,6 +61,11 @@
                 throw new ArgumentException("Employee not found.");
 
             _employeeRepository.Delete(employee);
+        }
+
+        public IEnumerable<Employee> All()
+        {
+            return _employeeRepository.All();
         }
     }
 }

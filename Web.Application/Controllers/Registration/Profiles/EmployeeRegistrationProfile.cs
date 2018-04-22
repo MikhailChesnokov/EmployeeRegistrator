@@ -10,7 +10,7 @@
     {
         public EmployeeRegistrationProfile()
         {
-            CreateMap<Registration, EmployeeRegistrationViewModel>();
+            CreateMap<Registration, RegistrationViewModel>();
         }
     }
 }

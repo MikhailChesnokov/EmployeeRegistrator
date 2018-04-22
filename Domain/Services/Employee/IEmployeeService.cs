@@ -1,5 +1,6 @@
 ﻿namespace Domain.Services.Employee
 {
+    using System.Collections.Generic;
     using Entities.Employee;
 
 
@@ -13,5 +14,7 @@
         Employee GetById(int id);
 
         void Delete(int id);
+
+        IEnumerable<Employee> All();
     }
 }

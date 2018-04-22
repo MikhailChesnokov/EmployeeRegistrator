@@ -46,7 +46,6 @@
         }
 
         [HttpGet]
-        [Authorize]
         public IActionResult SignOut()
         {
             _authenticationService.SignOut();
@@ -55,14 +54,14 @@
         }
 
         [HttpGet]
-        [Authorize]
+        //[Authorize]
         public IActionResult SignUp()
         {
             return View(new SignUpForm());
         }
 
         [HttpPost]
-        [Authorize]
+        //[Authorize]
         public IActionResult SignUp(SignUpForm form)
         {
             return Form(

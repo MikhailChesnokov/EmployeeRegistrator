@@ -136,7 +136,13 @@
 
             void SetDefaultOption()
             {
-                TagBuilder defaultOptioin = new TagBuilder("option");
+                TagBuilder defaultOptioin = new TagBuilder("option")
+                {
+                    Attributes =
+                    {
+                        {"value", string.Empty}
+                    }
+                };
 
                 defaultOptioin.InnerHtml.Append(placeholder ?? $"Выберите {label.ToLower()}");
 

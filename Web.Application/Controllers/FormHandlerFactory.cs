@@ -18,15 +18,15 @@
 
     public class FormHandlerFactory : IFormHandlerFactory
     {
+        private readonly IAuthenticationService<User> _authenticationService;
+
         private readonly IEmployeeService _employeeService;
 
         private readonly IRegistrationService _registrationService;
 
-        private readonly IUserService _userService;
-
-        private readonly IAuthenticationService<User> _authenticationService;
-
         private readonly IRepository<User> _userRepository;
+
+        private readonly IUserService _userService;
 
 
 

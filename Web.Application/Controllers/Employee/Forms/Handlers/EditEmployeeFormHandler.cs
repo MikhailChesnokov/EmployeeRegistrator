@@ -2,6 +2,7 @@
 {
     using Domain.Entities.Employee;
     using Domain.Services.Employee;
+    using Domain.Services.Employee.Exceptions;
 
 
 
@@ -27,8 +28,16 @@
             employee.SetSurname(form.Surname);
             employee.SetPatronymic(form.Patronymic);
             employee.SetWorkplacePresenceRequirement(form.WorkplacePresenceRequired);
+            employee.SetPersonnelNumber(form.PersonnelNumber);
 
-            _employeeService.UpdateEmployee(employee);
+            try
+            {
+                _employeeService.UpdateEmployee(employee);
+            }
+            catch (EmployeeAlreadyExistsException e)
+            {
+                throw new FormException(e.Message);
+            }
         }
     }
 }

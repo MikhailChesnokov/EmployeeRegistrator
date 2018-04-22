@@ -2,18 +2,17 @@
 {
     using System;
     using Domain.Entities.Registration;
+    using Employee.ViewModels;
 
 
 
-    public class EmployeeRegistrationViewModel
+    public class RegistrationViewModel
     {
         public DateTime DateTime { get; set; }
 
         public RegistrationEventType EventType { get; set; }
 
-        public int EmployeeId { get; set; }
-
-        public string EmployeeFio { get; set; }
+        public EmployeeViewModel Employee { get; set; } = new EmployeeViewModel();
 
         public int Id { get; set; }
     }

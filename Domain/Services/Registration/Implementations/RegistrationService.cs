@@ -1,5 +1,6 @@
 ﻿namespace Domain.Services.Registration.Implementations
 {
+    using System.Collections.Generic;
     using Entities.Employee;
     using Entities.Registration;
     using Exceptions;
@@ -9,17 +10,17 @@
 
     public class RegistrationService : IRegistrationService
     {
-        public readonly IRepository<Registration> EmployeeRegistrationRepository;
-
         public readonly IRepository<Employee> EmployeeRepository;
+
+        public readonly IRepository<Registration> RegistrationRepository;
 
 
 
         public RegistrationService(
-            IRepository<Registration> employeeRegistrationRepository,
+            IRepository<Registration> registrationRepository,
             IRepository<Employee> employeeRepository)
         {
-            EmployeeRegistrationRepository = employeeRegistrationRepository;
+            RegistrationRepository = registrationRepository;
             EmployeeRepository = employeeRepository;
         }
 
@@ -36,7 +37,7 @@
                 employee,
                 RegistrationEventType.Coming);
 
-            EmployeeRegistrationRepository.Add(registration);
+            RegistrationRepository.Add(registration);
         }
 
         public void RegisterEmployeeLeaving(int employeeId)
@@ -50,7 +51,12 @@
                 employee,
                 RegistrationEventType.Leaving);
 
-            EmployeeRegistrationRepository.Add(registration);
+            RegistrationRepository.Add(registration);
+        }
+
+        public IEnumerable<Registration> All()
+        {
+            return RegistrationRepository.All();
         }
     }
 }

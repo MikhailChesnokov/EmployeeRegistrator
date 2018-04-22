@@ -1,18 +1,20 @@
 ﻿namespace Web.Application.Controllers.Registration
 {
+    using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
     using AutoMapper;
     using Domain.Entities.Employee;
     using Domain.Entities.Registration;
-    using Domain.Repository;
+    using Domain.Services.Employee;
     using Domain.Services.Registration;
     using Employee;
-    using Exceptions;
     using Forms;
-    using Forms.Handlers;
     using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Mvc.Rendering;
     using ViewModels;
 
 
@@ -20,11 +22,9 @@
     [Authorize]
     public class RegistrationController : FormControllerBase
     {
-        private readonly IRepository<Employee> _employeeRepository;
+        private readonly IEmployeeService _employeeService;
 
         private readonly IMapper _mapper;
-
-        private readonly IRepository<Registration> _registrationRepository;
 
         private readonly IRegistrationService _registrationService;
 
@@ -33,14 +33,12 @@
         public RegistrationController(
             IFormHandlerFactory formHandlerFactory,
             IRegistrationService registrationService,
-            IRepository<Employee> employeeRepository,
-            IRepository<Registration> registrationRepository,
-            IMapper mapper) : base(formHandlerFactory)
+            IMapper mapper,
+            IEmployeeService employeeService) : base(formHandlerFactory)
         {
             _registrationService = registrationService;
-            _employeeRepository = employeeRepository;
-            _registrationRepository = registrationRepository;
             _mapper = mapper;
+            _employeeService = employeeService;
         }
 
 
@@ -48,49 +46,81 @@
         [HttpPost]
         public void RegisterComing([FromBody] RegisterComingForm form)
         {
-            if (!ModelState.IsValid)
-                throw new InvalidRequestParameterException("Invalid request parameters.");
-
-            new RegisterComingFormHandler(_registrationService).Execute(form);
+            Form(form, Ok, () => StatusCode(StatusCodes.Status409Conflict));
         }
 
         [HttpPost]
         public void RegisterLeaving([FromBody] RegisterLeavingForm form)
         {
-            if (!ModelState.IsValid)
-                throw new InvalidRequestParameterException("Invalid request parameters.");
-
-            new RegisterLeavingFormHandler(_registrationService).Execute(form);
+            Form(form, Ok, () => StatusCode(StatusCodes.Status409Conflict));
         }
 
         [HttpGet]
         public IActionResult RegisterComing(int id)
         {
-            new RegisterComingFormHandler(_registrationService).Execute(new RegisterComingForm {EmployeeId = id});
-
-            return this.RedirectToAction<EmployeeController>(c => c.Registration());
+            return Form(
+                new RegisterComingForm {EmployeeId = id},
+                () => this.RedirectToAction<EmployeeController>(c => c.Registration()),
+                () => this.RedirectToAction<EmployeeController>(c => c.Registration()));
         }
 
         [HttpGet]
         public IActionResult RegisterLeaving(int id)
         {
-            new RegisterLeavingFormHandler(_registrationService).Execute(new RegisterLeavingForm {EmployeeId = id});
-
-            return this.RedirectToAction<EmployeeController>(c => c.Registration());
+            return Form(
+                new RegisterLeavingForm {EmployeeId = id},
+                () => this.RedirectToAction<EmployeeController>(c => c.Registration()),
+                () => this.RedirectToAction<EmployeeController>(c => c.Registration()));
         }
 
         [HttpGet]
         public IActionResult Report()
         {
-            IEnumerable<Registration> registrations = _registrationRepository.All();
+            IEnumerable<Registration> registrations = _registrationService.All();
 
-            IEnumerable<Employee> employees = _employeeRepository.All();
+            IEnumerable<RegistrationViewModel> registrationViewModels = _mapper.Map<IEnumerable<RegistrationViewModel>>(registrations);
 
-            IEnumerable<EmployeeRegistrationViewModel> registrationsViewModels = _mapper.Map<IEnumerable<EmployeeRegistrationViewModel>>(registrations);
+            IEnumerable<Employee> employees = _employeeService.All();
 
-            registrationsViewModels.ToList().ForEach(x => x.EmployeeFio = employees.Single(y => y.Id == x.EmployeeId).Fio);
+            ReportForm form = new ReportForm
+            {
+                Registrations = registrationViewModels,
+                Employees = employees.Select(x => new SelectListItem
+                {
+                    Value = x.Id.ToString(),
+                    Text = x.Fio
+                })
+            };
 
-            return View(registrationsViewModels);
+            return View(form);
+        }
+
+        [HttpPost]
+        public IActionResult Report(ReportForm form)
+        {
+            IEnumerable<Registration> registrations = _registrationService.All();
+
+            if (form.EmployeeId != null)
+                registrations = registrations.Where(x => x.Employee.Id == form.EmployeeId);
+
+            if (form.DateFrom != null)
+                registrations = registrations.Where(x => x.DateTime >= form.DateFrom);
+
+            if (form.DateTo != null)
+                registrations = registrations.Where(x => x.DateTime < form.DateTo.Value.AddDays(1));
+
+            IEnumerable<RegistrationViewModel> registrationsViewModels = _mapper.Map<IEnumerable<RegistrationViewModel>>(registrations);
+
+            IEnumerable<Employee> employees = _employeeService.All();
+
+            form.Registrations = registrationsViewModels;
+            form.Employees = employees.Select(x => new SelectListItem
+            {
+                Value = x.Id.ToString(),
+                Text = x.Fio
+            });
+
+            return View(form);
         }
     }
 }

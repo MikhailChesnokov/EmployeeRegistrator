@@ -4,7 +4,6 @@
     using Entities;
     using Microsoft.AspNetCore.Authentication;
     using Microsoft.AspNetCore.Http;
-    using AuthenticationProperties = Microsoft.AspNetCore.Authentication.AuthenticationProperties;
 
 
 
@@ -12,6 +11,7 @@
         where TUser : IEntity
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
+
         private readonly string _scheme;
 
 
@@ -48,6 +48,8 @@
             await _httpContextAccessor.HttpContext.SignOutAsync(_scheme);
         }
     }
+
+
 
     public static class ClaimTypes
     {
