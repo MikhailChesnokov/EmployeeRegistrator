@@ -1,30 +1,25 @@
 ﻿namespace Web.Application.Controllers.Employee.Forms.Handlers
 {
-    using Domain.Entities;
-    using Domain.Repository;
+    using Domain.Services.Employee;
 
 
 
     public class DeleteEmployeeFormHandler : IFormHandler<DeleteEmployeeForm>
     {
-        private readonly IRepository<Employee> _employeeRepository;
+        private readonly IEmployeeService _employeeService;
 
 
 
-        public DeleteEmployeeFormHandler(IRepository<Employee> employeeRepository)
+        public DeleteEmployeeFormHandler(IEmployeeService employeeService)
         {
-            _employeeRepository = employeeRepository;
+            _employeeService = employeeService;
         }
 
 
 
         public void Execute(DeleteEmployeeForm form)
         {
-            Employee employee = _employeeRepository.FindById(form.Id);
-
-            if (employee is null) return;
-
-            _employeeRepository.Delete(employee);
+            _employeeService.Delete(form.Id);
         }
     }
 }

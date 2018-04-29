@@ -7,6 +7,7 @@
     using global::Autofac.Extensions.DependencyInjection;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Modules;
@@ -37,6 +38,14 @@
                 .AddMvc(options => options.Filters.AddService<ExceptionFilter>())
                 .AddTypedRouting();
 
+            services
+                .AddAuthentication("CookieScheme")
+                .AddCookie("CookieScheme", options =>
+                {
+                    options.Cookie.Name = "BillGeneratorCookie";
+                    options.LoginPath = new PathString("/Account/SignIn");
+                });
+
             ContainerBuilder containerBuilder = new ContainerBuilder();
             containerBuilder.Populate(services);
             containerBuilder.RegisterConfiguredModulesFromAssemblyContaining<ServiceModule>(
@@ -51,6 +60,8 @@
             if (env.IsDevelopment()) app.UseDeveloperExceptionPage();
 
             app.UseStaticFiles();
+
+            app.UseAuthentication();
 
             app.UseMvc(routes => routes.MapRoute("default", "{controller=Employee}/{action=List}/{id?}"));
 

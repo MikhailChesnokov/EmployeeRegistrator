@@ -1,32 +1,43 @@
 ﻿namespace Web.Application.Controllers.Employee.Forms.Handlers
 {
-    using Domain.Entities;
-    using Domain.Repository;
+    using Domain.Entities.Employee;
+    using Domain.Services.Employee;
+    using Domain.Services.Employee.Exceptions;
 
 
 
     public class EditEmployeeFormHandler : IFormHandler<EditEmployeeForm>
     {
-        private readonly IRepository<Employee> _employeeRepository;
+        private readonly IEmployeeService _employeeService;
 
 
 
-        public EditEmployeeFormHandler(IRepository<Employee> employeeRepository)
+        public EditEmployeeFormHandler(
+            IEmployeeService employeeService)
         {
-            _employeeRepository = employeeRepository;
+            _employeeService = employeeService;
         }
 
 
 
         public void Execute(EditEmployeeForm form)
         {
-            Employee employee = _employeeRepository.FindById(form.Id);
+            Employee employee = _employeeService.GetById(form.Id);
 
             employee.SetFirstName(form.FirstName);
             employee.SetSurname(form.Surname);
             employee.SetPatronymic(form.Patronymic);
+            employee.SetWorkplacePresenceRequirement(form.WorkplacePresenceRequired);
+            employee.SetPersonnelNumber(form.PersonnelNumber);
 
-            _employeeRepository.Update(employee);
+            try
+            {
+                _employeeService.UpdateEmployee(employee);
+            }
+            catch (EmployeeAlreadyExistsException e)
+            {
+                throw new FormException(e.Message);
+            }
         }
     }
 }

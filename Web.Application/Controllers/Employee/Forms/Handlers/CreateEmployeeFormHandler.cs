@@ -1,19 +1,20 @@
 ﻿namespace Web.Application.Controllers.Employee.Forms.Handlers
 {
-    using Domain.Entities;
-    using Domain.Repository;
+    using Domain.Entities.Employee;
+    using Domain.Services.Employee;
 
 
 
     public class CreateEmployeeFormHandler : IFormHandler<CreateEmployeeForm, int>
     {
-        private readonly IRepository<Employee> _employeeRepository;
+        private readonly IEmployeeService _employeeService;
 
 
 
-        public CreateEmployeeFormHandler(IRepository<Employee> employeeRepository1)
+        public CreateEmployeeFormHandler(
+            IEmployeeService employeeService)
         {
-            _employeeRepository = employeeRepository1;
+            _employeeService = employeeService;
         }
 
 
@@ -23,9 +24,11 @@
             Employee employee = new Employee(
                 form.FirstName,
                 form.Surname,
-                form.Patronymic);
+                form.Patronymic,
+                form.WorkplacePresenceRequired,
+                form.PersonnelNumber);
 
-            _employeeRepository.Add(employee);
+            employee = _employeeService.AddEmployee(employee);
 
             return employee.Id;
         }

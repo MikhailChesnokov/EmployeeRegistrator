@@ -1,0 +1,42 @@
+﻿@model ReportForm
+
+@{ ViewBag.Title = "Список регистраций"; }
+
+<h4>Список регистраций</h4>
+
+<form method="post">
+
+    <root-errors/>
+
+    <select-group
+        name="EmployeeId"
+        label="Сотрудник"
+        placeholder="Все сотрудники"
+        value="@Model.EmployeeId"
+        items="@Model.Employees"/>
+
+    <input-group
+        name="DateFrom"
+        label="Начальная дата"
+        placeholder="Не установлена"
+        invalid-feedback="Некорректная начальная дата"
+        value="@Model.DateFrom?.ToShortDateString()"/>
+
+    <input-group
+        name="DateTo"
+        label="Конечная дата"
+        placeholder="Не установлена"
+        invalid-feedback="Некорректная конечная дата"
+        value="@Model.DateTo?.ToShortDateString()"/>
+
+    <input type="submit" class="btn btn-primary" value="Применить"/>
+</form>
+
+@if (Model?.Registrations?.Any() != true)
+{
+    <p>Список регистраций пуст</p>
+}
+else
+{
+    @Html.Partial("RegistrationsGroupByDaysPartial", Model)
+}

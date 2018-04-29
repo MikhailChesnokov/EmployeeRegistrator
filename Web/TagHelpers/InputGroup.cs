@@ -9,7 +9,7 @@
 
     [HtmlTargetElement(
         "input-group",
-        Attributes = "name, label, value",
+        Attributes = "name, label",
         TagStructure = TagStructure.NormalOrSelfClosing)]
     public class InputGroupTagHelper : TagHelper
     {
@@ -23,7 +23,11 @@
 
         public string InvalidFeedback { get; set; }
 
+        public string Placeholder { get; set; }
+
         public string Value { get; set; }
+
+        public bool IsPassword { get; set; }
 
 
 
@@ -34,8 +38,8 @@
             output.TagMode = TagMode.StartTagAndEndTag;
             output
                 .AddLabel(Name, Label)
-                .AddTextInput(Name, Value, Label, ViewContext)
-                .AddInvalidFeedback(InvalidFeedback);
+                .AddTextInput(Name, Value, Label, Placeholder, IsPassword, ViewContext)
+                .AddInvalidFeedback(InvalidFeedback ?? $"Некорректный {Label.ToLower()}");
         }
     }
 }

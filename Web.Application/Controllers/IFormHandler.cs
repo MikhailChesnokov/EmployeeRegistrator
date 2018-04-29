@@ -8,9 +8,9 @@
 
 
 
-    public interface IFormHandler<in TForm, out TResult>
+    public interface IFormHandler<in TForm, out TFormResult>
         where TForm : IForm
     {
-        TResult Execute(TForm form);
+        TFormResult Execute(TForm form);
     }
 }

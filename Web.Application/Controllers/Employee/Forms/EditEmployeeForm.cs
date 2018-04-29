@@ -20,5 +20,11 @@
         [Required]
         [RegularExpression("^[А-Яа-яёЁ]+$")]
         public string Patronymic { get; set; }
+
+        [Required(AllowEmptyStrings = false)]
+        [RegularExpression("^.+$")]
+        public string PersonnelNumber { get; set; }
+
+        public bool WorkplacePresenceRequired { get; set; }
     }
 }

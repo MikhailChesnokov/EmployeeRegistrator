@@ -1,5 +1,4 @@
-﻿@using Web.Application.Controllers.Registration
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -7,12 +6,14 @@
 
     <environment include="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css"/>
+        <link rel="stylesheet" href="~/css/Site.css">
     </environment>
     <environment exclude="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
+        <link rel="stylesheet" href="~/css/Site.css">
     </environment>
 
-    <title>@ViewBag.Title</title>
+    <title>@($"{ViewBag.Title} - Регистратор сотрудников")</title>
 
 </head>
 <body>
@@ -27,6 +28,7 @@
                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                     <a class="dropdown-item" href="@(Url.Action<EmployeeController>(c => c.List()))">Список сотрудников</a>
                     <a class="dropdown-item" href="@(Url.Action<EmployeeController>(c => c.Create(With.No<CreateEmployeeForm>())))">Добавить сотрудника</a>
+                    <a class="dropdown-item" href="@(Url.Action<EmployeeController>(c => c.Registration()))">Регистрация сотрудников</a>
                 </div>
             </li>
             <li class="nav-item dropdown">
@@ -34,7 +36,7 @@
                     События
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                    <a class="dropdown-item" href="@(Url.Action<RegistrationController>(c => c.List()))">Список событий</a>
+                    <a class="dropdown-item" href="@(Url.Action<RegistrationController>(c => c.Report()))">Список событий</a>
                 </div>
             </li>
         </ul>

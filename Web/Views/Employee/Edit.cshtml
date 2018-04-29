@@ -1,12 +1,21 @@
 ﻿@model EditEmployeeForm
 
-<p></p>
+@{ ViewBag.Title = "Изменить сотрудника"; }
 
-<form method="post">
+<h4>Изменить сотрудника</h4>
+
+<form method="post" id="employee-form">
 
     <root-errors/>
 
     <input type="hidden" name="Id" value="@Model.Id">
+
+    <input-group
+        name="Surname"
+        label="Фамилия"
+        invalid-feedback="Некорректая фамилия сотрудника"
+        placeholder="Введите фамилию ..."
+        value="@Model.Surname"/>
 
     <input-group
         name="FirstName"
@@ -15,16 +24,36 @@
         value="@Model.FirstName"/>
 
     <input-group
-        name="Surname"
-        label="Фамилия"
-        invalid-feedback="Некорректая фамилия сотрудника"
-        value="@Model.Surname"/>
-
-    <input-group
         name="Patronymic"
         label="Отчество"
         invalid-feedback="Некорректное отчество сотрудника"
         value="@Model.Patronymic"/>
 
-    <button type="submit" class="btn btn-primary">Сохранить</button>
+    <input-group
+        name="PersonnelNumber"
+        label="Табельный номер"
+        value="@Model.PersonnelNumber"/>
+
+    <div class="form-check">
+        <input class="form-check-input" type="checkbox" id="WorkplacePresenceRequired" name="WorkplacePresenceRequired" @(Model.WorkplacePresenceRequired ? "checked" : string.Empty)>
+        <label class="form-check-label" for="WorkplacePresenceRequired">
+            Обязательно присутсвие на рабочем месте в любой момент рабочего времени
+        </label>
+    </div>
+
+    <button type="submit" class="btn btn-primary lower-button">Сохранить</button>
 </form>
+
+@section Scripts{
+    <script type="text/javascript">
+        $('#employee-form').submit(function() {
+            var checkbox = $('#WorkplacePresenceRequired');
+
+            if (checkbox.prop('checked')) {
+                checkbox.attr('value', "true");
+            } else {
+                checkbox.attr('value', "false");
+            }
+        });
+    </script>
+}

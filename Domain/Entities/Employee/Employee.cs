@@ -1,4 +1,4 @@
-﻿namespace Domain.Entities
+﻿namespace Domain.Entities.Employee
 {
     using System;
 
@@ -12,11 +12,15 @@
         public Employee(
             string firstName,
             string surname,
-            string patronymic)
+            string patronymic,
+            bool isWorkplacePresenceRequired,
+            string personnelNumber)
         {
             SetFirstName(firstName);
             SetSurname(surname);
             SetPatronymic(patronymic);
+            SetWorkplacePresenceRequirement(isWorkplacePresenceRequired);
+            SetPersonnelNumber(personnelNumber);
         }
 
 
@@ -28,6 +32,10 @@
         public string Patronymic { get; protected set; }
 
         public string Fio => $"{Surname} {FirstName} {Patronymic}";
+
+        public bool WorkplacePresenceRequired { get; protected set; }
+
+        public string PersonnelNumber { get; protected set; }
 
         public int Id { get; protected set; }
 
@@ -55,6 +63,19 @@
                 throw new ArgumentException("Value cannot be null or whitespace.", nameof(patronymic));
 
             Patronymic = patronymic;
+        }
+
+        public void SetWorkplacePresenceRequirement(bool isWorkplacePresenceRequired)
+        {
+            WorkplacePresenceRequired = isWorkplacePresenceRequired;
+        }
+
+        public void SetPersonnelNumber(string personnelNumber)
+        {
+            if (string.IsNullOrWhiteSpace(personnelNumber))
+                throw new ArgumentException("Value cannot be null or whitespace.", nameof(personnelNumber));
+
+            PersonnelNumber = personnelNumber;
         }
     }
 }

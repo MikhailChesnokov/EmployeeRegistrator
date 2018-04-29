@@ -24,6 +24,8 @@
 
         public string Placeholder { get; set; }
 
+        public long? Value { get; set; }
+
         public string InvalidFeedback { get; set; }
 
         public IEnumerable<SelectListItem> Items { get; set; }
@@ -33,12 +35,12 @@
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
             output.TagName = "div";
-            output.Attributes.Add("class", $"form-group row");
+            output.Attributes.Add("class", "form-group row");
             output.TagMode = TagMode.StartTagAndEndTag;
             output
                 .AddLabel(Name, Label)
-                .AddSelect(Name, Label, Items, Placeholder, ViewContext)
-                .AddInvalidFeedback(InvalidFeedback);
+                .AddSelect(Name, Label, Items, Placeholder, Value, ViewContext)
+                .AddInvalidFeedback(InvalidFeedback ?? $"{Label} не выбран");
         }
     }
 }

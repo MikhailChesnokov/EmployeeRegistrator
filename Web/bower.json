@@ -2,8 +2,12 @@
   "name": "asp.net",
   "private": true,
   "dependencies": {
-    "bootstrap": "v4.0.0",
+    "bootstrap": "v4.1.0",
     "jQuery": "3.3.1",
-    "popper.js": "v1.14.1"
+    "popper.js": "v1.14.3"
+  },
+  "resolutions": {
+    "bootstrap": "v4.1.0",
+    "popper.js": "v1.14.3"
   }
 }

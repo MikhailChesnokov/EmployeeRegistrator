@@ -1,0 +1,67 @@
+﻿@model ReportForm
+
+<table class="table table-sm table-bordered">
+    <thead>
+    <tr>
+        <th>День</th>
+        <th>Сотрудник</th>
+        <th>Время</th>
+        <th>Событие</th>
+        <th>Отработано</th>
+        <th>Опоздание</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (IGrouping<DateTime, RegistrationViewModel> dayRegistrations in Model.Registrations.OrderBy(x => x.DateTime).GroupBy(x => x.DateTime.Date))
+    {
+        bool daySpaned = false;
+
+        foreach (IGrouping<EmployeeViewModel, RegistrationViewModel> dayAndEmployeeRegistrations in dayRegistrations.OrderBy(x => x.Employee.Surname).GroupBy(x => x.Employee, new EmployeeViewModelEqualityComparer()))
+        {
+            bool employeeSpaned = false;
+
+
+            RegistrationViewModel[] registrationArray = dayAndEmployeeRegistrations.ToArray();
+
+            TimeSpan dayWorkTime = default(TimeSpan);
+
+            for (int i = 0; i < registrationArray.Length;)
+            {
+                if (registrationArray.Length == i)
+                {
+                    break;
+                }
+
+                if (registrationArray.Length == i + 1)
+                {
+                    @Html.Partial("TrPartial", new RowViewModel(registrationArray[i], daySpaned, dayRegistrations.Count() + dayRegistrations.Select(x => x.Employee.Id).Distinct().Count(), dayRegistrations.Key, employeeSpaned, dayAndEmployeeRegistrations.Count(), dayAndEmployeeRegistrations.Key.Fio, false))
+                    daySpaned = true;
+                    break;
+                }
+
+                if (registrationArray[i].EventType == RegistrationEventType.Coming &&
+                    registrationArray[i + 1].EventType == RegistrationEventType.Leaving)
+                {
+                    @Html.Partial("TrPartial", new RowViewModel(registrationArray[i], daySpaned, dayRegistrations.Count() + dayRegistrations.Select(x => x.Employee.Id).Distinct().Count(), dayRegistrations.Key, employeeSpaned, dayAndEmployeeRegistrations.Count(), dayAndEmployeeRegistrations.Key.Fio, true, registrationArray[i + 1].DateTime - registrationArray[i].DateTime))
+                    daySpaned = employeeSpaned = true;
+                    @Html.Partial("TrPartial", new RowViewModel(registrationArray[i + 1], daySpaned, dayRegistrations.Count(), dayRegistrations.Key, employeeSpaned, dayAndEmployeeRegistrations.Count(), dayAndEmployeeRegistrations.Key.Fio, true))
+                    dayWorkTime += (registrationArray[i + 1].DateTime - registrationArray[i].DateTime);
+                    i += 2;
+                }
+                else
+                {
+                    @Html.Partial("TrPartial", new RowViewModel(registrationArray[i], daySpaned, dayRegistrations.Count() + dayRegistrations.Select(x => x.Employee.Id).Distinct().Count(), dayRegistrations.Key, employeeSpaned, dayAndEmployeeRegistrations.Count(), dayAndEmployeeRegistrations.Key.Fio, false))
+                    daySpaned = employeeSpaned = true;
+                    i++;
+                }
+            }
+
+            <tr>
+
+                <td colspan="2"><strong>Всего отработано</strong></td>
+                <td><strong>@($"{dayWorkTime.Hours} ч. {dayWorkTime.Minutes} мин.")</strong></td>
+            </tr>
+        }
+    }
+    </tbody>
+</table>
