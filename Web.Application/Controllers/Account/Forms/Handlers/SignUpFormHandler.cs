@@ -1,6 +1,7 @@
 ﻿namespace Web.Application.Controllers.Account.Forms.Handlers
 {
     using Domain.Services.User;
+    using Domain.Services.User.Exceptions;
 
 
 
@@ -22,7 +23,14 @@
             if (request.Password != request.ConfirmPassword)
                 throw new FormException("Пароли не совпадают.");
 
-            _userService.SignUp(request.Login, request.Password);
+            try
+            {
+                _userService.SignUp(request.Login, request.Password);
+            }
+            catch (UserAlreadyExistsException e)
+            {
+                throw new FormException(e.Message);
+            }
         }
     }
 }

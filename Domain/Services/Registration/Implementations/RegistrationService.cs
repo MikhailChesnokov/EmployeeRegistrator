@@ -1,9 +1,9 @@
 ﻿namespace Domain.Services.Registration.Implementations
 {
+    using System;
     using System.Collections.Generic;
     using Entities.Employee;
     using Entities.Registration;
-    using Exceptions;
     using Repository;
 
 
@@ -26,12 +26,10 @@
 
 
 
-        public void RegisterEmployeeComing(int employeeId)
+        public void RegisterEmployeeComing(Employee employee)
         {
-            Employee employee = EmployeeRepository.FindById(employeeId);
-
-            if (employee is null)
-                throw new EmployeeNotFoundException($"Employee with id \"{employeeId}\" not found.");
+            if (employee == null)
+                throw new ArgumentNullException(nameof(employee));
 
             Registration registration = new Registration(
                 employee,
@@ -40,12 +38,10 @@
             RegistrationRepository.Add(registration);
         }
 
-        public void RegisterEmployeeLeaving(int employeeId)
+        public void RegisterEmployeeLeaving(Employee employee)
         {
-            Employee employee = EmployeeRepository.FindById(employeeId);
-
-            if (employee is null)
-                throw new EmployeeNotFoundException($"Employee with id \"{employeeId}\" not found.");
+            if (employee == null)
+                throw new ArgumentNullException(nameof(employee));
 
             Registration registration = new Registration(
                 employee,

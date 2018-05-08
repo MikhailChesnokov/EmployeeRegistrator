@@ -1,8 +1,6 @@
 ﻿namespace Web.Application.Controllers.Registration
 {
-    using System;
     using System.Collections.Generic;
-    using System.IO;
     using System.Linq;
     using AutoMapper;
     using Domain.Entities.Employee;
