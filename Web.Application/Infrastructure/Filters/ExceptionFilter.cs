@@ -42,6 +42,10 @@
 
                 default:
                     context.HttpContext.Response.StatusCode = StatusCodes.Status503ServiceUnavailable;
+                    context.Result = new JsonResult(new
+                    {
+                        Error = context.Exception.Message
+                    });
 
                     break;
             }

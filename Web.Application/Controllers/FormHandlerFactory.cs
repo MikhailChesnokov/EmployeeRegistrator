@@ -55,9 +55,9 @@
                 return new DeleteEmployeeFormHandler(_employeeService) as IFormHandler<TForm>;
 
             if (typeof(TForm) == typeof(RegisterComingForm))
-                return new RegisterComingFormHandler(_registrationService) as IFormHandler<TForm>;
+                return new RegisterComingFormHandler(_registrationService, _employeeService) as IFormHandler<TForm>;
             if (typeof(TForm) == typeof(RegisterLeavingForm))
-                return new RegisterLeavingFormHandler(_registrationService) as IFormHandler<TForm>;
+                return new RegisterLeavingFormHandler(_registrationService, _employeeService) as IFormHandler<TForm>;
 
             if (typeof(TForm) == typeof(SignInForm))
                 return new SignInFormHandler(_authenticationService, _userRepository) as IFormHandler<TForm>;

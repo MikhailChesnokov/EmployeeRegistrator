@@ -17,7 +17,7 @@
                 .InstancePerLifetimeScope();
 
             builder
-                .RegisterInstance(new DefaultContext())
+                .RegisterType<DefaultContext>()
                 .As<DbContext>()
                 .SingleInstance();
         }

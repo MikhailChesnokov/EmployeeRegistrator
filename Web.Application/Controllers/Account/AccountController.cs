@@ -54,14 +54,21 @@
         }
 
         [HttpGet]
-        //[Authorize]
+        #if DEBUG
+        [AllowAnonymous]
+        #else
+        [Authorize]
+        #endif
         public IActionResult SignUp()
         {
             return View(new SignUpForm());
         }
 
-        [HttpPost]
-        //[Authorize]
+        #if DEBUG
+        [AllowAnonymous]
+        #else
+        [Authorize]
+        #endif
         public IActionResult SignUp(SignUpForm form)
         {
             return Form(

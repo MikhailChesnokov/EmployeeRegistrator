@@ -42,14 +42,13 @@
                 .AddAuthentication("CookieScheme")
                 .AddCookie("CookieScheme", options =>
                 {
-                    options.Cookie.Name = "BillGeneratorCookie";
+                    options.Cookie.Name = "EmployeeRegistratorCookie";
                     options.LoginPath = new PathString("/Account/SignIn");
                 });
 
             ContainerBuilder containerBuilder = new ContainerBuilder();
             containerBuilder.Populate(services);
-            containerBuilder.RegisterConfiguredModulesFromAssemblyContaining<ServiceModule>(
-                Configuration as IConfigurationRoot);
+            containerBuilder.RegisterConfiguredModulesFromAssemblyContaining<ServiceModule>(Configuration as IConfigurationRoot);
             Container = containerBuilder.Build();
 
             return new AutofacServiceProvider(Container);

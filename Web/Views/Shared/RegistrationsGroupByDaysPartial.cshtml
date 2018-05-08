@@ -45,7 +45,7 @@
                     @Html.Partial("TrPartial", new RowViewModel(registrationArray[i], daySpaned, dayRegistrations.Count() + dayRegistrations.Select(x => x.Employee.Id).Distinct().Count(), dayRegistrations.Key, employeeSpaned, dayAndEmployeeRegistrations.Count(), dayAndEmployeeRegistrations.Key.Fio, true, registrationArray[i + 1].DateTime - registrationArray[i].DateTime))
                     daySpaned = employeeSpaned = true;
                     @Html.Partial("TrPartial", new RowViewModel(registrationArray[i + 1], daySpaned, dayRegistrations.Count(), dayRegistrations.Key, employeeSpaned, dayAndEmployeeRegistrations.Count(), dayAndEmployeeRegistrations.Key.Fio, true))
-                    dayWorkTime += (registrationArray[i + 1].DateTime - registrationArray[i].DateTime);
+                    dayWorkTime += registrationArray[i + 1].DateTime - registrationArray[i].DateTime;
                     i += 2;
                 }
                 else
