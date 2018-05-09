@@ -6,13 +6,13 @@
 
     public class SignUpForm : IForm
     {
-        [Required]
+        [Required(AllowEmptyStrings = false)]
         public string Login { get; set; }
 
-        [Required]
+        [Required(AllowEmptyStrings = false)]
         public string Password { get; set; }
 
-        [Required]
+        [Required(AllowEmptyStrings = false)]
         public string ConfirmPassword { get; set; }
     }
 }

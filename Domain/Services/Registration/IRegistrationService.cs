@@ -8,9 +8,7 @@
 
     public interface IRegistrationService : IDomainService
     {
-        void RegisterEmployeeComing(Employee employee);
-
-        void RegisterEmployeeLeaving(Employee employee);
+        void RegisterEmployee(Employee employee, RegistrationEventType eventType);
 
         IEnumerable<Registration> All();
     }

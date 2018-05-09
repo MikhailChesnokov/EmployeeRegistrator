@@ -1,6 +1,7 @@
 ﻿namespace Web.Application.Controllers.Registration.Forms.Handlers
 {
     using Domain.Entities.Employee;
+    using Domain.Entities.Registration;
     using Domain.Services.Employee;
     using Domain.Services.Registration;
 
@@ -30,7 +31,7 @@
             if (employee is null)
                 throw new FormException("Employee not found.");
 
-            _registrationService.RegisterEmployeeComing(employee);
+            _registrationService.RegisterEmployee(employee, RegistrationEventType.Coming);
         }
     }
 }

@@ -8,6 +8,7 @@
     using Domain.Services.Employee;
     using Domain.Services.Registration;
     using Employee;
+    using Enums;
     using Forms;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Http;
@@ -87,7 +88,38 @@
                 {
                     Value = x.Id.ToString(),
                     Text = x.Fio
-                })
+                }),
+                LatenessCases = new[]
+                {
+                    new SelectListItem
+                    {
+                        Value = ((int)Lateness.No).ToString(),
+                        Text = "Без опозданий"
+                    },
+                    new SelectListItem
+                    {
+                        Value = ((int)Lateness.LessThanFiftyMinutes).ToString(),
+                        Text = "Опоздание не более чем на 15 минут"
+                    },
+                    new SelectListItem
+                    {
+                        Value = ((int)Lateness.MoreThanFiftyMinutes).ToString(),
+                        Text = "Опоздание более чем на 15 минут"
+                    }
+                },
+                StrictScheduleCases = new []
+                {
+                    new SelectListItem
+                    {
+                        Value = ((int)StrictSchedureRequirement.Yes).ToString(),
+                        Text = "Строгое соблюдение рабочего графика обязательно"
+                    },
+                    new SelectListItem
+                    {
+                        Value = ((int)StrictSchedureRequirement.No).ToString(),
+                        Text = "Строгое соблюдение рабочего графика не обязательно"
+                    }
+                }
             };
 
             return View(form);
@@ -107,7 +139,78 @@
             if (form.DateTo != null)
                 registrations = registrations.Where(x => x.DateTime < form.DateTo.Value.AddDays(1));
 
-            IEnumerable<RegistrationViewModel> registrationsViewModels = _mapper.Map<IEnumerable<RegistrationViewModel>>(registrations);
+            List<Registration> registrationsResult = new List<Registration>();
+
+            if (form.Lateness != null)
+            {
+                switch (form.Lateness)
+                {
+                    case (int)Lateness.No:
+                        foreach (IGrouping<int, Registration> grouping1 in registrations.OrderBy(x => x.DateTime).GroupBy(x => x.DateTime.DayOfYear))
+                        {
+                            foreach (IGrouping<int, Registration> grouping2 in grouping1.OrderBy(x => x.DateTime).GroupBy(x => x.Employee.Id))
+                            {
+                                Registration first = grouping2.OrderBy(x => x.DateTime).First();
+
+                                if (first.DateTime.Hour < 10 || first.DateTime.Hour == 10 && first.DateTime.Minute == 0)
+                                {
+                                    registrationsResult.AddRange(grouping2);
+                                }
+                            }
+                        }
+                        break;
+
+                    case (int)Lateness.LessThanFiftyMinutes:
+                        foreach (IGrouping<int, Registration> grouping1 in registrations.OrderBy(x => x.DateTime).GroupBy(x => x.DateTime.DayOfYear))
+                        {
+                            foreach (IGrouping<int, Registration> grouping2 in grouping1.OrderBy(x => x.DateTime).GroupBy(x => x.Employee.Id))
+                            {
+                                Registration first = grouping2.OrderBy(x => x.DateTime).First();
+
+                                if (first.DateTime.Hour == 10 && first.DateTime.Minute <= 15)
+                                {
+                                    registrationsResult.AddRange(grouping2);
+                                }
+                            }
+                        }
+                        break;
+
+                    case (int)Lateness.MoreThanFiftyMinutes:
+                        foreach (IGrouping<int, Registration> grouping1 in registrations.OrderBy(x => x.DateTime).GroupBy(x => x.DateTime.DayOfYear))
+                        {
+                            foreach (IGrouping<int, Registration> grouping2 in grouping1.OrderBy(x => x.DateTime).GroupBy(x => x.Employee.Id))
+                            {
+                                Registration first = grouping2.OrderBy(x => x.DateTime).First();
+
+                                if (first.DateTime.Hour == 10 && first.DateTime.Minute > 15 || first.DateTime.Hour > 10)
+                                {
+                                    registrationsResult.AddRange(grouping2);
+                                }
+                            }
+                        }
+                        break;
+                }
+            }
+            else
+            {
+                registrationsResult.AddRange(registrations);
+            }
+
+            IEnumerable<RegistrationViewModel> registrationsViewModels = _mapper.Map<IEnumerable<RegistrationViewModel>>(registrationsResult);
+
+            if (form.StrictSchedule != null)
+            {
+                switch (form.StrictSchedule)
+                {
+                    case (int)StrictSchedureRequirement.Yes:
+                        registrationsViewModels = registrationsViewModels.Where(x => x.Employee.WorkplacePresenceRequired);
+                        break;
+
+                    case (int)StrictSchedureRequirement.No:
+                        registrationsViewModels = registrationsViewModels.Where(x => !x.Employee.WorkplacePresenceRequired);
+                        break;
+                }
+            }
 
             IEnumerable<Employee> employees = _employeeService.All();
 
@@ -117,6 +220,37 @@
                 Value = x.Id.ToString(),
                 Text = x.Fio
             });
+            form.LatenessCases = new[]
+            {
+                new SelectListItem
+                {
+                    Value = ((int)Lateness.No).ToString(),
+                    Text = "Без опозданий"
+                },
+                new SelectListItem
+                {
+                    Value = ((int)Lateness.LessThanFiftyMinutes).ToString(),
+                    Text = "Опоздание не более чем на 15 минут"
+                },
+                new SelectListItem
+                {
+                    Value = ((int)Lateness.MoreThanFiftyMinutes).ToString(),
+                    Text = "Опоздание более чем на 15 минут"
+                }
+            };
+            form.StrictScheduleCases = new[]
+            {
+                new SelectListItem
+                {
+                    Value = ((int)StrictSchedureRequirement.Yes).ToString(),
+                    Text = "Строгое соблюдение рабочего графика обязательно"
+                },
+                new SelectListItem
+                {
+                    Value = ((int)StrictSchedureRequirement.No).ToString(),
+                    Text = "Строгое соблюдение рабочего графика не обязательно"
+                }
+            };
 
             return View(form);
         }

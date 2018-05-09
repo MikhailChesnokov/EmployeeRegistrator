@@ -18,8 +18,6 @@
 
         public void OnException(ExceptionContext context)
         {
-            context.ExceptionHandled = true;
-
             switch (context.Exception)
             {
                 case InvalidRequestParameterException _:
@@ -28,7 +26,7 @@
                     {
                         Error = context.Exception.Message
                     });
-
+                    context.ExceptionHandled = true;
                     break;
 
                 case EmployeeNotFoundException _:
@@ -37,16 +35,7 @@
                     {
                         Error = context.Exception.Message
                     });
-
-                    break;
-
-                default:
-                    context.HttpContext.Response.StatusCode = StatusCodes.Status503ServiceUnavailable;
-                    context.Result = new JsonResult(new
-                    {
-                        Error = context.Exception.Message
-                    });
-
+                    context.ExceptionHandled = true;
                     break;
             }
         }

@@ -20,8 +20,7 @@
             IAuthenticationService<User> authenticationService,
             IRepository<User> userRepository)
         {
-            _authenticationService =
-                authenticationService ?? throw new ArgumentNullException(nameof(authenticationService));
+            _authenticationService = authenticationService ?? throw new ArgumentNullException(nameof(authenticationService));
             _userRepository = userRepository;
         }
 
@@ -32,10 +31,10 @@
             User user = _userRepository.All().SingleOrDefault(x => x.Login == request.Login);
 
             if (user == null)
-                throw new FormException("Пользователя с таким логином не существует.");
+                throw new FormException("Пользователя с таким логином не существует");
 
             if (!user.CheckPassword(request.Password))
-                throw new FormException("Неверный пароль.");
+                throw new FormException("Неверный пароль");
 
             _authenticationService.SignIn(user);
         }

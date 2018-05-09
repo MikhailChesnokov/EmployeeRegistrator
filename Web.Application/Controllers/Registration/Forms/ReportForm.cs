@@ -18,8 +18,16 @@
 
         public int? EmployeeId { get; set; }
 
+        public int? Lateness { get; set; }
+
+        public int? StrictSchedule { get; set; }
+
         public IEnumerable<RegistrationViewModel> Registrations { get; set; }
 
         public IEnumerable<SelectListItem> Employees { get; set; }
+
+        public IEnumerable<SelectListItem> LatenessCases { get; set; }
+
+        public IEnumerable<SelectListItem> StrictScheduleCases { get; set; }
     }
 }

@@ -26,26 +26,12 @@
 
 
 
-        public void RegisterEmployeeComing(Employee employee)
+        public void RegisterEmployee(Employee employee, RegistrationEventType eventType)
         {
             if (employee == null)
                 throw new ArgumentNullException(nameof(employee));
 
-            Registration registration = new Registration(
-                employee,
-                RegistrationEventType.Coming);
-
-            RegistrationRepository.Add(registration);
-        }
-
-        public void RegisterEmployeeLeaving(Employee employee)
-        {
-            if (employee == null)
-                throw new ArgumentNullException(nameof(employee));
-
-            Registration registration = new Registration(
-                employee,
-                RegistrationEventType.Leaving);
+            Registration registration = new Registration(employee, eventType);
 
             RegistrationRepository.Add(registration);
         }

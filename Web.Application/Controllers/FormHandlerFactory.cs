@@ -64,7 +64,7 @@
             if (typeof(TForm) == typeof(SignUpForm))
                 return new SignUpFormHandler(_userService) as IFormHandler<TForm>;
 
-            throw new InvalidOperationException("Undefined type.");
+            throw new InvalidOperationException("Undefined type");
         }
 
         public IFormHandler<TForm, TFormResult> Create<TForm, TFormResult>()
