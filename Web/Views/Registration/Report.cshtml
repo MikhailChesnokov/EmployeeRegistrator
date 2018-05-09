@@ -28,6 +28,20 @@
         placeholder="Не установлена"
         invalid-feedback="Некорректная конечная дата"
         value="@Model.DateTo?.ToShortDateString()"/>
+    
+    <select-group
+        name="Lateness"
+        label="Опоздание"
+        placeholder="Не имеет значения"
+        value="@Model.Lateness"
+        items="@Model.LatenessCases"/>
+    
+    <select-group
+        name="StrictSchedule"
+        label="Строгий график"
+        placeholder="Не имеет значения"
+        value="@Model.StrictSchedule"
+        items="@Model.StrictScheduleCases"/>
 
     <input type="submit" class="btn btn-primary mb-4" value="Применить"/>
 </form>
