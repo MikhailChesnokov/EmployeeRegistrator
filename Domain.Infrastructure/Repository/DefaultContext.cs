@@ -2,7 +2,6 @@
 {
     using System;
     using System.IO;
-    using Components.Password;
     using Entities.Employee;
     using Entities.Registration;
     using Entities.User;
@@ -30,8 +29,6 @@
 
         public DbSet<User> Users { get; set; }
 
-        public DbSet<Password> Passwords { get; set; }
-
 
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -46,29 +43,57 @@
                     optionsBuilder.UseMySQL(ConfigurationRoot.GetConnectionString("MySql"));
                     break;
 
+                case "sqlite":
+                    optionsBuilder.UseSqlite(ConfigurationRoot.GetConnectionString("SQLite"));
+                    break;
+
+                case "inmemory":
+                    optionsBuilder.UseInMemoryDatabase(ConfigurationRoot.GetConnectionString("InMemory"));
+                    break;
+
                 default:
-                    throw new InvalidOperationException("Unexpected \"Database\" parameter in appsettings.json. Try \"SqlServer\" or \"MySql\".");
+                    throw new InvalidOperationException("Unexpected \"Database\" parameter in appsettings.json. Try \"SqlServer\", \"MySql\" or \"SQLite\".");
             }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<User>().HasOne(x => x.Password);
-
             switch (ConfigurationRoot["Database"].ToLower())
             {
                 case "sqlserver":
-                    modelBuilder.Entity<Password>().Property(x => x.Salt).IsRequired().HasColumnType("varbinary(40)").HasMaxLength(40);
-                    modelBuilder.Entity<Password>().Property(x => x.Hash).IsRequired().HasColumnType("varbinary(256)").HasMaxLength(256);
+                    modelBuilder.Entity<User>().OwnsOne(x => x.Password, pw =>
+                    {
+                        pw.Property(x => x.Salt).IsRequired().HasColumnType("varbinary(40)").HasMaxLength(40);
+                        pw.Property(x => x.Hash).IsRequired().HasColumnType("varbinary(256)").HasMaxLength(256);
+                    });
                     break;
 
                 case "mysql":
-                    modelBuilder.Entity<Password>().Property(x => x.Salt).IsRequired().HasColumnType("MEDIUMBLOB").HasMaxLength(40);
-                    modelBuilder.Entity<Password>().Property(x => x.Hash).IsRequired().HasColumnType("MEDIUMBLOB").HasMaxLength(256);
+                    modelBuilder.Entity<User>().OwnsOne(x => x.Password, pw =>
+                    {
+                        pw.Property(x => x.Salt).IsRequired().HasColumnType("MEDIUMBLOB").HasMaxLength(40);
+                        pw.Property(x => x.Hash).IsRequired().HasColumnType("MEDIUMBLOB").HasMaxLength(256);
+                    });
+                    break;
+
+                case "sqlite":
+                    modelBuilder.Entity<User>().OwnsOne(x => x.Password, pw =>
+                    {
+                        pw.Property(x => x.Salt).IsRequired().HasColumnType("BLOB").HasMaxLength(40);
+                        pw.Property(x => x.Hash).IsRequired().HasColumnType("BLOB").HasMaxLength(256);
+                    });
+                    break;
+
+                case "inmemory":
+                    modelBuilder.Entity<User>().OwnsOne(x => x.Password, pw =>
+                    {
+                        pw.Property(x => x.Salt).IsRequired().HasColumnType("varbinary(40)").HasMaxLength(40);
+                        pw.Property(x => x.Hash).IsRequired().HasColumnType("varbinary(256)").HasMaxLength(256);
+                    });
                     break;
 
                 default:
-                    throw new InvalidOperationException("Unexpected \"Database\" parameter in appsettings.json. Try \"SqlServer\" or \"MySql\".");
+                    throw new InvalidOperationException("Unexpected \"Database\" parameter in appsettings.json. Try \"SqlServer\", \"MySql\" or \"SQLite\".");
             }
 
             base.OnModelCreating(modelBuilder);

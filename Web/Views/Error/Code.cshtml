@@ -1,0 +1,10 @@
+﻿@model StatusCodeViewModel
+
+<h3 class="my-3">Ошибка :(</h3>
+
+<h5>Код: @Model.Code</h5>
+
+@switch (Model.Code)
+{
+    case 404: <p>Запрашиваемый ресурс не найден</p> break;
+}

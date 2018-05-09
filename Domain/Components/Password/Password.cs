@@ -37,8 +37,6 @@
 
         public byte[] Salt { get; protected set; }
 
-        public int Id { get; set; }
-
 
 
         private void SetPassword(string password)
@@ -48,10 +46,10 @@
 
             if (password.Length < MinPasswordLength)
                 throw new TooShortPasswordException(
-                    $"The length of password must be equals or greather than {MinPasswordLength}.");
+                    $"Длина пароля должна составлять не менее чем {MinPasswordLength} символов");
 
             if (Salt == null || Salt.Length != SaltLength)
-                throw new InvalidSaltException("Incorrect salt.");
+                throw new InvalidOperationException("Incorrect salt");
 
             byte[] buffer = CreatePasswordSaltBuffer(password);
 

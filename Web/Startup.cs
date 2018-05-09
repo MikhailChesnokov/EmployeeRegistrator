@@ -1,10 +1,8 @@
 ﻿namespace Web
 {
-    using System;
     using Application.Infrastructure.Filters;
     using Autofac;
     using global::Autofac;
-    using global::Autofac.Extensions.DependencyInjection;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
@@ -25,11 +23,9 @@
 
         public IConfiguration Configuration { get; set; }
 
-        public IContainer Container { get; set; }
 
 
-
-        public IServiceProvider ConfigureServices(IServiceCollection services)
+        public void ConfigureServices(IServiceCollection services)
         {
             services
                 .AddScoped<ExceptionFilter>();
@@ -43,28 +39,47 @@
                 .AddCookie("CookieScheme", options =>
                 {
                     options.Cookie.Name = "EmployeeRegistratorCookie";
+                    options.AccessDeniedPath = new PathString("/Error/AccessDenied");
                     options.LoginPath = new PathString("/Account/SignIn");
+                    options.LogoutPath = new PathString("/Account/SignOut");
+                    options.ReturnUrlParameter = "returnUrl";
                 });
+        }
 
-            ContainerBuilder containerBuilder = new ContainerBuilder();
-            containerBuilder.Populate(services);
-            containerBuilder.RegisterConfiguredModulesFromAssemblyContaining<ServiceModule>(Configuration as IConfigurationRoot);
-            Container = containerBuilder.Build();
-
-            return new AutofacServiceProvider(Container);
+        public void ConfigureContainer(ContainerBuilder builder)
+        {
+            builder.RegisterConfiguredModulesFromAssemblyContaining<EfCoreModule>(Configuration as IConfigurationRoot);
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, IApplicationLifetime lifetime)
         {
-            if (env.IsDevelopment()) app.UseDeveloperExceptionPage();
+            if (env.IsDevelopment())
+            {
+                app.UseBrowserLink();
+                app.UseDeveloperExceptionPage();
+            }
+            else
+            {
+                app.UseExceptionHandler("/Error");
+            }
+
+            app.UseStatusCodePagesWithRedirects("/Error/Code/{0}");
 
             app.UseStaticFiles();
 
             app.UseAuthentication();
 
-            app.UseMvc(routes => routes.MapRoute("default", "{controller=Employee}/{action=List}/{id?}"));
+            app.UseMvc(routes =>
+            {
+                routes.MapRoute(
+                    "error",
+                    "Error/{action=Index}/{code?}",
+                    new { controller = "Error" });
 
-            lifetime.ApplicationStopping.Register(() => Container.Dispose());
+                routes.MapRoute(
+                    "default",
+                    "{controller=Employee}/{action=List}/{id?}");
+            });
         }
     }
 }

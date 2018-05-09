@@ -1,0 +1,12 @@
+﻿@model ErrorViewModel
+
+@if (string.IsNullOrWhiteSpace(Model.Message))
+{
+    <h3 class="my-3">Неизвестная ошибка :(</h3>
+}
+else
+{
+    <h3 class="my-3">Ошибка :(</h3>
+
+    <h5>Сообщение: @Model.Message</h5>
+}

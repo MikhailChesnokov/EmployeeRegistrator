@@ -14,9 +14,10 @@
 
 
 
-        public UserService(IRepository<User> userRepository1)
+        public UserService(
+            IRepository<User> userRepository)
         {
-            _userRepository = userRepository1;
+            _userRepository = userRepository;
         }
 
 
@@ -29,7 +30,7 @@
                 throw new ArgumentException("Value cannot be null or whitespace.", nameof(password));
 
             if (_userRepository.All().Select(x => x.Login == login) is null)
-                throw new UserAlreadyExistsException("User with the same login already exists.");
+                throw new UserAlreadyExistsException("Пользователь с таким логином уже существует");
 
             User user = new User(login, password);
 
