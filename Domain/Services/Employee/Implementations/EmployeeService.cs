@@ -60,12 +60,19 @@
             if (employee is null)
                 throw new ArgumentException("Employee not found.");
 
-            _employeeRepository.Delete(employee);
+            employee.Delete();
+
+            UpdateEmployee(employee);
         }
 
         public IEnumerable<Employee> All()
         {
             return _employeeRepository.All();
+        }
+
+        public IEnumerable<Employee> AllActive()
+        {
+            return _employeeRepository.AllActive();
         }
     }
 }

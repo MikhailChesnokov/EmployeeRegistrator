@@ -16,5 +16,7 @@
         void Delete(int id);
 
         IEnumerable<Employee> All();
+
+        IEnumerable<Employee> AllActive();
     }
 }

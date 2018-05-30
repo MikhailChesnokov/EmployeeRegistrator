@@ -3,7 +3,7 @@
     using System.Collections.Generic;
     using AutoMapper;
     using Domain.Entities.Employee;
-    using Domain.Repository;
+    using Domain.Services.Employee;
     using Forms;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
@@ -14,7 +14,7 @@
     [Authorize]
     public class EmployeeController : FormControllerBase
     {
-        private readonly IRepository<Employee> _employeeRepository;
+        private readonly IEmployeeService _employeeService;
 
         private readonly IMapper _mapper;
 
@@ -22,12 +22,12 @@
 
         public EmployeeController(
             IFormHandlerFactory formHandlerFactory,
-            IRepository<Employee> employeeRepository,
-            IMapper mapper)
+            IMapper mapper,
+            IEmployeeService employeeService)
             : base(formHandlerFactory)
         {
-            _employeeRepository = employeeRepository;
             _mapper = mapper;
+            _employeeService = employeeService;
         }
 
 
@@ -35,7 +35,7 @@
         [HttpGet]
         public IActionResult List()
         {
-            IEnumerable<Employee> employees = _employeeRepository.All();
+            IEnumerable<Employee> employees = _employeeService.AllActive();
 
             IEnumerable<EmployeeViewModel> employeeViewModels = _mapper.Map<IEnumerable<EmployeeViewModel>>(employees);
 
@@ -45,7 +45,7 @@
         [HttpGet]
         public IActionResult Registration()
         {
-            IEnumerable<Employee> employees = _employeeRepository.All();
+            IEnumerable<Employee> employees = _employeeService.AllActive();
 
             IEnumerable<EmployeeViewModel> employeeViewModels = _mapper.Map<IEnumerable<EmployeeViewModel>>(employees);
 
@@ -55,7 +55,7 @@
         [HttpGet]
         public IActionResult View(int id)
         {
-            Employee employee = _employeeRepository.FindById(id);
+            Employee employee = _employeeService.GetById(id);
 
             EmployeeViewModel employeeViewModel = _mapper.Map<EmployeeViewModel>(employee);
 
@@ -80,7 +80,7 @@
         [HttpGet]
         public IActionResult Edit(int id)
         {
-            Employee employee = _employeeRepository.FindById(id);
+            Employee employee = _employeeService.GetById(id);
 
             EditEmployeeForm editEmployeeForm = _mapper.Map<EditEmployeeForm>(employee);
 

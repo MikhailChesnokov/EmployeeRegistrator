@@ -1,10 +1,11 @@
 ﻿namespace Domain.Entities.Employee
 {
     using System;
+    using Exceptions;
 
 
 
-    public class Employee : IEntity
+    public class Employee : IRemovableEntity
     {
         [Obsolete("Only for reflection", true)]
         public Employee() { }
@@ -36,6 +37,8 @@
         public bool WorkplacePresenceRequired { get; protected set; }
 
         public string PersonnelNumber { get; protected set; }
+
+        public DateTime? DeletedAtUtc { get; set; }
 
         public int Id { get; protected set; }
 
@@ -76,6 +79,21 @@
                 throw new ArgumentException("Value cannot be null or whitespace.", nameof(personnelNumber));
 
             PersonnelNumber = personnelNumber;
+        }
+
+        protected internal void Delete()
+        {
+            if (DeletedAtUtc.HasValue)
+            {
+                throw new EmployeeAlreadyRemovedException($"Сотрудник \"{Fio}\" уже был удален ранее.");
+            }
+
+            DeletedAtUtc = DateTime.Today;
+        }
+
+        public bool IsDeleted()
+        {
+            return DeletedAtUtc.HasValue;
         }
     }
 }

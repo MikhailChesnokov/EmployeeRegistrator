@@ -16,6 +16,8 @@
 
         IEnumerable<TEntity> All();
 
+        IEnumerable<TEntity> AllActive();
+
         TEntity FindById(int id);
     }
 }

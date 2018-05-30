@@ -29,7 +29,7 @@
             if (string.IsNullOrWhiteSpace(password))
                 throw new ArgumentException("Value cannot be null or whitespace.", nameof(password));
 
-            if (_userRepository.All().Select(x => x.Login == login) is null)
+            if (_userRepository.All()?.Any(x => x.Login == login) is true)
                 throw new UserAlreadyExistsException("Пользователь с таким логином уже существует");
 
             User user = new User(login, password);

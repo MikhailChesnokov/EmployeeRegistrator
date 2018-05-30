@@ -48,6 +48,19 @@
             return _entities;
         }
 
+        public IEnumerable<TEntity> AllActive()
+        {
+            if (typeof(IRemovableEntity).IsAssignableFrom(typeof(TEntity)))
+            {
+                return _entities
+                       .Cast<IRemovableEntity>()
+                       .Where(x => !x.IsDeleted())
+                       .Cast<TEntity>();
+            }
+
+            return _entities;
+        }
+
         public TEntity FindById(int id)
         {
             return _entities.SingleOrDefault(x => x.Id == id);
