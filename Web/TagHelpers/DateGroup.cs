@@ -1,6 +1,5 @@
 ﻿namespace Web.TagHelpers
 {
-    using System.Collections.Generic;
     using Extensions;
     using Microsoft.AspNetCore.Mvc.Rendering;
     using Microsoft.AspNetCore.Mvc.ViewFeatures;
@@ -9,10 +8,10 @@
 
 
     [HtmlTargetElement(
-        "select-group",
-        Attributes = "name, label, items",
+        "date-group",
+        Attributes = "name, label",
         TagStructure = TagStructure.NormalOrSelfClosing)]
-    public class SelectGroupTagHelper : TagHelper
+    public class DateGroup : TagHelper
     {
         [ViewContext]
         [HtmlAttributeNotBound]
@@ -22,15 +21,9 @@
 
         public string Label { get; set; }
 
-        public string Placeholder { get; set; }
-
-        public long? Value { get; set; }
-
         public string InvalidFeedback { get; set; }
 
-        public bool Grouping { get; set; }
-
-        public IEnumerable<SelectListItem> Items { get; set; }
+        public string Value { get; set; }
 
 
 
@@ -41,8 +34,8 @@
             output.TagMode = TagMode.StartTagAndEndTag;
             output
                 .AddLabel(Name, Label)
-                .AddSelect(Name, Label, Items, Placeholder, Value, Grouping ,ViewContext)
-                .AddInvalidFeedback(InvalidFeedback ?? $"{Label} не выбран");
+                .AddDateInput(Name, Value, Label, ViewContext)
+                .AddInvalidFeedback(InvalidFeedback ?? $"Некорректный {Label.ToLower()}");
         }
     }
 }

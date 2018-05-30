@@ -1,11 +1,14 @@
 ﻿namespace Web.TagHelpers.Extensions
 {
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
+    using System.Linq;
     using Microsoft.AspNetCore.Mvc.Rendering;
     using Microsoft.AspNetCore.Razor.TagHelpers;
 
 
 
+    [SuppressMessage("ReSharper", "ImplicitlyCapturedClosure")]
     public static class TagHelperOutputExtensions
     {
         public static TagHelperOutput AddLabel(
@@ -112,6 +115,7 @@
             IEnumerable<SelectListItem> items,
             string placeholder,
             long? value,
+            bool grouping,
             ViewContext viewContext,
             int width = 6)
         {
@@ -134,15 +138,12 @@
             return output;
 
 
+
             void SetDefaultOption()
             {
-                TagBuilder defaultOptioin = new TagBuilder("option")
-                {
-                    Attributes =
-                    {
-                        {"value", string.Empty}
-                    }
-                };
+                TagBuilder defaultOptioin = new TagBuilder("option");
+
+                defaultOptioin.Attributes.Add("value", string.Empty);
 
                 defaultOptioin.InnerHtml.Append(placeholder ?? $"Выберите {label.ToLower()}");
 
@@ -154,18 +155,52 @@
 
             void SetOptions()
             {
-                foreach (SelectListItem item in items)
+                if (items == null) return;
+
+                if (grouping)
                 {
-                    TagBuilder option = new TagBuilder("option");
+                    foreach (IGrouping<SelectListGroup, SelectListItem> itemsByOurLegalPerson in items.GroupBy(x => x.Group))
+                    {
+                        TagBuilder optgroupTag = new TagBuilder("optgroup")
+                        {
+                            Attributes =
+                            {
+                                {"label", $"{itemsByOurLegalPerson.Key.Name}"}
+                            }
+                        };
 
-                    option.Attributes.Add("value", item.Value);
+                        foreach (SelectListItem item in itemsByOurLegalPerson)
+                        {
+                            TagBuilder option = new TagBuilder("option");
 
-                    if (value != null && ((long)value).ToString() == item.Value)
-                        option.Attributes.Add("selected", "selected");
+                            option.Attributes.Add("value", item.Value);
 
-                    option.InnerHtml.Append(item.Text);
+                            if (value != null && ((long)value).ToString() == item.Value)
+                                option.Attributes.Add("selected", "selected");
 
-                    selectTag.InnerHtml.AppendHtml(option);
+                            option.InnerHtml.Append(item.Text);
+
+                            optgroupTag.InnerHtml.AppendHtml(option);
+                        }
+
+                        selectTag.InnerHtml.AppendHtml(optgroupTag);
+                    }
+                }
+                else
+                {
+                    foreach (SelectListItem item in items)
+                    {
+                        TagBuilder option = new TagBuilder("option");
+
+                        option.Attributes.Add("value", item.Value);
+
+                        if (value != null && ((long)value).ToString() == item.Value)
+                            option.Attributes.Add("selected", "selected");
+
+                        option.InnerHtml.Append(item.Text);
+
+                        selectTag.InnerHtml.AppendHtml(option);
+                    }
                 }
             }
         }
@@ -198,6 +233,7 @@
             output.Content.AppendHtml(wrapperTag);
 
             return output;
+
 
 
             void SetInput()
@@ -243,6 +279,87 @@
                 feedbackTag.InnerHtml.Append(invalidFeedback ?? string.Empty);
 
                 wrapperTag.InnerHtml.AppendHtml(feedbackTag);
+            }
+        }
+
+        public static TagHelperOutput AddDateInput(
+            this TagHelperOutput output,
+            string name,
+            string value,
+            string label,
+            ViewContext viewContext,
+            int width = 6)
+        {
+            TagBuilder wrapper = new TagBuilder("div")
+            {
+                Attributes =
+                {
+                    {"class", $"input-group date col-sm-{width}"},
+                    {"id", $"datetimepicker4-{name}"},
+                    {"data-target-input", "nearest"}
+                }
+            };
+
+            wrapper.InnerHtml.AppendHtml(GetInput());
+            wrapper.InnerHtml.AppendHtml(GetIcon());
+
+            output.Content.AppendHtml(wrapper);
+
+            return output;
+
+
+
+            TagBuilder GetInput()
+            {
+                TagBuilder inputTag = new TagBuilder("input")
+                {
+                    Attributes =
+                    {
+                        {"type", "text"},
+                        {"id", name},
+                        {"name", name},
+                        {"value", viewContext.ModelState[name]?.AttemptedValue ?? value ?? string.Empty},
+                        {"class", $"form-control datetimepicker-input {(viewContext.ModelState[name]?.Errors?.Count > 0 ? "is-invalid" : string.Empty)}"},
+                        {"data-target", $"#datetimepicker4-{name}"}
+                    }
+                };
+
+                return inputTag;
+            }
+
+            TagBuilder GetIcon()
+            {
+                TagBuilder iconTag = new TagBuilder("i")
+                {
+                    Attributes =
+                    {
+                        {"class", "fa fa-calendar"}
+                    }
+                };
+
+                TagBuilder iconInputTag = new TagBuilder("div")
+                {
+                    Attributes =
+                    {
+                        {"class", "input-group-text"}
+                    }
+                };
+
+                iconInputTag.InnerHtml.AppendHtml(iconTag);
+
+                TagBuilder iconWrapperTag = new TagBuilder("div")
+                {
+                    Attributes =
+                    {
+                        {"class", "input-group-append"},
+                        {"data-target", $"#datetimepicker4-{name}"},
+                        {"data-toggle", "datetimepicker"}
+                    }
+                };
+
+                iconWrapperTag.InnerHtml.AppendHtml(iconInputTag);
+
+                return iconWrapperTag;
             }
         }
     }

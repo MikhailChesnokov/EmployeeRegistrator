@@ -15,14 +15,13 @@
         value="@Model.EmployeeId"
         items="@Model.Employees"/>
 
-    <input-group
+    <date-group
         name="DateFrom"
         label="Начальная дата"
-        placeholder="Не установлена"
         invalid-feedback="Некорректная начальная дата"
         value="@Model.DateFrom?.ToShortDateString()"/>
 
-    <input-group
+    <date-group
         name="DateTo"
         label="Конечная дата"
         placeholder="Не установлена"
@@ -53,4 +52,24 @@
 else
 {
     @Html.Partial("RegistrationsGroupByDaysPartial", Model)
+}
+
+@section Scripts{
+    <script type="text/javascript">
+        window.$('#EmployeeId').select2();
+        window.$('#Lateness').select2();
+        window.$('#StrictSchedule').select2();
+
+        $(function () {
+            $('#datetimepicker4-DateFrom').datetimepicker({
+                format: 'L'
+            });
+        });
+
+        $(function () {
+            $('#datetimepicker4-DateTo').datetimepicker({
+                format: 'L'
+            });
+        });
+    </script>
 }
