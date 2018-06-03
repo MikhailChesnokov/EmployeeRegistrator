@@ -17,7 +17,7 @@
     <td class="@(!Model.IsCorrectRow? "table-danger" : string.Empty)">@Model.Registration.DateTime.ToShortTimeString()</td>
                     
 
-    <td class="@(!Model.IsCorrectRow? "table-danger" : string.Empty)">@(Model.Registration.EventType == RegistrationEventType.Coming ? "Приход" : "Уход")</td>
+    <td class="@(!Model.IsCorrectRow? "table-danger" : string.Empty)">@(Model.Registration.EventType == RegistrationEventType.Coming ? "Вход" : "Выход")</td>
      
 
     @if (Model.IsCorrectRow && Model.Registration.EventType == RegistrationEventType.Coming)
