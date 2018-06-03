@@ -15,7 +15,7 @@
         public DefaultContext()
         {
             SetConfigurationRoot();
-
+            
             Database.EnsureCreated();
         }
 

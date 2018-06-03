@@ -12,10 +12,11 @@
 
 
 
-        public User(string login, string password)
+        protected User(string login, string password, Roles role)
         {
             SetLogin(login);
             SetPassword(password);
+            SetRole(role);
         }
 
 
@@ -23,6 +24,8 @@
         public string Login { get; protected set; }
 
         public Password Password { get; protected set; }
+
+        public Roles Role { get; protected set; }
 
         public int Id { get; set; }
 
@@ -44,6 +47,10 @@
             Password = new Password(password);
         }
 
+        private void SetRole(Roles role)
+        {
+            Role = role;
+        }
 
 
         public bool CheckPassword(string password)

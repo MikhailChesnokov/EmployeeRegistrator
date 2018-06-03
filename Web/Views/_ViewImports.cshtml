@@ -1,24 +1,28 @@
-﻿@using Microsoft.AspNetCore.Mvc.ModelBinding
-
-@using Web.Application.Controllers.Employee
+﻿@using Web.Application.Controllers.Employee
 @using Web.Application.Controllers.Employee.Forms;
 @using Web.Application.Controllers.Employee.ViewModels;
 
-@using Web.Application.Controllers.Registration.ViewModels
 @using Web.Application.Controllers.Registration
 @using Web.Application.Controllers.Registration.Forms
-
-@using Microsoft.AspNetCore.Mvc
-@using Web.Application.Components.ViewModels
-
-@using Domain.Entities.Registration;
+@using Web.Application.Controllers.Registration.ViewModels
 
 @using Web.Application.Controllers.Error.ViewModels;
 
 @using Web.Application.Controllers.Account
 @using Web.Application.Controllers.Account.Forms;
 
+
+@using Domain.Entities.Registration;
 @using Domain.Entities;
+
+@using Microsoft.AspNetCore.Mvc
+@using Microsoft.AspNetCore.Mvc.ModelBinding
+@using Web.Application.Components.ViewModels
+
+@using System
+@using System.Linq
+@using System.Collections.Generic
+@using Microsoft.AspNetCore.Mvc.Rendering
 
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @addTagHelper *, Web

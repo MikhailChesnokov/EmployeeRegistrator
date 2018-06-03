@@ -7,7 +7,7 @@
 
 
 
-    public class EfCoreModule : Module
+    public class RepositoryModule : Module
     {
         protected override void Load(ContainerBuilder builder)
         {

@@ -32,9 +32,14 @@
             if (_userRepository.All()?.Any(x => x.Login == login) is true)
                 throw new UserAlreadyExistsException("Пользователь с таким логином уже существует");
 
-            User user = new User(login, password);
+            User user = new Administrator(login, password);
 
             _userRepository.Add(user);
+        }
+
+        public User GetById(int id)
+        {
+            return _userRepository.FindById(id);
         }
     }
 }

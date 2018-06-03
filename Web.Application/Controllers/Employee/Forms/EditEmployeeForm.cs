@@ -6,22 +6,31 @@
 
     public class EditEmployeeForm : IForm
     {
+        private const int MaxStringLength = 64;
+
+
+
         [Required]
+        [Range(1, int.MaxValue)]
         public int Id { get; set; }
 
-        [Required]
-        [RegularExpression("^[А-Яа-яёЁ]+$")]
+        [Required(AllowEmptyStrings = false)]
+        [MaxLength(MaxStringLength)]
+        [RegularExpression("^[А-Яа-яёЁ\\-]+$")]
         public string FirstName { get; set; }
 
-        [Required]
+        [Required(AllowEmptyStrings = false)]
+        [MaxLength(MaxStringLength)]
         [RegularExpression("^[А-Яа-яёЁ\\-]+$")]
         public string Surname { get; set; }
 
-        [Required]
+        [Required(AllowEmptyStrings = false)]
+        [MaxLength(MaxStringLength)]
         [RegularExpression("^[А-Яа-яёЁ]+$")]
         public string Patronymic { get; set; }
 
         [Required(AllowEmptyStrings = false)]
+        [MaxLength(MaxStringLength)]
         [RegularExpression("^.+$")]
         public string PersonnelNumber { get; set; }
 

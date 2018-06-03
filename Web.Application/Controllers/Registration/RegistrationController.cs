@@ -22,9 +22,7 @@
     public class RegistrationController : FormControllerBase
     {
         private readonly IEmployeeService _employeeService;
-
         private readonly IMapper _mapper;
-
         private readonly IRegistrationService _registrationService;
 
 

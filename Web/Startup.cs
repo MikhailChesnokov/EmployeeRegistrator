@@ -48,7 +48,7 @@
 
         public void ConfigureContainer(ContainerBuilder builder)
         {
-            builder.RegisterConfiguredModulesFromAssemblyContaining<EfCoreModule>(Configuration as IConfigurationRoot);
+            builder.RegisterConfiguredModulesFromAssemblyContaining<RepositoryModule>(Configuration as IConfigurationRoot);
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, IApplicationLifetime lifetime)

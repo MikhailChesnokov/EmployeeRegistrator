@@ -2,6 +2,7 @@
 {
     using Domain.Entities.Employee;
     using Domain.Services.Employee;
+    using Domain.Services.Employee.Exceptions;
 
 
 
@@ -28,7 +29,14 @@
                 form.WorkplacePresenceRequired,
                 form.PersonnelNumber);
 
-            employee = _employeeService.AddEmployee(employee);
+            try
+            {
+                employee = _employeeService.AddEmployee(employee);
+            }
+            catch (EmployeeAlreadyExistsException e)
+            {
+                throw new FormException(e.Message);
+            }
 
             return employee.Id;
         }

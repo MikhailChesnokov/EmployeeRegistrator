@@ -1,6 +1,7 @@
 ﻿namespace Web.Application.Controllers.Employee
 {
     using System.Collections.Generic;
+    using Authorization.Requirements;
     using AutoMapper;
     using Domain.Entities.Employee;
     using Domain.Services.Employee;
@@ -15,19 +16,21 @@
     public class EmployeeController : FormControllerBase
     {
         private readonly IEmployeeService _employeeService;
-
         private readonly IMapper _mapper;
+        private readonly IAuthorizationService _authorizationService;
 
 
 
         public EmployeeController(
             IFormHandlerFactory formHandlerFactory,
             IMapper mapper,
-            IEmployeeService employeeService)
+            IEmployeeService employeeService,
+            IAuthorizationService authorizationService)
             : base(formHandlerFactory)
         {
             _mapper = mapper;
             _employeeService = employeeService;
+            _authorizationService = authorizationService;
         }
 
 
@@ -45,6 +48,13 @@
         [HttpGet]
         public IActionResult Registration()
         {
+            AuthorizationResult authResult = _authorizationService.AuthorizeAsync(User, null, new IsSecurityGuardRequirement()).Result;
+
+            if (!authResult.Succeeded)
+            {
+                return Forbid();
+            }
+            
             IEnumerable<Employee> employees = _employeeService.AllActive();
 
             IEnumerable<EmployeeViewModel> employeeViewModels = _mapper.Map<IEnumerable<EmployeeViewModel>>(employees);
