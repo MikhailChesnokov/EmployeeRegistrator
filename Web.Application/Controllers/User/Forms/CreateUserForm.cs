@@ -1,7 +1,9 @@
 ﻿namespace Web.Application.Controllers.User.Forms
 {
+    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using Domain.Entities.User;
+    using Microsoft.AspNetCore.Mvc.Rendering;
 
 
 
@@ -28,6 +30,8 @@
 
         [Required]
         [EnumDataType(typeof(Roles))]
-        public Roles Role { get; set; }
+        public Roles? Role { get; set; }
+
+        public IEnumerable<SelectListItem> Roles { get; set; }
     }
 }

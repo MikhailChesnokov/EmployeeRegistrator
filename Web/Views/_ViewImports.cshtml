@@ -11,18 +11,25 @@
 @using Web.Application.Controllers.Account
 @using Web.Application.Controllers.Account.Forms;
 
+@using Web.Application.Controllers.User
+@using Web.Application.Controllers.User.ViewModels
+@using Web.Application.Controllers.User.Forms
+
+@using Web.Application.Components.ViewModels
+
 
 @using Domain.Entities.Registration;
+@using Domain.Entities.User
 @using Domain.Entities;
 
 @using Microsoft.AspNetCore.Mvc
+@using Microsoft.AspNetCore.Mvc.Rendering
 @using Microsoft.AspNetCore.Mvc.ModelBinding
-@using Web.Application.Components.ViewModels
 
 @using System
 @using System.Linq
+@using System.ComponentModel.DataAnnotations
 @using System.Collections.Generic
-@using Microsoft.AspNetCore.Mvc.Rendering
 
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @addTagHelper *, Web

@@ -65,9 +65,6 @@
             if (typeof(TForm) == typeof(SignUpForm))
                 return new SignUpFormHandler(_userService) as IFormHandler<TForm>;
 
-            if (typeof(TForm) == typeof(CreateUserForm))
-                return new CreateUserFormHandler(_userService) as IFormHandler<TForm>;
-
             throw new InvalidOperationException("Undefined type");
         }
 
@@ -77,6 +74,8 @@
             if (typeof(TForm) == typeof(CreateEmployeeForm))
                 return new CreateEmployeeFormHandler(_employeeService) as IFormHandler<TForm, TFormResult>;
 
+            if (typeof(TForm) == typeof(CreateUserForm))
+                return new CreateUserFormHandler(_userService) as IFormHandler<TForm, TFormResult>;
 
             throw new InvalidOperationException("Undefined type");
         }

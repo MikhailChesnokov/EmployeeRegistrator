@@ -1,1 +1,30 @@
-﻿
+﻿@model IEnumerable<UserViewModel>
+
+@{ ViewBag.Title = "Список пользователей"; }
+
+<h4>Список пользователей</h4>
+
+@if (Model?.Any() != true)
+{
+    <p>Список пользователей пуст</p>
+}
+else
+{
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th scope="col">Логин</th>
+                <th scope="col">Роль</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (UserViewModel user in Model)
+            {
+                <tr>
+                    <td>@user.Login</td>
+                    <td>@(typeof(Roles).GetField(Enum.GetName(typeof(Roles), user.Role)).GetCustomAttributes(false).OfType<DisplayAttribute>().Single().Name)</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

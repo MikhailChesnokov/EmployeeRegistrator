@@ -7,8 +7,21 @@
 
     <div class="collapse navbar-collapse" id="menu">
         <ul class="navbar-nav mr-auto">
+            
+
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Пользователи
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                    <a class="dropdown-item" href="@(Url.Action<UserController>(c => c.List()))">Список пользователей</a>
+                    <a class="dropdown-item" href="@(Url.Action<UserController>(c => c.Create(With.No<CreateUserForm>())))">Добавить пользователя</a>
+                </div>
+            </li>
+            
+
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     Сотрудники
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
@@ -17,14 +30,17 @@
                     <a class="dropdown-item" href="@(Url.Action<EmployeeController>(c => c.Registration()))">Регистрация сотрудников</a>
                 </div>
             </li>
+            
+
             <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     События
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                     <a class="dropdown-item" href="@(Url.Action<RegistrationController>(c => c.Report()))">Список событий</a>
                 </div>
             </li>
+            
         </ul>
     </div>
     @if (Model.IsUserAuthorized)
