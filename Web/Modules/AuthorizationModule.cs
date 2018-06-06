@@ -10,7 +10,7 @@
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterAssemblyTypes(typeof(IdEqualsRequirementHandler).Assembly)
+            builder.RegisterAssemblyTypes(typeof(RoleRequirementHandler).Assembly)
                    .AssignableTo<IAuthorizationHandler>()
                    .As<IAuthorizationHandler>()
                    .InstancePerLifetimeScope();

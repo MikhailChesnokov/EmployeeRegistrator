@@ -24,7 +24,7 @@
 
         public IActionResult AccessDenied()
         {
-            return View("Index", new ErrorViewModel { Message = "Access denied" });
+            return View("Index", new ErrorViewModel { Message = "доступ к запрашиваемой странице запрещен" });
         }
     }
 }

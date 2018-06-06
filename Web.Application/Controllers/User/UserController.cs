@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
+    using Authorization.Requirements;
     using AutoMapper;
     using Domain.Entities.User;
     using Domain.Services.User;
@@ -20,17 +21,20 @@
     {
         private readonly IUserService _userService;
         private readonly IMapper _mapper;
+        private readonly IAuthorizationService _authorizationService;
 
 
 
         public UserController(
             IFormHandlerFactory formHandlerFactory,
             IUserService userService,
-            IMapper mapper)
+            IMapper mapper,
+            IAuthorizationService authorizationService)
             : base(formHandlerFactory)
         {
             _userService = userService;
             _mapper = mapper;
+            _authorizationService = authorizationService;
         }
 
 
@@ -38,6 +42,11 @@
         [HttpGet]
         public IActionResult List()
         {
+            if (!IsRoleIn(Roles.Administrator))
+            {
+                return Forbid();
+            }
+
             IEnumerable<User> users = _userService.GetAllActive();
 
             IEnumerable<UserViewModel> userViewModels = _mapper.Map<IEnumerable<UserViewModel>>(users);
@@ -48,6 +57,11 @@
         [HttpGet]
         public IActionResult Create()
         {
+            if (!IsRoleIn(Roles.Administrator))
+            {
+                return Forbid();
+            }
+
             CreateUserForm form = new CreateUserForm();
 
             SetRoles(form);
@@ -58,6 +72,11 @@
         [HttpPost]
         public IActionResult Create(CreateUserForm form)
         {
+            if (!IsRoleIn(Roles.Administrator))
+            {
+                return Forbid();
+            }
+
             return Form(
                 form,
                 (int userId) => this.RedirectToAction(x => x.List()),
@@ -104,6 +123,17 @@
             }));
 
             form.Roles = items;
+        }
+
+        private bool IsRoleIn(params Roles[] roles)
+        {
+            return _authorizationService
+                   .AuthorizeAsync(
+                       User,
+                       roles,
+                       new RoleRequirement())
+                   .Result
+                   .Succeeded;
         }
     }
 }

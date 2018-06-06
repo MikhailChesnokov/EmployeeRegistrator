@@ -1,10 +1,13 @@
 ﻿namespace Web.Application.Controllers.Registration
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Authorization.Requirements;
     using AutoMapper;
     using Domain.Entities.Employee;
     using Domain.Entities.Registration;
+    using Domain.Entities.User;
     using Domain.Services.Employee;
     using Domain.Services.Registration;
     using Employee;
@@ -24,6 +27,7 @@
         private readonly IEmployeeService _employeeService;
         private readonly IMapper _mapper;
         private readonly IRegistrationService _registrationService;
+        private readonly IAuthorizationService _authorizationService;
 
 
 
@@ -31,11 +35,13 @@
             IFormHandlerFactory formHandlerFactory,
             IRegistrationService registrationService,
             IMapper mapper,
-            IEmployeeService employeeService) : base(formHandlerFactory)
+            IEmployeeService employeeService,
+            IAuthorizationService authorizationService) : base(formHandlerFactory)
         {
             _registrationService = registrationService;
             _mapper = mapper;
             _employeeService = employeeService;
+            _authorizationService = authorizationService;
         }
 
 
@@ -43,18 +49,27 @@
         [HttpPost]
         public void RegisterComing([FromBody] RegisterComingForm form)
         {
+            throw new NotImplementedException();
+
             Form(form, Ok, () => StatusCode(StatusCodes.Status409Conflict));
         }
 
         [HttpPost]
         public void RegisterLeaving([FromBody] RegisterLeavingForm form)
         {
+            throw new NotImplementedException();
+
             Form(form, Ok, () => StatusCode(StatusCodes.Status409Conflict));
         }
 
         [HttpGet]
         public IActionResult RegisterComing(int id)
         {
+            if (!IsRoleIn(Roles.SecurityGuard))
+            {
+                return Forbid();
+            }
+
             return Form(
                 new RegisterComingForm {EmployeeId = id},
                 () => this.RedirectToAction<EmployeeController>(c => c.Registration()),
@@ -64,6 +79,11 @@
         [HttpGet]
         public IActionResult RegisterLeaving(int id)
         {
+            if (!IsRoleIn(Roles.SecurityGuard))
+            {
+                return Forbid();
+            }
+
             return Form(
                 new RegisterLeavingForm {EmployeeId = id},
                 () => this.RedirectToAction<EmployeeController>(c => c.Registration()),
@@ -73,6 +93,12 @@
         [HttpGet]
         public IActionResult Report()
         {
+            if (!IsRoleIn(Roles.Administrator, Roles.Manager))
+            {
+                return Forbid();
+            }
+
+
             IEnumerable<Registration> registrations = _registrationService.All();
 
             IEnumerable<RegistrationViewModel> registrationViewModels = _mapper.Map<IEnumerable<RegistrationViewModel>>(registrations);
@@ -126,6 +152,12 @@
         [HttpPost]
         public IActionResult Report(ReportForm form)
         {
+            if (!IsRoleIn(Roles.Administrator, Roles.Manager))
+            {
+                return Forbid();
+            }
+
+
             IEnumerable<Registration> registrations = _registrationService.All();
 
             if (form.EmployeeId != null)
@@ -251,6 +283,17 @@
             };
 
             return View(form);
+        }
+
+        private bool IsRoleIn(params Roles[] roles)
+        {
+            return _authorizationService
+                   .AuthorizeAsync(
+                       User,
+                       roles,
+                       new RoleRequirement())
+                   .Result
+                   .Succeeded;
         }
     }
 }

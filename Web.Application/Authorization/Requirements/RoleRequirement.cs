@@ -4,5 +4,5 @@
 
 
 
-    public class IsSecurityGuardRequirement : IAuthorizationRequirement { }
+    public class RoleRequirement : IAuthorizationRequirement { }
 }

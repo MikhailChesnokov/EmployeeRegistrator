@@ -4,6 +4,7 @@
     using Authorization.Requirements;
     using AutoMapper;
     using Domain.Entities.Employee;
+    using Domain.Entities.User;
     using Domain.Services.Employee;
     using Forms;
     using Microsoft.AspNetCore.Authorization;
@@ -15,9 +16,11 @@
     [Authorize]
     public class EmployeeController : FormControllerBase
     {
-        private readonly IEmployeeService _employeeService;
-        private readonly IMapper _mapper;
         private readonly IAuthorizationService _authorizationService;
+
+        private readonly IEmployeeService _employeeService;
+
+        private readonly IMapper _mapper;
 
 
 
@@ -38,6 +41,11 @@
         [HttpGet]
         public IActionResult List()
         {
+            if (!IsRoleIn(Roles.Administrator, Roles.Manager))
+            {
+                return Forbid();
+            }
+
             IEnumerable<Employee> employees = _employeeService.AllActive();
 
             IEnumerable<EmployeeViewModel> employeeViewModels = _mapper.Map<IEnumerable<EmployeeViewModel>>(employees);
@@ -48,13 +56,11 @@
         [HttpGet]
         public IActionResult Registration()
         {
-            AuthorizationResult authResult = _authorizationService.AuthorizeAsync(User, null, new IsSecurityGuardRequirement()).Result;
-
-            if (!authResult.Succeeded)
+            if (!IsRoleIn(Roles.SecurityGuard))
             {
                 return Forbid();
             }
-            
+
             IEnumerable<Employee> employees = _employeeService.AllActive();
 
             IEnumerable<EmployeeViewModel> employeeViewModels = _mapper.Map<IEnumerable<EmployeeViewModel>>(employees);
@@ -65,6 +71,11 @@
         [HttpGet]
         public IActionResult View(int id)
         {
+            if (!IsRoleIn(Roles.Administrator, Roles.Manager))
+            {
+                return Forbid();
+            }
+
             Employee employee = _employeeService.GetById(id);
 
             EmployeeViewModel employeeViewModel = _mapper.Map<EmployeeViewModel>(employee);
@@ -75,12 +86,22 @@
         [HttpGet]
         public IActionResult Create()
         {
+            if (!IsRoleIn(Roles.Administrator))
+            {
+                return Forbid();
+            }
+
             return View(new CreateEmployeeForm());
         }
 
         [HttpPost]
         public IActionResult Create(CreateEmployeeForm form)
         {
+            if (!IsRoleIn(Roles.Administrator))
+            {
+                return Forbid();
+            }
+
             return Form(
                 form,
                 (int employeeId) => this.RedirectToAction(c => c.View(employeeId)),
@@ -90,6 +111,11 @@
         [HttpGet]
         public IActionResult Edit(int id)
         {
+            if (!IsRoleIn(Roles.Administrator))
+            {
+                return Forbid();
+            }
+
             Employee employee = _employeeService.GetById(id);
 
             EditEmployeeForm editEmployeeForm = _mapper.Map<EditEmployeeForm>(employee);
@@ -100,6 +126,11 @@
         [HttpPost]
         public IActionResult Edit(EditEmployeeForm form)
         {
+            if (!IsRoleIn(Roles.Administrator))
+            {
+                return Forbid();
+            }
+
             return Form(
                 form,
                 () => this.RedirectToAction(c => c.View(form.Id)),
@@ -109,10 +140,26 @@
         [HttpPost]
         public IActionResult Delete(DeleteEmployeeForm form)
         {
+            if (!IsRoleIn(Roles.Administrator))
+            {
+                return Forbid();
+            }
+
             return Form(
                 form,
                 () => this.RedirectToAction(c => c.List()),
                 () => this.RedirectToAction(c => c.View(form.Id)));
+        }
+
+        private bool IsRoleIn(params Roles[] roles)
+        {
+            return _authorizationService
+                   .AuthorizeAsync(
+                       User,
+                       roles,
+                       new RoleRequirement())
+                   .Result
+                   .Succeeded;
         }
     }
 }

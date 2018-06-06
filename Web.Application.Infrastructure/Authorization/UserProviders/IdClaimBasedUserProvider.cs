@@ -1,9 +1,8 @@
-﻿namespace Web.Application.Authorization.UserProviders
+﻿namespace Web.Application.Infrastructure.Authorization.UserProviders
 {
     using System;
     using System.Security.Claims;
-    using Domain.Entities;
-    using Domain.Services.User;
+    using Application.Authorization.UserProviders;
     using Microsoft.AspNetCore.Http;
     using ClaimTypes = Claims.ClaimTypes;
 
@@ -28,8 +27,8 @@
 
         protected override TUser GetUser()
         {
-            //if (_user != null)
-            //    return _user;
+            if (_user != null)
+                return _user;
 
             if (_httpContextAccessor.HttpContext.User.Identity?.IsAuthenticated != true)
                 return default;
@@ -45,6 +44,11 @@
             _user = _userService.GetById(id) as TUser;
 
             return _user;
+        }
+
+        public override void DropUser()
+        {
+            _user = null;
         }
     }
 }

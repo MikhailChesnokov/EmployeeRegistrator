@@ -16,6 +16,7 @@
 
 
 
+
         public IdClaimBasedCookieAuthenticationService(
             IHttpContextAccessor httpContextAccessor,
             string scheme)
