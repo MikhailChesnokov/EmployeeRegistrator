@@ -28,8 +28,8 @@
 
         protected override TUser GetUser()
         {
-            //if (_user != null)
-            //    return _user;
+            if (_user != null)
+                return _user;
 
             if (_httpContextAccessor.HttpContext.User.Identity?.IsAuthenticated != true)
                 return default;
