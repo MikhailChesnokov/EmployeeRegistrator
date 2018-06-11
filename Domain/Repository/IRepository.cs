@@ -1,6 +1,8 @@
 ﻿namespace Domain.Repository
 {
-    using System.Collections.Generic;
+    using System;
+    using System.Linq;
+    using System.Linq.Expressions;
     using Entities;
 
 
@@ -14,9 +16,11 @@
 
         void Delete(TEntity entity);
 
-        IEnumerable<TEntity> All();
+        IQueryable<TEntity> All();
 
-        IEnumerable<TEntity> AllActive();
+        IQueryable<TEntity> AllActive();
+
+        IQueryable<TEntity> AllInclude<TProperty>(params Expression<Func<TEntity, TProperty>>[] expression);
 
         TEntity FindById(int id);
     }

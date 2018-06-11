@@ -1,5 +1,6 @@
 ﻿namespace Web.Application.Controllers.Account
 {
+    using Authorization.UserProviders;
     using Domain.Entities.User;
     using Domain.Infrastructure.Authentication;
     using Employee;
@@ -12,15 +13,21 @@
     public class AccountController : FormControllerBase
     {
         private readonly IAuthenticationService<User> _authenticationService;
+        private readonly IUserProvider<User> _userProvider;
 
 
 
         public AccountController(
             IFormHandlerFactory formHandlerFactory,
-            IAuthenticationService<User> authenticationService)
-            : base(formHandlerFactory)
+            IAuthenticationService<User> authenticationService,
+            IAuthorizationService authorizationService,
+            IUserProvider<User> userProvider)
+            : base(
+                formHandlerFactory,
+                authorizationService)
         {
             _authenticationService = authenticationService;
+            _userProvider = userProvider;
         }
 
 
@@ -41,7 +48,7 @@
                 form,
                 () => returnUrl != null
                     ? (IActionResult)Redirect(returnUrl)
-                    : this.RedirectToAction<EmployeeController>(c => c.List()),
+                    : this.RedirectToAction<EmployeeController>(x => x.List()),
                 () => View(form));
         }
 

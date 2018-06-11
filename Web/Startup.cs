@@ -69,6 +69,8 @@
 
             app.UseAuthentication();
 
+            app.UseRequestLocalization("ru");
+
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

@@ -1,9 +1,15 @@
 ﻿namespace Web.Application.Controllers.Registration.Enums
 {
+    using System.ComponentModel.DataAnnotations;
+
+
+
     public enum StrictSchedureRequirement
     {
-        NotImportant = 1,
-        Yes = 2,
-        No = 3
+        [Display(Name = "Да")]
+        Yes = 1,
+
+        [Display(Name = "Нет")]
+        No = 2
     }
 }

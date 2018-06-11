@@ -1,17 +1,15 @@
 ﻿namespace Web.Application.Controllers.User
 {
-    using System;
     using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-    using System.Linq;
-    using Authorization.Requirements;
     using AutoMapper;
     using Domain.Entities.User;
     using Domain.Services.User;
     using Forms;
+    using Infrastructure.Extensions;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Rendering;
+    using Registration.Enums;
     using ViewModels;
 
 
@@ -21,7 +19,6 @@
     {
         private readonly IUserService _userService;
         private readonly IMapper _mapper;
-        private readonly IAuthorizationService _authorizationService;
 
 
 
@@ -30,11 +27,12 @@
             IUserService userService,
             IMapper mapper,
             IAuthorizationService authorizationService)
-            : base(formHandlerFactory)
+            : base(
+                formHandlerFactory,
+                authorizationService)
         {
             _userService = userService;
             _mapper = mapper;
-            _authorizationService = authorizationService;
         }
 
 
@@ -42,10 +40,8 @@
         [HttpGet]
         public IActionResult List()
         {
-            if (!IsRoleIn(Roles.Administrator))
-            {
-                return Forbid();
-            }
+            if (!RoleIs(Roles.Administrator)) return Forbid();
+
 
             IEnumerable<User> users = _userService.GetAllActive();
 
@@ -57,10 +53,8 @@
         [HttpGet]
         public IActionResult Create()
         {
-            if (!IsRoleIn(Roles.Administrator))
-            {
-                return Forbid();
-            }
+            if (!RoleIs(Roles.Administrator)) return Forbid();
+
 
             CreateUserForm form = new CreateUserForm();
 
@@ -72,10 +66,8 @@
         [HttpPost]
         public IActionResult Create(CreateUserForm form)
         {
-            if (!IsRoleIn(Roles.Administrator))
-            {
-                return Forbid();
-            }
+            if (!RoleIs(Roles.Administrator)) return Forbid();
+
 
             return Form(
                 form,
@@ -104,36 +96,9 @@
                 });
             }
 
-            items.AddRange(Enum.GetNames(typeof(Roles)).Select(x => new SelectListItem
-            {
-                Value =
-                    Enum
-                        .Parse<Roles>(x)
-                        .ToString(),
-                Text =
-                    typeof(Roles)
-                        .GetField(x)
-                        .GetCustomAttributes(false)
-                        .OfType<DisplayAttribute>()
-                        .Single()
-                        .Name,
-                Group = default,
-                Selected = false,
-                Disabled = false
-            }));
+            items.AddRange(typeof(Lateness).ToSelectList());
 
             form.Roles = items;
-        }
-
-        private bool IsRoleIn(params Roles[] roles)
-        {
-            return _authorizationService
-                   .AuthorizeAsync(
-                       User,
-                       roles,
-                       new RoleRequirement())
-                   .Result
-                   .Succeeded;
         }
     }
 }

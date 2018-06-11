@@ -4,45 +4,63 @@
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#menu" aria-controls="menu" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
+    
+    @if (Model.UserRole.HasValue)
+    {
+        <div class="collapse navbar-collapse" id="menu">
+            <ul class="navbar-nav mr-auto">
 
-    <div class="collapse navbar-collapse" id="menu">
-        <ul class="navbar-nav mr-auto">
-            
+                @if (Model.UserRole is Roles.Administrator)
+                {
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Пользователи
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            <a class="dropdown-item" href="@(Url.Action<UserController>(c => c.List()))">Список пользователей</a>
+                            <a class="dropdown-item" href="@(Url.Action<UserController>(c => c.Create(With.No<CreateUserForm>())))">Добавить пользователя</a>
+                        </div>
+                    </li>
+                }
 
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Пользователи
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                    <a class="dropdown-item" href="@(Url.Action<UserController>(c => c.List()))">Список пользователей</a>
-                    <a class="dropdown-item" href="@(Url.Action<UserController>(c => c.Create(With.No<CreateUserForm>())))">Добавить пользователя</a>
-                </div>
-            </li>
-            
 
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Сотрудники
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                    <a class="dropdown-item" href="@(Url.Action<EmployeeController>(c => c.List()))">Список сотрудников</a>
-                    <a class="dropdown-item" href="@(Url.Action<EmployeeController>(c => c.Create(With.No<CreateEmployeeForm>())))">Добавить сотрудника</a>
-                    <a class="dropdown-item" href="@(Url.Action<EmployeeController>(c => c.Registration()))">Регистрация сотрудников</a>
-                </div>
-            </li>
-            
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Сотрудники
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        @if (Model.UserRole is Roles.Administrator || Model.UserRole is Roles.Manager || Model.UserRole is Roles.SecurityGuard)
+                        {
+                            <a class="dropdown-item" href="@(Url.Action<EmployeeController>(c => c.List()))">Список сотрудников</a>
+                        }
+                        @if (Model.UserRole is Roles.Administrator)
+                        {
+                            <a class="dropdown-item" href="@(Url.Action<EmployeeController>(c => c.Create(With.No<CreateEmployeeForm>())))">Добавить сотрудника</a>
+                        }
+                        @if (Model.UserRole is Roles.SecurityGuard)
+                        {
+                            <a class="dropdown-item" href="@(Url.Action<EmployeeController>(c => c.Registration()))">Регистрация сотрудников</a>
+                        }
+                    </div>
+                </li>
 
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    События
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                    <a class="dropdown-item" href="@(Url.Action<RegistrationController>(c => c.Report()))">Список событий</a>
-                </div>
-            </li>
-            
-        </ul>
-    </div>
+                @if (Model.UserRole is Roles.Administrator || Model.UserRole is Roles.Manager)
+                {
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            События
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            <a class="dropdown-item" href="@(Url.Action<RegistrationController>(c => c.Report()))">Список событий</a>
+                        </div>
+                    </li>
+                }
+
+            </ul>
+        </div>
+    }
+    
+
     @if (Model.IsUserAuthorized)
     {
         <div class="justify-content-end">

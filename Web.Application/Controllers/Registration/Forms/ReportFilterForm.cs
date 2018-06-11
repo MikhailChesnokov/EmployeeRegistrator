@@ -3,12 +3,17 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+    using Abstractions;
+    using Enums;
     using Microsoft.AspNetCore.Mvc.Rendering;
     using ViewModels;
 
 
 
-    public class ReportForm : IForm
+    public class ReportFilterForm :
+        IForm,
+        ILatenessSelectList,
+        IStrictScheduleSelectList
     {
         [DataType(DataType.Date)]
         public DateTime? DateFrom { get; set; }
@@ -18,16 +23,16 @@
 
         public int? EmployeeId { get; set; }
 
-        public int? Lateness { get; set; }
+        public Lateness? Lateness { get; set; }
 
-        public int? StrictSchedule { get; set; }
+        public StrictSchedureRequirement? StrictSchedule { get; set; }
 
         public IEnumerable<RegistrationViewModel> Registrations { get; set; }
 
         public IEnumerable<SelectListItem> Employees { get; set; }
 
-        public IEnumerable<SelectListItem> LatenessCases { get; set; }
+        public IEnumerable<SelectListItem> LatenessSelectListItems { get; set; }
 
-        public IEnumerable<SelectListItem> StrictScheduleCases { get; set; }
+        public IEnumerable<SelectListItem> StrictScheduleSelecrListItems { get; set; }
     }
 }

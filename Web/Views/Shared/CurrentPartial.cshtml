@@ -1,4 +1,4 @@
-﻿@model ReportForm
+﻿@model ReportFilterForm
 
 @foreach (IGrouping<string, RegistrationViewModel>registrationGroup in Model.Registrations.GroupBy(x => x.Employee.Fio))
 {
