@@ -9,7 +9,9 @@
     "tempusdominus-bootstrap-4": "5.0.0",
     "Font-Awesome": "5.0.13",
     "moment": "2.22.2",
-    "tempusdominus-core": "5.0.0"
+    "tempusdominus-core": "5.0.0",
+    "jquery-ajax-unobtrusive": "v3.2.5",
+    "pnotify": "3.2.1"
   },
   "resolutions": {
     "tempusdominus-bootstrap-4": "5.0.0",

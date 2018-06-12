@@ -125,7 +125,7 @@
                     registrations[i + 1].Registration.DateTime -
                     registrations[i].Registration.DateTime;
 
-                registrations[i].WorkPeriodTime = registrations[i].WorkPeriodTime = workPeriodTime;
+                registrations[i].WorkPeriodTime = registrations[i + 1].WorkPeriodTime = workPeriodTime;
 
                 total += workPeriodTime;
             }

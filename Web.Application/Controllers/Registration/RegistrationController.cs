@@ -54,19 +54,15 @@
 
 
         [HttpPost]
-        public void RegisterComing([FromBody] RegisterComingForm form)
+        public IActionResult RegisterComing([FromBody] RegisterComingForm form)
         {
-            throw new NotImplementedException();
-
-            Form(form, Ok, () => StatusCode(StatusCodes.Status409Conflict));
+            return Form(form, Ok, () => StatusCode(StatusCodes.Status409Conflict));
         }
 
         [HttpPost]
-        public void RegisterLeaving([FromBody] RegisterLeavingForm form)
+        public IActionResult RegisterLeaving([FromBody] RegisterLeavingForm form)
         {
-            throw new NotImplementedException();
-
-            Form(form, Ok, () => StatusCode(StatusCodes.Status409Conflict));
+            return Form(form, Ok, () => StatusCode(StatusCodes.Status409Conflict));
         }
 
         [HttpGet]

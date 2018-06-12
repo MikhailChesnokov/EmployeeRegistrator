@@ -54,11 +54,19 @@
             if (!RoleIs(Roles.SecurityGuard)) return Forbid();
 
 
+            return View();
+        }
+
+        public IActionResult RegistrationAjax()
+        {
+            if (!RoleIs(Roles.SecurityGuard)) return Forbid();
+
+
             IEnumerable<Employee> employees = _employeeService.AllActive();
 
             IEnumerable<EmployeeViewModel> employeeViewModels = _mapper.Map<IEnumerable<EmployeeViewModel>>(employees);
 
-            return View(employeeViewModels);
+            return PartialView(employeeViewModels);
         }
 
         [HttpGet]
