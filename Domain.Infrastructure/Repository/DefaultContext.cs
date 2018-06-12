@@ -7,15 +7,19 @@
     using Entities.User;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.Logging;
 
 
 
     public sealed class DefaultContext : DbContext
     {
-        public DefaultContext()
-        {
-            SetConfigurationRoot();
+        private readonly ILoggerFactory _loggerFactory;
 
+        public DefaultContext(ILoggerFactory loggerFactory)
+        {
+            _loggerFactory = loggerFactory;
+            SetConfigurationRoot();
+            
             Database.EnsureCreated();
         }
 
@@ -54,6 +58,10 @@
                 default:
                     throw new InvalidOperationException("Unexpected \"Database\" parameter in appsettings.json. Try \"SqlServer\", \"MySql\" or \"SQLite\".");
             }
+
+            optionsBuilder.UseLoggerFactory(_loggerFactory);
+
+            base.OnConfiguring(optionsBuilder);
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

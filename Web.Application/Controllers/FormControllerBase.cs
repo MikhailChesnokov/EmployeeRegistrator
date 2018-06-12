@@ -1,6 +1,9 @@
 ﻿namespace Web.Application.Controllers
 {
     using System;
+    using Authorization.Requirements;
+    using Domain.Entities.User;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
 
@@ -8,16 +11,29 @@
     public class FormControllerBase : Controller
     {
         private readonly IFormHandlerFactory _formHandlerFactory;
+        private readonly IAuthorizationService _authorizationService;
 
 
 
         protected FormControllerBase(
-            IFormHandlerFactory formHandlerFactory)
+            IFormHandlerFactory formHandlerFactory,
+            IAuthorizationService authorizationService)
         {
             _formHandlerFactory = formHandlerFactory;
+            _authorizationService = authorizationService;
         }
 
 
+        protected bool RoleIs(params Roles[] roles)
+        {
+            return _authorizationService
+                   .AuthorizeAsync(
+                       User,
+                       roles,
+                       new RoleRequirement())
+                   .Result
+                   .Succeeded;
+        }
 
         protected IActionResult Form<TForm>(TForm form, Func<IActionResult> success, Func<IActionResult> failure)
             where TForm : IForm

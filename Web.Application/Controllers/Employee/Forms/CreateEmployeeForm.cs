@@ -6,19 +6,27 @@
 
     public class CreateEmployeeForm : IForm
     {
-        [Required]
-        [RegularExpression("^[А-Яа-яёЁ]+$")]
+        private const int MaxStringLength = 64;
+
+
+
+        [Required(AllowEmptyStrings = false)]
+        [MaxLength(MaxStringLength)]
+        [RegularExpression("^[А-Яа-яёЁ\\-]+$")]
         public string FirstName { get; set; }
 
-        [Required]
+        [Required(AllowEmptyStrings = false)]
+        [MaxLength(MaxStringLength)]
         [RegularExpression("^[А-Яа-яёЁ\\-]+$")]
         public string Surname { get; set; }
 
-        [Required]
+        [Required(AllowEmptyStrings = false)]
+        [MaxLength(MaxStringLength)]
         [RegularExpression("^[А-Яа-яёЁ]+$")]
         public string Patronymic { get; set; }
 
         [Required(AllowEmptyStrings = false)]
+        [MaxLength(MaxStringLength)]
         [RegularExpression("^.+$")]
         public string PersonnelNumber { get; set; }
 

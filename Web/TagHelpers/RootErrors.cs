@@ -21,7 +21,7 @@
             if (ViewContext.ModelState.Root?.Errors?.Count > 0)
             {
                 output.TagName = "div";
-                output.Attributes.Add("class", "my-4");
+                output.Attributes.Add("class","my-4");
                 output.TagMode = TagMode.StartTagAndEndTag;
 
                 ViewContext.ModelState.Root.Errors.ToList().ForEach(error =>
@@ -30,8 +30,8 @@
                     {
                         Attributes =
                         {
-                            {"class", "alert alert-danger"},
-                            {"role", "alert"}
+                            {"class","alert alert-danger"},
+                            {"role","alert"}
                         }
                     };
 
@@ -41,7 +41,9 @@
                 });
             }
             else
+            {
                 output.SuppressOutput();
+            }
         }
     }
 }

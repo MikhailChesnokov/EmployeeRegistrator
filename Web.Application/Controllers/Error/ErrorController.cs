@@ -1,5 +1,6 @@
 ﻿namespace Web.Application.Controllers.Error
 {
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using ViewModels;
 
@@ -8,10 +9,14 @@
     public class ErrorController : FormControllerBase
     {
         public ErrorController(
-            IFormHandlerFactory formHandlerFactory)
-            : base(formHandlerFactory) { }
+            IFormHandlerFactory formHandlerFactory,
+            IAuthorizationService authorizationService)
+            : base(
+                formHandlerFactory,
+                authorizationService) { }
 
  
+
         public IActionResult Index()
         {
             return View(new ErrorViewModel{Message = string.Empty});
@@ -24,7 +29,7 @@
 
         public IActionResult AccessDenied()
         {
-            return View("Index", new ErrorViewModel { Message = "Access denied" });
+            return View("Index", new ErrorViewModel { Message = "доступ к запрашиваемой странице запрещен" });
         }
     }
 }

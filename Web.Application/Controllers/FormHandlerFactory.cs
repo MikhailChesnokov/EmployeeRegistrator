@@ -3,7 +3,6 @@
     using System;
     using Account.Forms;
     using Account.Forms.Handlers;
-    using Domain.Entities.User;
     using Domain.Infrastructure.Authentication;
     using Domain.Repository;
     using Domain.Services.Employee;
@@ -13,18 +12,20 @@
     using Employee.Forms.Handlers;
     using Registration.Forms;
     using Registration.Forms.Handlers;
+    using User.Forms;
+    using User.Forms.Handlers;
 
 
 
     public class FormHandlerFactory : IFormHandlerFactory
     {
-        private readonly IAuthenticationService<User> _authenticationService;
+        private readonly IAuthenticationService<Domain.Entities.User.User> _authenticationService;
 
         private readonly IEmployeeService _employeeService;
 
         private readonly IRegistrationService _registrationService;
 
-        private readonly IRepository<User> _userRepository;
+        private readonly IRepository<Domain.Entities.User.User> _userRepository;
 
         private readonly IUserService _userService;
 
@@ -34,8 +35,8 @@
             IEmployeeService employeeService,
             IRegistrationService registrationService,
             IUserService userService,
-            IAuthenticationService<User> authenticationService,
-            IRepository<User> userRepository)
+            IAuthenticationService<Domain.Entities.User.User> authenticationService,
+            IRepository<Domain.Entities.User.User> userRepository)
         {
             _employeeService = employeeService;
             _registrationService = registrationService;
@@ -73,6 +74,8 @@
             if (typeof(TForm) == typeof(CreateEmployeeForm))
                 return new CreateEmployeeFormHandler(_employeeService) as IFormHandler<TForm, TFormResult>;
 
+            if (typeof(TForm) == typeof(CreateUserForm))
+                return new CreateUserFormHandler(_userService) as IFormHandler<TForm, TFormResult>;
 
             throw new InvalidOperationException("Undefined type");
         }

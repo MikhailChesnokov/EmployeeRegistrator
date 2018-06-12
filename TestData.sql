@@ -1,15 +1,26 @@
 USE EmployeeRegistrator
 GO
 
-INSERT INTO Employees VALUES
-  ('Иван', 'Иванович', '1', 'Иванов', 'true'),
-  ('Петр', 'Петрович', '2', 'Петров', 'false'),
-  ('Сидор', 'Сидорович', '3', 'Сидоров', 'true'),
-  ('Владимир', 'Владимирович', '4', 'Владимиров', 'true')
+-- admin 12345678
+INSERT INTO Users
+  (Login, Password_Hash, Password_Salt, Role)
+VALUES
+  ('admin', 0x55F3E83D9D8F50A2481487B562511F261556894B6AD6B563D6F32547C017FD22, 0x4CC7C0212EAC253FC5CFA6A40D9E77C7E26F25D452642A34FD18C389050509EB7E1611CB7C8967BA, '1')
+GO
+
+INSERT INTO Employees
+  (FirstName, Surname, Patronymic, WorkplacePresenceRequired, PersonnelNumber, DeletedAtUtc)
+VALUES
+  ('Иван', 'Иванов', 'Иванович', 'true', '1', NULL),
+  ('Петр', 'Петров', 'Петрович', 'false', '2', NULL),
+  ('Сидор', 'Сидоров', 'Сидорович', 'true', '3', NULL),
+  ('Владимир', 'Владимиров', 'Владимирович', 'true', '4', NULL)
 GO
 
 -- Иванов (Ходит редко и без опозданий)
-INSERT INTO Registrations VALUES
+INSERT INTO Registrations
+  (DateTime, EmployeeId, EventType)
+VALUES
   -- Пн
   ('2018-04-30 09:55:00', 1, 1),
   ('2018-04-30 17:56:00', 1, 2),
@@ -33,7 +44,9 @@ GO
 
 
 -- Петров (Ходит часто, с опозданиями, присутствие необязательно)
-INSERT INTO Registrations VALUES
+INSERT INTO Registrations
+  (DateTime, EmployeeId, EventType)
+VALUES
   -- Пн
   ('2018-04-30 11:09:00', 2, 1),
   ('2018-04-30 13:03:00', 2, 2),
@@ -70,7 +83,9 @@ INSERT INTO Registrations VALUES
 GO
 
 -- Сидоров (Ходит часто, с опозданиями, присутствие обязательно)
-INSERT INTO Registrations VALUES
+INSERT INTO Registrations
+  (DateTime, EmployeeId, EventType)
+VALUES
   -- Пн
   ('2018-04-30 11:07:00', 3, 1),
   ('2018-04-30 13:01:00', 3, 2),
@@ -107,7 +122,9 @@ INSERT INTO Registrations VALUES
 GO
 
 -- Владимир Владимирович (Ходит редко, с без опозданий, иногда через окно)
-INSERT INTO Registrations VALUES
+INSERT INTO Registrations
+  (DateTime, EmployeeId, EventType)
+VALUES
   -- Пн
   ('2018-04-30 10:00:00', 4, 1),
   ('2018-04-30 13:01:00', 4, 1),

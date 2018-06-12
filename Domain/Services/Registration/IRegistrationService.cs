@@ -1,6 +1,8 @@
 ﻿namespace Domain.Services.Registration
 {
-    using System.Collections.Generic;
+    using System;
+    using System.Linq;
+    using System.Linq.Expressions;
     using Entities.Employee;
     using Entities.Registration;
 
@@ -10,6 +12,6 @@
     {
         void RegisterEmployee(Employee employee, RegistrationEventType eventType);
 
-        IEnumerable<Registration> All();
+        IQueryable<Registration> AllInclude<TProperty>(Expression<Func<Registration, TProperty>> expression);
     }
 }

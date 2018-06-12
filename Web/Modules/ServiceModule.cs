@@ -1,5 +1,6 @@
 ﻿namespace Web.Modules
 {
+    using Application.Services;
     using Domain.Services;
     using Domain.Services.Registration.Implementations;
     using global::Autofac;
@@ -14,6 +15,11 @@
                 .RegisterAssemblyTypes(typeof(RegistrationService).Assembly)
                 .AssignableTo<IDomainService>()
                 .AsImplementedInterfaces()
+                .InstancePerLifetimeScope();
+
+            builder
+                .RegisterType<RegistrationsViewModelService>()
+                .As<IRegistrationsViewModelService>()
                 .InstancePerLifetimeScope();
         }
     }

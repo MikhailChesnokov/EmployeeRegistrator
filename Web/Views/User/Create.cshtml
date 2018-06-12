@@ -1,0 +1,37 @@
+﻿@model CreateUserForm
+
+@{ ViewBag.Title = "Новый пользователь"; }
+
+<h4>Новый пользователь</h4>
+
+<form method="post" id="employee-form">
+
+    <root-errors/>
+
+    <input-group
+        name="Login"
+        label="Логин"
+        value="@Model.Login"/>
+
+    <input-group
+        name="Password"
+        label="Пароль"
+        invalid-feedback="Некорректное имя сотрудника"
+        is-password="true"
+        value="@Model.Password"/>
+
+    <input-group
+        name="ConfirmPassword"
+        label="Подтверждение пароля"
+        invalid-feedback="Некорректное подтверждение пароля"
+        is-password="true"
+        value="@Model.ConfirmPassword"/>
+
+    <select-group
+        name="Role"
+        label="Роль"
+        invalid-feedback="Роль не выбрана"
+        items="@Model.Roles"/>
+
+    <button type="submit" class="btn btn-primary lower-button">Сохранить</button>
+</form>

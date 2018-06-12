@@ -1,7 +1,8 @@
 ﻿namespace Domain.Services.Registration.Implementations
 {
     using System;
-    using System.Collections.Generic;
+    using System.Linq;
+    using System.Linq.Expressions;
     using Entities.Employee;
     using Entities.Registration;
     using Repository;
@@ -10,9 +11,8 @@
 
     public class RegistrationService : IRegistrationService
     {
-        public readonly IRepository<Employee> EmployeeRepository;
-
-        public readonly IRepository<Registration> RegistrationRepository;
+        private readonly IRepository<Employee> _employeeRepository;
+        private readonly IRepository<Registration> _registrationRepository;
 
 
 
@@ -20,8 +20,8 @@
             IRepository<Registration> registrationRepository,
             IRepository<Employee> employeeRepository)
         {
-            RegistrationRepository = registrationRepository;
-            EmployeeRepository = employeeRepository;
+            _registrationRepository = registrationRepository;
+            _employeeRepository = employeeRepository;
         }
 
 
@@ -33,12 +33,15 @@
 
             Registration registration = new Registration(employee, eventType);
 
-            RegistrationRepository.Add(registration);
+            _registrationRepository.Add(registration);
         }
 
-        public IEnumerable<Registration> All()
+        public IQueryable<Registration> AllInclude<TProperty>(Expression<Func<Registration, TProperty>> expression)
         {
-            return RegistrationRepository.All();
+            return
+                _registrationRepository
+                    .AllInclude(expression)
+                    .Where(x => x.DateTime.Year == DateTime.Now.Year);
         }
     }
 }

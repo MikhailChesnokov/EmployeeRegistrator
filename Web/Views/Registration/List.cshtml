@@ -1,0 +1,82 @@
+﻿@model RegistrationsViewModel
+
+@{ ViewBag.Title = "Список регистраций"; }
+
+<h4>Список регистраций</h4>
+
+<partial name="ReportFilterPartial" model="@Model.FilterForm" />
+
+@if (Model.DayRegistrations?.Any() != true)
+{
+    <p>Список регистраций пуст</p>
+}
+else
+{
+    <table class="table table-bordered table-sm">
+        <thead>
+            <tr>
+                <th>День</th>
+                <th>Сотрудник</th>
+                <th>Время</th>
+                <th>Событие</th>
+                <th>Отработано за период</th>
+                <th>Отработано за день</th>
+                <th>Опоздание</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var dayRegistrations in Model.DayRegistrations)
+            {
+                foreach (var dayEmployeeRegistraions in dayRegistrations.DayEmployeeRegistraions)
+                {
+                    foreach (var dayEmployeeRegistraionRow in dayEmployeeRegistraions.RegistrationRows)
+                    {
+                        string dayAndEmployee = $"{dayRegistrations.Day.Date}-{dayEmployeeRegistraions.EmployeeId}-";
+                        int dayEmployeeRowsCount = dayEmployeeRegistraions.TotalDayEmployeeRegistrationsCount;
+                        const string timeSpanFormat = "hh\\:mm";
+
+                        <tr>
+                            <td rowspan="@dayRegistrations.TotalDayRegistrationsCount" rowspan-id="@dayRegistrations.Day.Date">@dayRegistrations.Day.ToShortDateString()</td>
+
+                            <td rowspan="@dayEmployeeRowsCount" rowspan-id="@dayAndEmployee-emp">@dayEmployeeRegistraions.Employee</td>
+
+                            <td>@dayEmployeeRegistraionRow.Time.ToString(timeSpanFormat)</td>
+
+                            <td>@(dayEmployeeRegistraionRow.Event == RegistrationEventType.Coming ? "Вход" : "Выход")</td>
+
+                            @if (dayEmployeeRegistraionRow.CheckResult is RegistrationCheckResult.Ok && dayEmployeeRegistraionRow.Event is RegistrationEventType.Coming)
+                            {
+                                <td rowspan="2">@dayEmployeeRegistraionRow.WorkTimeInterval.ToString(timeSpanFormat)</td>
+                            }
+                            else if (dayEmployeeRegistraionRow.CheckResult is RegistrationCheckResult.Violation)
+                            {
+                                <td class="table-danger">-</td>
+                            }
+
+                            <td rowspan="@dayEmployeeRowsCount" rowspan-id="@dayAndEmployee-work">@dayEmployeeRegistraions.TotalWorkDayTimeInterval.ToString(timeSpanFormat)</td>
+
+                            <td rowspan="@dayEmployeeRowsCount" rowspan-id="@dayAndEmployee-late" class="@(dayEmployeeRegistraions.EmployeeWasLate? "table-warning" : string.Empty)">@dayEmployeeRegistraions.LatenessTimeInterval.ToString(timeSpanFormat)</td>
+                        </tr>
+                    }
+                }
+            }
+        </tbody>
+    </table>
+}
+
+@section Scripts{
+    <script type="text/javascript">
+        window.$('#EmployeeId').select2();
+
+        $(function () {
+            $('#datetimepicker4-DateFrom').datetimepicker({
+                format: 'L'
+            });
+
+            $('#datetimepicker4-DateTo').datetimepicker({
+                format: 'L'
+            });
+        });
+    </script>
+}

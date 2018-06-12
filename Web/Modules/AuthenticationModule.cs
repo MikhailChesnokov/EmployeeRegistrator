@@ -1,5 +1,6 @@
 ﻿namespace Web.Modules
 {
+    using Application.Authorization.UserProviders;
     using Domain.Entities.User;
     using Domain.Infrastructure.Authentication;
     using global::Autofac;
@@ -15,6 +16,11 @@
                 .As<IAuthenticationService<User>>()
                 .InstancePerLifetimeScope()
                 .WithParameter("scheme", "CookieScheme");
+
+            builder
+                .RegisterType<IdClaimBasedUserProvider<User>>()
+                .As<IUserProvider<User>>()
+                .InstancePerLifetimeScope();
         }
     }
 }

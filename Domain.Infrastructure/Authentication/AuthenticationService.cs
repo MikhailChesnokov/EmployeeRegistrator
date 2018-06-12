@@ -11,8 +11,8 @@
         where TUser : IEntity
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
-
         private readonly string _scheme;
+
 
 
 

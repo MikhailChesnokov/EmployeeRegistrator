@@ -17,8 +17,11 @@
 
         public AccountController(
             IFormHandlerFactory formHandlerFactory,
-            IAuthenticationService<User> authenticationService)
-            : base(formHandlerFactory)
+            IAuthenticationService<User> authenticationService,
+            IAuthorizationService authorizationService)
+            : base(
+                formHandlerFactory,
+                authorizationService)
         {
             _authenticationService = authenticationService;
         }
@@ -41,7 +44,7 @@
                 form,
                 () => returnUrl != null
                     ? (IActionResult)Redirect(returnUrl)
-                    : this.RedirectToAction<EmployeeController>(c => c.List()),
+                    : this.RedirectToAction<EmployeeController>(x => x.List()),
                 () => View(form));
         }
 

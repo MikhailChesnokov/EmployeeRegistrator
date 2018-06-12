@@ -1,7 +1,6 @@
 ﻿namespace Web.Modules
 {
     using global::Autofac;
-    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Http;
 
 
@@ -13,11 +12,6 @@
             builder
                 .RegisterType<HttpContextAccessor>()
                 .As<IHttpContextAccessor>()
-                .SingleInstance();
-
-            builder
-                .RegisterType<DefaultAuthorizationService>()
-                .As<IAuthorizationService>()
                 .SingleInstance();
         }
     }

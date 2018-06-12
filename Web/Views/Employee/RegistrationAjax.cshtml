@@ -1,0 +1,35 @@
+﻿@model IEnumerable<EmployeeViewModel>
+
+@if (Model?.Any() != true)
+{
+    <p>Список сотрудников пуст</p>
+}
+else
+{
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th scope="col">ФИО</th>
+                <th scope="col" style="width: 170px">Табельный номер</th>
+                <th style="width: 225px"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (EmployeeViewModel employee in Model)
+            {
+                <tr>
+                    <td>
+                        @employee.Fio
+                    </td>
+                    <td style="text-align: center">
+                        @employee.PersonnelNumber
+                    </td>
+                    <td style="text-align: center" class="py-1">
+                        <a class="btn btn-light" href="#" onclick="registerComing(@employee.Id)">Впустить</a>
+                        <a class="btn btn-light" href="#" onclick="registerLeaving(@employee.Id)">Выпустить</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

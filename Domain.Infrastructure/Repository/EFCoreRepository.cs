@@ -1,10 +1,12 @@
 ﻿namespace Domain.Infrastructure.Repository
 {
-    using System.Collections.Generic;
+    using System;
     using System.Linq;
+    using System.Linq.Expressions;
     using Domain.Repository;
     using Entities;
     using Microsoft.EntityFrameworkCore;
+    using Microsoft.EntityFrameworkCore.Query;
 
 
 
@@ -12,7 +14,6 @@
         where TEntity : class, IEntity, new()
     {
         private readonly DbContext _context;
-
         private readonly DbSet<TEntity> _entities;
 
 
@@ -43,8 +44,33 @@
             _context.SaveChanges();
         }
 
-        public IEnumerable<TEntity> All()
+        public IQueryable<TEntity> All()
         {
+            return _entities;
+        }
+
+        public IQueryable<TEntity> AllInclude<TProperty>(params Expression<Func<TEntity, TProperty>>[] expressions)
+        {
+            IIncludableQueryable<TEntity, TProperty> res = _entities.Include(expressions.First());
+
+            foreach (Expression<Func<TEntity, TProperty>> expression in expressions.Skip(1))
+            {
+                res.Include(expression);
+            }
+
+            return res;
+        }
+
+        public IQueryable<TEntity> AllActive()
+        {
+            if (typeof(IRemovableEntity).IsAssignableFrom(typeof(TEntity)))
+            {
+                return _entities
+                       .Cast<IRemovableEntity>()
+                       .Where(x => !x.IsDeleted())
+                       .Cast<TEntity>();
+            }
+
             return _entities;
         }
 

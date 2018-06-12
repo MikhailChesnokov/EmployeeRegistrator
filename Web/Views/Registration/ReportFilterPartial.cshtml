@@ -1,8 +1,4 @@
-﻿@model ReportForm
-
-@{ ViewBag.Title = "Список регистраций"; }
-
-<h4>Список регистраций</h4>
+﻿@model ReportFilterForm
 
 <form method="post">
 
@@ -15,42 +11,29 @@
         value="@Model.EmployeeId"
         items="@Model.Employees"/>
 
-    <input-group
+    <date-group
         name="DateFrom"
         label="Начальная дата"
-        placeholder="Не установлена"
         invalid-feedback="Некорректная начальная дата"
         value="@Model.DateFrom?.ToShortDateString()"/>
 
-    <input-group
+    <date-group
         name="DateTo"
         label="Конечная дата"
-        placeholder="Не установлена"
         invalid-feedback="Некорректная конечная дата"
         value="@Model.DateTo?.ToShortDateString()"/>
-    
+
     <select-group
         name="Lateness"
         label="Опоздание"
         placeholder="Не имеет значения"
-        value="@Model.Lateness"
-        items="@Model.LatenessCases"/>
-    
+        items="@Model.LatenessSelectListItems"/>
+
     <select-group
         name="StrictSchedule"
         label="Строгий график"
         placeholder="Не имеет значения"
-        value="@Model.StrictSchedule"
-        items="@Model.StrictScheduleCases"/>
+        items="@Model.StrictScheduleSelecrListItems"/>
 
     <input type="submit" class="btn btn-primary mb-4" value="Применить"/>
 </form>
-
-@if (Model?.Registrations?.Any() != true)
-{
-    <p>Список регистраций пуст</p>
-}
-else
-{
-    @Html.Partial("RegistrationsGroupByDaysPartial", Model)
-}

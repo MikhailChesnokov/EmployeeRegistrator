@@ -28,6 +28,8 @@
 
         public string InvalidFeedback { get; set; }
 
+        public bool Grouping { get; set; }
+
         public IEnumerable<SelectListItem> Items { get; set; }
 
 
@@ -39,7 +41,7 @@
             output.TagMode = TagMode.StartTagAndEndTag;
             output
                 .AddLabel(Name, Label)
-                .AddSelect(Name, Label, Items, Placeholder, Value, ViewContext)
+                .AddSelect(Name, Label, Items, Placeholder, Value, Grouping ,ViewContext)
                 .AddInvalidFeedback(InvalidFeedback ?? $"{Label} не выбран");
         }
     }
