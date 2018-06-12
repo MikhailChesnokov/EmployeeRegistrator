@@ -1,6 +1,5 @@
 ﻿namespace Web.Application.Controllers.Account
 {
-    using Authorization.UserProviders;
     using Domain.Entities.User;
     using Domain.Infrastructure.Authentication;
     using Employee;
@@ -13,21 +12,18 @@
     public class AccountController : FormControllerBase
     {
         private readonly IAuthenticationService<User> _authenticationService;
-        private readonly IUserProvider<User> _userProvider;
 
 
 
         public AccountController(
             IFormHandlerFactory formHandlerFactory,
             IAuthenticationService<User> authenticationService,
-            IAuthorizationService authorizationService,
-            IUserProvider<User> userProvider)
+            IAuthorizationService authorizationService)
             : base(
                 formHandlerFactory,
                 authorizationService)
         {
             _authenticationService = authenticationService;
-            _userProvider = userProvider;
         }
 
 

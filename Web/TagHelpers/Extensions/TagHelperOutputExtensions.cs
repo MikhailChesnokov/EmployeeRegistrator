@@ -175,7 +175,7 @@
 
                             option.Attributes.Add("value", item.Value);
 
-                            if (value != null && ((long)value).ToString() == item.Value)
+                            if (value != null && ((long)value).ToString() == item.Value || item.Selected)
                                 option.Attributes.Add("selected", "selected");
 
                             option.InnerHtml.Append(item.Text);
@@ -194,7 +194,7 @@
 
                         option.Attributes.Add("value", item.Value);
 
-                        if (value != null && ((long)value).ToString() == item.Value)
+                        if (value != null && ((long)value).ToString() == item.Value || item.Selected)
                             option.Attributes.Add("selected", "selected");
 
                         option.InnerHtml.Append(item.Text);

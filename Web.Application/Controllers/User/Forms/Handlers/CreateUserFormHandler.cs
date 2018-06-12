@@ -1,5 +1,6 @@
 ﻿namespace Web.Application.Controllers.User.Forms.Handlers
 {
+    using Domain.Components.Password.Exceptions;
     using Domain.Entities.User;
     using Domain.Services.User;
     using Domain.Services.User.Exceptions;
@@ -41,6 +42,10 @@
                 user = _userService.Create(form.Login, form.Password, form.Role.Value);
             }
             catch (UserAlreadyExistsException e)
+            {
+                throw new FormException(e.Message);
+            }
+            catch (TooShortPasswordException e)
             {
                 throw new FormException(e.Message);
             }

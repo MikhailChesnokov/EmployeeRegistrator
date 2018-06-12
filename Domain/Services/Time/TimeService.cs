@@ -8,8 +8,8 @@
     {
         public DateTime Now => DateTime.Today;
 
-        public DateTime WorkDayStartsAt => new DateTime(2000, 1, 1, 10, 0, 0);
+        public TimeSpan WorkDayStartsAt => new TimeSpan(10, 00, 00);
 
-        public DateTime WorkDayEndsAt => new DateTime(2000, 1, 1, 18, 0, 0);
+        public TimeSpan WorkDayEndsAt => new TimeSpan(18, 00, 00);
     }
 }

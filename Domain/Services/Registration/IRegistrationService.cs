@@ -12,8 +12,6 @@
     {
         void RegisterEmployee(Employee employee, RegistrationEventType eventType);
 
-        IQueryable<Registration> All();
-
         IQueryable<Registration> AllInclude<TProperty>(Expression<Func<Registration, TProperty>> expression);
     }
 }

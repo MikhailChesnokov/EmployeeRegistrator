@@ -8,8 +8,8 @@
     {
         DateTime Now { get; }
 
-        DateTime WorkDayStartsAt { get; }
+        TimeSpan WorkDayStartsAt { get; }
 
-        DateTime WorkDayEndsAt { get; }
+        TimeSpan WorkDayEndsAt { get; }
     }
 }

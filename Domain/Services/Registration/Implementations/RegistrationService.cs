@@ -36,14 +36,12 @@
             _registrationRepository.Add(registration);
         }
 
-        public IQueryable<Registration> All()
-        {
-            return _registrationRepository.All();
-        }
-
         public IQueryable<Registration> AllInclude<TProperty>(Expression<Func<Registration, TProperty>> expression)
         {
-            return _registrationRepository.AllInclude(expression);
+            return
+                _registrationRepository
+                    .AllInclude(expression)
+                    .Where(x => x.DateTime.Year == DateTime.Now.Year);
         }
     }
 }

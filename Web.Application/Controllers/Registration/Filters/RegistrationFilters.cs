@@ -48,7 +48,7 @@
                 {
                     Registration firstRegistration = dayEmployeeRegistrations.OrderBy(x => x.DateTime).First();
 
-                    TimeSpan employeeLateness = firstRegistration.DateTime.TimeOfDay - timeService.WorkDayStartsAt.TimeOfDay;
+                    TimeSpan employeeLateness = firstRegistration.DateTime.TimeOfDay - timeService.WorkDayStartsAt;
 
                     switch (lateness)
                     {

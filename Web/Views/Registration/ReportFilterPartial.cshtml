@@ -1,9 +1,5 @@
 ﻿@model ReportFilterForm
 
-@{ ViewBag.Title = "Список регистраций"; }
-
-<h4>Список регистраций</h4>
-
 <form method="post">
 
     <root-errors/>
@@ -26,45 +22,18 @@
         label="Конечная дата"
         invalid-feedback="Некорректная конечная дата"
         value="@Model.DateTo?.ToShortDateString()"/>
-    
+
     <select-group
         name="Lateness"
         label="Опоздание"
         placeholder="Не имеет значения"
-        value="@((int?)Model.Lateness)"
         items="@Model.LatenessSelectListItems"/>
-    
+
     <select-group
         name="StrictSchedule"
         label="Строгий график"
         placeholder="Не имеет значения"
-        value="@((int?)Model.StrictSchedule)"
         items="@Model.StrictScheduleSelecrListItems"/>
 
     <input type="submit" class="btn btn-primary mb-4" value="Применить"/>
 </form>
-
-@if (Model?.Registrations?.Any() != true)
-{
-    <p>Список регистраций пуст</p>
-}
-else
-{
-    <partial name="RegistrationsGroupByDaysPartial" model="Model"/>
-}
-
-@section Scripts{
-    <script type="text/javascript">
-        window.$('#EmployeeId').select2();
-
-        $(function () {
-            $('#datetimepicker4-DateFrom').datetimepicker({
-                format: 'L'
-            });
-
-            $('#datetimepicker4-DateTo').datetimepicker({
-                format: 'L'
-            });
-        });
-    </script>
-}

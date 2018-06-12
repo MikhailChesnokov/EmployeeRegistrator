@@ -16,6 +16,7 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
+    using Services;
     using ViewModels;
 
 
@@ -27,6 +28,7 @@
         private readonly IMapper _mapper;
         private readonly IRegistrationService _registrationService;
         private readonly ITimeService _timeService;
+        private readonly IRegistrationsViewModelService _registrationsViewModelService;
 
 
 
@@ -36,7 +38,8 @@
             IMapper mapper,
             IEmployeeService employeeService,
             IAuthorizationService authorizationService,
-            ITimeService timeService)
+            ITimeService timeService,
+            IRegistrationsViewModelService registrationsViewModelService)
             : base(
                 formHandlerFactory,
                 authorizationService)
@@ -45,6 +48,7 @@
             _mapper = mapper;
             _employeeService = employeeService;
             _timeService = timeService;
+            _registrationsViewModelService = registrationsViewModelService;
         }
 
 
@@ -90,7 +94,7 @@
         }
 
         [HttpGet]
-        public IActionResult Report()
+        public IActionResult List()
         {
             if (!RoleIs(Roles.Administrator, Roles.Manager)) return Forbid();
 
@@ -109,11 +113,13 @@
                 StrictScheduleSelecrListItems = typeof(StrictSchedureRequirement).ToSelectList()
             };
 
-            return View(filterForm);
+            RegistrationsViewModel registraionsViewModel = _registrationsViewModelService.ToRegistrationsViewModel(registrationViewModels, filterForm);
+
+            return View(registraionsViewModel);
         }
 
         [HttpPost]
-        public IActionResult Report(ReportFilterForm filterForm)
+        public IActionResult List(ReportFilterForm filterForm)
         {
             if (!RoleIs(Roles.Administrator, Roles.Manager)) return Forbid();
 
@@ -126,14 +132,19 @@
                     .WithStrictScheduleRestriction(filterForm.StrictSchedule)
                     .WithLateness(_timeService, filterForm.Lateness);
 
-            IEnumerable<RegistrationViewModel> registrationsViewModels = _mapper.Map<IEnumerable<RegistrationViewModel>>(registrations);
+            IEnumerable<RegistrationViewModel> registrationViewModels = _mapper.Map<IEnumerable<RegistrationViewModel>>(registrations);
 
-            filterForm.Registrations = registrationsViewModels;
+            string selectedLateness = filterForm.Lateness.HasValue ? Enum.GetName(typeof(Lateness), filterForm.Lateness) : string.Empty;
+            string selectedScheduleRestriction = filterForm.StrictSchedule.HasValue ? Enum.GetName(typeof(StrictSchedureRequirement), filterForm.StrictSchedule) : string.Empty;
+
+            filterForm.Registrations = registrationViewModels;
             filterForm.Employees = _employeeService.All().ToSelectList();
-            filterForm.LatenessSelectListItems = typeof(Lateness).ToSelectList(Enum.GetName(typeof(Lateness), filterForm.Lateness));
-            filterForm.StrictScheduleSelecrListItems = typeof(StrictSchedureRequirement).ToSelectList();
+            filterForm.LatenessSelectListItems = typeof(Lateness).ToSelectList(selectedLateness);
+            filterForm.StrictScheduleSelecrListItems = typeof(StrictSchedureRequirement).ToSelectList(selectedScheduleRestriction);
 
-            return View(filterForm);
+            RegistrationsViewModel registraionsViewModel = _registrationsViewModelService.ToRegistrationsViewModel(registrationViewModels, filterForm);
+
+            return View(registraionsViewModel);
         }
     }
 }
