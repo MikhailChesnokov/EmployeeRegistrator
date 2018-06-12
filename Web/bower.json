@@ -11,7 +11,8 @@
     "moment": "2.22.2",
     "tempusdominus-core": "5.0.0",
     "jquery-ajax-unobtrusive": "v3.2.5",
-    "pnotify": "3.2.1"
+    "pnotify": "3.2.1",
+    "chartist": "v0.11.0"
   },
   "resolutions": {
     "tempusdominus-bootstrap-4": "5.0.0",
