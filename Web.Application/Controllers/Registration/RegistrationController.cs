@@ -170,12 +170,55 @@
             List<StackedBarDayViewModel> barViewModels =
                 registraionsViewModel
                     .DayRegistrations
-                    .Select(dayRegistrations => new StackedBarDayViewModel
+                    .Select(dayRegistrations =>
                     {
-                        Day = dayRegistrations.Day.DayOfYear.ToString(),
-                        Names = JsonConvert.SerializeObject(dayRegistrations.DayEmployeeRegistraions.OrderBy(x => x.EmployeeId).Select(x => x.Employee)),
-                        WorkTimes = JsonConvert.SerializeObject(dayRegistrations.DayEmployeeRegistraions.OrderBy(x => x.EmployeeId).Select(x => x.TotalWorkDayTimeInterval.TotalMinutes.ToString("###0"))),
-                        LatenessTimes = JsonConvert.SerializeObject(dayRegistrations.DayEmployeeRegistraions.OrderBy(x => x.EmployeeId).Select(x => x.LatenessTimeInterval.TotalMinutes.ToString("###0")))
+                        IOrderedEnumerable<DayEmployeeRegistraionsViewModel> orderedDayEmployeeRegistrations = dayRegistrations.DayEmployeeRegistraions.OrderBy(x => x.EmployeeId);
+
+
+                        return new StackedBarDayViewModel
+                        {
+                            Day = dayRegistrations.Day.DayOfYear.ToString(),
+                            Names = JsonConvert.SerializeObject(orderedDayEmployeeRegistrations.Select(x => x.Employee)),
+                            WorkTimes = JsonConvert.SerializeObject(orderedDayEmployeeRegistrations.Select(x =>
+                            {
+                                int totalMinutes = (int)x.TotalWorkDayTimeInterval.TotalMinutes;
+
+                                if (dayRegistrations.Day.Date.Equals(_timeService.Now.Date))
+                                {
+                                    RegistrationRowViewModel last = x.RegistrationRows.OrderBy(y => y.Time).Last();
+
+                                    if (last.Event.Equals(RegistrationEventType.Coming))
+                                    {
+                                        totalMinutes += (int)(_timeService.TimeNow - last.Time).TotalMinutes;
+                                    }
+                                }
+
+                                return totalMinutes.ToString();
+                            })),
+                            LatenessTimes = JsonConvert.SerializeObject(orderedDayEmployeeRegistrations.Select(x =>
+                            {
+                                int totalMinutes = (int)x.LatenessTimeInterval.TotalMinutes;
+
+                                if (dayRegistrations.Day.Date.Equals(_timeService.Now.Date))
+                                {
+                                    RegistrationRowViewModel last = x.RegistrationRows.OrderBy(y => y.Time).Last();
+
+                                    if (last.Event.Equals(RegistrationEventType.Coming))
+                                    {
+                                        if (totalMinutes < 1 && last.Time >= _timeService.WorkDayStartsAt)
+                                        {
+                                            totalMinutes = (int)(last.Time - _timeService.WorkDayStartsAt).TotalMinutes;
+                                        }
+                                    }
+                                }
+                                else if (x.RegistrationRows.All(z => z.CheckResult == RegistrationCheckResult.Violation))
+                                {
+                                    totalMinutes = (int)_timeService.TotalWorkDayTimeSpan.TotalMinutes;
+                                }
+
+                                return totalMinutes.ToString();
+                            }))
+                        };
                     })
                     .ToList();
 
@@ -218,12 +261,54 @@
             List<StackedBarDayViewModel> barViewModels =
                 registraionsViewModel
                     .DayRegistrations
-                    .Select(dayRegistrations => new StackedBarDayViewModel
+                    .Select(dayRegistrations =>
                     {
-                        Day = dayRegistrations.Day.DayOfYear.ToString(),
-                        Names = JsonConvert.SerializeObject(dayRegistrations.DayEmployeeRegistraions.OrderBy(x => x.EmployeeId).Select(x => x.Employee)),
-                        WorkTimes = JsonConvert.SerializeObject(dayRegistrations.DayEmployeeRegistraions.OrderBy(x => x.EmployeeId).Select(x => x.TotalWorkDayTimeInterval.TotalMinutes.ToString("###0"))),
-                        LatenessTimes = JsonConvert.SerializeObject(dayRegistrations.DayEmployeeRegistraions.OrderBy(x => x.EmployeeId).Select(x => x.LatenessTimeInterval.TotalMinutes.ToString("###0")))
+                        IOrderedEnumerable<DayEmployeeRegistraionsViewModel> orderedDayEmployeeRegistrations = dayRegistrations.DayEmployeeRegistraions.OrderBy(x => x.EmployeeId);
+
+
+                        return new StackedBarDayViewModel
+                        {
+                            Day = dayRegistrations.Day.DayOfYear.ToString(),
+                            Names = JsonConvert.SerializeObject(orderedDayEmployeeRegistrations.Select(x => x.Employee)),
+                            WorkTimes = JsonConvert.SerializeObject(orderedDayEmployeeRegistrations.Select(x =>
+                            {
+                                int totalMinutes = (int) x.TotalWorkDayTimeInterval.TotalMinutes;
+
+                                if (dayRegistrations.Day.Date.Equals(_timeService.Now.Date))
+                                {
+                                    RegistrationRowViewModel last = x.RegistrationRows.OrderBy(y => y.Time).Last();
+
+                                    if (last.Event.Equals(RegistrationEventType.Coming))
+                                    {
+                                        totalMinutes += (int)(_timeService.TimeNow - last.Time).TotalMinutes;
+                                    }
+                                }
+
+                                return totalMinutes.ToString();
+                            })),
+                            LatenessTimes = JsonConvert.SerializeObject(orderedDayEmployeeRegistrations.Select(x =>
+                            {
+                                int totalMinutes = (int) x.LatenessTimeInterval.TotalMinutes;
+
+                                if (dayRegistrations.Day.Date.Equals(_timeService.Now.Date))
+                                {
+                                    RegistrationRowViewModel last = x.RegistrationRows.OrderBy(y => y.Time).Last();
+
+                                    if (last.Event.Equals(RegistrationEventType.Coming))
+                                    {
+                                        if (totalMinutes < 1 && last.Time >= _timeService.WorkDayStartsAt)
+                                        {
+                                            totalMinutes = (int)(last.Time - _timeService.WorkDayStartsAt).TotalMinutes;
+                                        }
+                                    }
+                                } else if (x.RegistrationRows.All(z => z.CheckResult == RegistrationCheckResult.Violation))
+                                {
+                                    totalMinutes = (int)_timeService.TotalWorkDayTimeSpan.TotalMinutes;
+                                }
+
+                                return totalMinutes.ToString();
+                            }))
+                        };
                     })
                     .ToList();
 

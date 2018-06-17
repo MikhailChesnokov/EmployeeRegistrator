@@ -146,7 +146,11 @@
             if (firstDayEmployeeRegistration.Registration.DateTime.TimeOfDay < timeService.WorkDayStartsAt)
                 return TimeSpan.Zero;
 
-            return firstDayEmployeeRegistration.Registration.DateTime.TimeOfDay - timeService.WorkDayStartsAt;
+            var lateness = firstDayEmployeeRegistration.Registration.DateTime.TimeOfDay - timeService.WorkDayStartsAt;
+
+            var maxLateness = _timeService.TotalWorkDayTimeSpan;
+
+            return lateness < maxLateness ? lateness : maxLateness;
         }
 
         private bool WasEmployeeLate(IEnumerable<CheckedRegistrationViewModel> checkedDayEmployeeRegistration, ITimeService timeService)
