@@ -23,11 +23,11 @@
 
 
 
-        public Controllers.Registration.ViewModels.RegistrationsViewModel ToRegistrationsViewModel(
+        public RegistrationsViewModel ToRegistrationsViewModel(
             IEnumerable<RegistrationViewModel> registrations,
             ReportFilterForm filterForm)
         {
-            return new Controllers.Registration.ViewModels.RegistrationsViewModel
+            return new RegistrationsViewModel
             {
                 DayRegistrations = ToDayRegistrations(registrations),
                 FilterForm = filterForm

@@ -1,5 +1,6 @@
 namespace Web.Modules
 {
+    using Application.Services.ExcelGenerator;
     using Application.Services.HtmlLayoutGenerator;
     using Application.Services.PdfGenerator;
     using Application.Services.PdfGenerator.Dink;
@@ -13,6 +14,12 @@ namespace Web.Modules
     public class DocumentsModule : ConfiguredModule
     {
         protected override void Load(ContainerBuilder builder)
+        {
+            Pdf(builder);
+            Excel(builder);
+        }
+
+        private void Pdf(ContainerBuilder builder)
         {
             builder
                 .RegisterType<RazorHtmlLayoutGenerator>()
@@ -28,6 +35,15 @@ namespace Web.Modules
                 .RegisterType<DinkPdfGenerator>()
                 .As<IPdfGenerator>()
                 .WithParameter("settings", ConfigurationRoot.GetSection("Documents:Pdf").Get<DinkSettings>())
+                .SingleInstance();
+        }
+
+        private void Excel(ContainerBuilder builder)
+        {
+            builder
+                .RegisterType<ExcelGenerator>()
+                .As<IExcelGenerator>()
+                .WithParameter("settings", ConfigurationRoot.GetSection("Documents:Excel").Get<ExcelSettings>())
                 .SingleInstance();
         }
     }

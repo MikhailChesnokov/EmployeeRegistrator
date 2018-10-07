@@ -18,6 +18,7 @@
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Newtonsoft.Json;
+    using Services.ExcelGenerator;
     using Services.HtmlLayoutGenerator;
     using Services.PdfGenerator;
     using Services.RegistrationsViewModel;
@@ -26,7 +27,7 @@
 
 
     [Authorize]
-    public class RegistrationController : FormControllerBase
+    public sealed class RegistrationController : FormControllerBase
     {
         private readonly IEmployeeService _employeeService;
         private readonly IMapper _mapper;
@@ -35,6 +36,7 @@
         private readonly IRegistrationsViewModelService _registrationsViewModelService;
         private readonly IRazorHtmlLayoutGenerator _htmlLayoutGenerator;
         private readonly IPdfGenerator _pdfGenerator;
+        private readonly IExcelGenerator _excelGenerator;
 
 
 
@@ -47,7 +49,8 @@
             ITimeService timeService,
             IRegistrationsViewModelService registrationsViewModelService,
             IRazorHtmlLayoutGenerator htmlLayoutGenerator,
-            IPdfGenerator pdfGenerator)
+            IPdfGenerator pdfGenerator,
+            IExcelGenerator excelGenerator)
             : base(
                 formHandlerFactory,
                 authorizationService)
@@ -59,6 +62,7 @@
             _registrationsViewModelService = registrationsViewModelService;
             _htmlLayoutGenerator = htmlLayoutGenerator;
             _pdfGenerator = pdfGenerator;
+            _excelGenerator = excelGenerator;
         }
 
 
@@ -115,7 +119,7 @@
         }
 
         [HttpPost]
-        public IActionResult List(ReportFilterForm form, string pdf)
+        public IActionResult List(ReportFilterForm form, string pdf, string excel)
         {
             if (!RoleIs(Roles.Administrator, Roles.Manager))
             {
@@ -132,18 +136,28 @@
 
             var viewModel = GetViewModel(registrations, form);
 
-            if (string.IsNullOrWhiteSpace(pdf))
+            if (string.IsNullOrWhiteSpace(pdf) &&
+                string.IsNullOrWhiteSpace(excel))
             {
                 return View(viewModel);    
             }
 
             viewModel.IsDocument = true;
-            
-            var htmlContent = _htmlLayoutGenerator.RenderAsync($"Registration/{nameof(List)}", viewModel).GetAwaiter().GetResult();
 
-            var file = _pdfGenerator.GenerateAsync(htmlContent).GetAwaiter().GetResult();
+            if (pdf != null)
+            {
+                var htmlContent = _htmlLayoutGenerator.RenderAsync($"Registration/{nameof(List)}", viewModel).GetAwaiter().GetResult();
 
-            return File(file, "application/json", "test.pdf");
+                var file = _pdfGenerator.GenerateAsync(htmlContent).GetAwaiter().GetResult();
+
+                return File(file, "application/json", $"Отчет_{DateTime.Now.ToShortDateString()}_{DateTime.Now.ToShortTimeString()}.pdf");
+            }
+            else
+            {
+                var file = _excelGenerator.GenerateAsync(viewModel).GetAwaiter().GetResult();
+
+                return File(file, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", $"Отчет_{DateTime.Now.ToShortDateString()}_{DateTime.Now.ToShortTimeString()}.xlsx");
+            }
         }
 
         private RegistrationsViewModel GetViewModel(IEnumerable<Registration> registrations, ReportFilterForm form)
