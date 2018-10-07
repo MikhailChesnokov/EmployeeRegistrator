@@ -1,8 +1,8 @@
 ﻿namespace Web
 {
     using Application.Infrastructure.Filters;
+    using Extensions;
     using Autofac;
-    using global::Autofac;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;

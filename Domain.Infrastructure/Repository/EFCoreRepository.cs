@@ -10,7 +10,7 @@
 
 
 
-    public class EntityFrameworkCoreRepository<TEntity> : IRepository<TEntity>
+    public sealed class EntityFrameworkCoreRepository<TEntity> : IRepository<TEntity>
         where TEntity : class, IEntity, new()
     {
         private readonly DbContext _context;
@@ -18,7 +18,8 @@
 
 
 
-        public EntityFrameworkCoreRepository(DbContext context)
+        public EntityFrameworkCoreRepository(
+            DbContext context)
         {
             _context = context;
             _entities = _context.Set<TEntity>();
@@ -76,7 +77,7 @@
 
         public TEntity FindById(int id)
         {
-            return _entities.SingleOrDefault(x => x.Id == id);
+            return _entities.FirstOrDefault(x => x.Id == id);
         }
     }
 }

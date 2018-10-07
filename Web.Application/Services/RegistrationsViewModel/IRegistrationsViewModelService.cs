@@ -1,4 +1,4 @@
-﻿namespace Web.Application.Services
+﻿namespace Web.Application.Services.RegistrationsViewModel
 {
     using System.Collections.Generic;
     using Controllers.Registration.Forms;

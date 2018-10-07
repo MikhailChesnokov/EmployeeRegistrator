@@ -2,7 +2,7 @@
 {
     using Application.Controllers.Employee.Profiles;
     using AutoMapper;
-    using global::Autofac;
+    using Autofac;
 
 
 

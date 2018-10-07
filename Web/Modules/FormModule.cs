@@ -1,7 +1,7 @@
 ﻿namespace Web.Modules
 {
     using Application.Controllers;
-    using global::Autofac;
+    using Autofac;
 
 
 

@@ -10,5 +10,7 @@
         public IEnumerable<DayRegistrationsViewModel> DayRegistrations { get; set; }
 
         public ReportFilterForm FilterForm { get; set; }
+
+        public bool IsDocument { get; set; }
     }
 }

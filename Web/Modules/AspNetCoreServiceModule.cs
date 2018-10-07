@@ -1,6 +1,6 @@
 ﻿namespace Web.Modules
 {
-    using global::Autofac;
+    using Autofac;
     using Microsoft.AspNetCore.Http;
 
 

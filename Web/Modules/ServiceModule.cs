@@ -1,9 +1,10 @@
 ﻿namespace Web.Modules
 {
-    using Application.Services;
+    using Application.Services.HtmlLayoutGenerator;
+    using Application.Services.RegistrationsViewModel;
     using Domain.Services;
     using Domain.Services.Registration.Implementations;
-    using global::Autofac;
+    using Autofac;
 
 
 
@@ -20,6 +21,11 @@
             builder
                 .RegisterType<RegistrationsViewModelService>()
                 .As<IRegistrationsViewModelService>()
+                .InstancePerLifetimeScope();
+
+            builder
+                .RegisterType<RazorHtmlLayoutGenerator>()
+                .As<IRazorHtmlLayoutGenerator>()
                 .InstancePerLifetimeScope();
         }
     }

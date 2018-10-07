@@ -1,4 +1,4 @@
-﻿namespace Web.Application.Services
+﻿namespace Web.Application.Services.RegistrationsViewModel
 {
     using System;
     using System.Collections.Generic;
@@ -23,11 +23,11 @@
 
 
 
-        public RegistrationsViewModel ToRegistrationsViewModel(
+        public Controllers.Registration.ViewModels.RegistrationsViewModel ToRegistrationsViewModel(
             IEnumerable<RegistrationViewModel> registrations,
             ReportFilterForm filterForm)
         {
-            return new RegistrationsViewModel
+            return new Controllers.Registration.ViewModels.RegistrationsViewModel
             {
                 DayRegistrations = ToDayRegistrations(registrations),
                 FilterForm = filterForm

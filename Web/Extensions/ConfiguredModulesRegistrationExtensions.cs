@@ -1,10 +1,10 @@
-﻿namespace Web.Autofac
+﻿namespace Web.Extensions
 {
     using System;
     using System.Collections.Generic;
     using System.Reflection;
-    using global::Autofac;
-    using global::Autofac.Core;
+    using Autofac;
+    using Autofac.Core;
     using Microsoft.Extensions.Configuration;
 
 
