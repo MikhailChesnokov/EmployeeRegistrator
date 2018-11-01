@@ -50,7 +50,7 @@
 
         public Employee GetById(int id)
         {
-            return _employeeRepository.FindById(id);
+            return _employeeRepository.AllInclude(x => x.Department).SingleOrDefault(x => x.Id == id);
         }
 
         public void Delete(int id)

@@ -3,8 +3,11 @@
     using System;
     using Account.Forms;
     using Account.Forms.Handlers;
+    using Departments.Forms;
+    using Departments.Forms.Handlers;
     using Domain.Infrastructure.Authentication;
     using Domain.Repository;
+    using Domain.Services.Department;
     using Domain.Services.Employee;
     using Domain.Services.Registration;
     using Domain.Services.User;
@@ -20,14 +23,11 @@
     public class FormHandlerFactory : IFormHandlerFactory
     {
         private readonly IAuthenticationService<Domain.Entities.User.User> _authenticationService;
-
         private readonly IEmployeeService _employeeService;
-
         private readonly IRegistrationService _registrationService;
-
         private readonly IRepository<Domain.Entities.User.User> _userRepository;
-
         private readonly IUserService _userService;
+        private readonly IDepartmentService _departmentService;
 
 
 
@@ -36,13 +36,15 @@
             IRegistrationService registrationService,
             IUserService userService,
             IAuthenticationService<Domain.Entities.User.User> authenticationService,
-            IRepository<Domain.Entities.User.User> userRepository)
+            IRepository<Domain.Entities.User.User> userRepository,
+            IDepartmentService departmentService)
         {
             _employeeService = employeeService;
             _registrationService = registrationService;
             _userService = userService;
             _authenticationService = authenticationService;
             _userRepository = userRepository;
+            _departmentService = departmentService;
         }
 
 
@@ -51,7 +53,7 @@
             where TForm : IForm
         {
             if (typeof(TForm) == typeof(EditEmployeeForm))
-                return new EditEmployeeFormHandler(_employeeService) as IFormHandler<TForm>;
+                return new EditEmployeeFormHandler(_employeeService, _departmentService) as IFormHandler<TForm>;
             if (typeof(TForm) == typeof(DeleteEmployeeForm))
                 return new DeleteEmployeeFormHandler(_employeeService) as IFormHandler<TForm>;
 
@@ -72,10 +74,13 @@
             where TForm : IForm
         {
             if (typeof(TForm) == typeof(CreateEmployeeForm))
-                return new CreateEmployeeFormHandler(_employeeService) as IFormHandler<TForm, TFormResult>;
+                return new CreateEmployeeFormHandler(_employeeService, _departmentService) as IFormHandler<TForm, TFormResult>;
 
             if (typeof(TForm) == typeof(CreateUserForm))
                 return new CreateUserFormHandler(_userService) as IFormHandler<TForm, TFormResult>;
+
+            if (typeof(TForm) == typeof(CreateDepartmentForm))
+                return new CreateDepartmentFormHandler(_departmentService) as IFormHandler<TForm, TFormResult>;
 
             throw new InvalidOperationException("Undefined type");
         }

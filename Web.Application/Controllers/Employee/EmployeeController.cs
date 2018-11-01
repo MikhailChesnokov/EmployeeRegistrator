@@ -1,13 +1,17 @@
 ﻿namespace Web.Application.Controllers.Employee
 {
     using System.Collections.Generic;
+    using System.Linq;
     using AutoMapper;
+    using Domain.Entities.Department;
     using Domain.Entities.Employee;
     using Domain.Entities.User;
+    using Domain.Services.Department;
     using Domain.Services.Employee;
     using Forms;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Mvc.Rendering;
     using ViewModels;
 
 
@@ -16,6 +20,7 @@
     public class EmployeeController : FormControllerBase
     {
         private readonly IEmployeeService _employeeService;
+        private readonly IDepartmentService _departmentService;
         private readonly IMapper _mapper;
 
 
@@ -24,13 +29,15 @@
             IFormHandlerFactory formHandlerFactory,
             IMapper mapper,
             IEmployeeService employeeService,
-            IAuthorizationService authorizationService)
+            IAuthorizationService authorizationService,
+            IDepartmentService departmentService)
             : base(
                 formHandlerFactory,
                 authorizationService)
         {
             _mapper = mapper;
             _employeeService = employeeService;
+            _departmentService = departmentService;
         }
 
 
@@ -87,8 +94,10 @@
         {
             if (!RoleIs(Roles.Administrator)) return Forbid();
 
+            
+            var departments = _departmentService.AllActive();
 
-            return View(new CreateEmployeeForm());
+            return View(new CreateEmployeeForm{Departments = GetDepartmentsItems(departments)});
         }
 
         [HttpPost]
@@ -100,7 +109,14 @@
             return Form(
                 form,
                 (int employeeId) => this.RedirectToAction(c => c.View(employeeId)),
-                () => View(form));
+                () =>
+                {
+                    var departments = _departmentService.AllActive();
+                    
+                    form.Departments = GetDepartmentsItems(departments, form.DepartmentId);
+                    
+                    return View(form);
+                });
         }
 
         [HttpGet]
@@ -111,9 +127,13 @@
 
             Employee employee = _employeeService.GetById(id);
 
-            EditEmployeeForm editEmployeeForm = _mapper.Map<EditEmployeeForm>(employee);
+            EditEmployeeForm form = _mapper.Map<EditEmployeeForm>(employee);
 
-            return View(editEmployeeForm);
+            var departments = _departmentService.AllActive();
+
+            form.Departments = GetDepartmentsItems(departments, form.DepartmentId);
+
+            return View(form);
         }
 
         [HttpPost]
@@ -125,7 +145,14 @@
             return Form(
                 form,
                 () => this.RedirectToAction(c => c.View(form.Id)),
-                () => View(form));
+                () =>
+                {
+                    var departments = _departmentService.AllActive();
+                    
+                    form.Departments = GetDepartmentsItems(departments, form.DepartmentId);
+                    
+                    return View(form);
+                });
         }
 
         [HttpPost]
@@ -138,6 +165,19 @@
                 form,
                 () => this.RedirectToAction(c => c.List()),
                 () => this.RedirectToAction(c => c.View(form.Id)));
+        }
+
+
+        private IEnumerable<SelectListItem> GetDepartmentsItems(IEnumerable<Department> departments, int? selectedId = null)
+        {
+            return departments.Select(x => new SelectListItem
+            {
+                Text = x.Name,
+                Value = x.Id.ToString(),
+                Selected = selectedId != null && selectedId == x.Id,
+                Disabled = false,
+                Group = default
+            });
         }
     }
 }

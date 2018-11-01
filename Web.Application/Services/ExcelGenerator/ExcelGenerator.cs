@@ -10,7 +10,6 @@ namespace Web.Application.Services.ExcelGenerator
     using Domain.Entities.Registration;
     using Domain.Infrastructure.Extensions;
     using OfficeOpenXml;
-    using OfficeOpenXml.FormulaParsing.Excel.Functions.Logical;
 
 
 

@@ -1,0 +1,30 @@
+@model IEnumerable<DepartmentViewModel>
+
+@{ ViewBag.Title = "Список отделов"; }
+
+<h4>Список отделов</h4>
+
+@if (Model?.Any() != true)
+{
+    <p>Список отделов пуст</p>
+}
+else
+{
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th scope="col">Название</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (DepartmentViewModel department in Model)
+        {
+            <tr>
+                <td>
+                    <p>@department.Name</p>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}

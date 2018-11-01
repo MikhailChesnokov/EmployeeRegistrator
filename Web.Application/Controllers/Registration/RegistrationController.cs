@@ -20,9 +20,11 @@
     using Newtonsoft.Json;
     using Services.ExcelGenerator;
     using Services.HtmlLayoutGenerator;
+    using Services.Mail;
     using Services.PdfGenerator;
     using Services.RegistrationsViewModel;
     using ViewModels;
+    using IMailService = Services.Mail.IMailService;
 
 
 

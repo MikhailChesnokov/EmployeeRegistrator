@@ -1,0 +1,19 @@
+@model CreateDepartmentForm
+
+@{ ViewBag.Title = "Новый отдел"; }
+
+<h4>Новый отдел</h4>
+
+<form method="post" id="department-form">
+
+    <root-errors/>
+
+    <input-group
+        name="Name"
+        label="Название отдела"
+        invalid-feedback="Некорректное название отдела"
+        placeholder="Введите название отдела ..."
+        value="@Model.Name"/>
+
+    <button type="submit" class="btn btn-primary lower-button">Сохранить</button>
+</form>
