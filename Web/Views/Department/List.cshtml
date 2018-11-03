@@ -21,7 +21,7 @@ else
         {
             <tr>
                 <td>
-                    <p>@department.Name</p>
+                    <a href="@(Url.Action<DepartmentController>(c => c.View(department.Id)))">@department.Name</a>
                 </td>
             </tr>
         }

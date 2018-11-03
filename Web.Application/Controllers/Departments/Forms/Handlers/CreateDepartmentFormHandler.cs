@@ -27,7 +27,7 @@ namespace Web.Application.Controllers.Departments.Forms.Handlers
             {
                 department = _departmentService.Add(department);
             }
-            catch (EntityAlreadyCreatedException e)
+            catch (EntityAlreadyExistsException e)
             {
                 throw new FormException(e.Message);
             }

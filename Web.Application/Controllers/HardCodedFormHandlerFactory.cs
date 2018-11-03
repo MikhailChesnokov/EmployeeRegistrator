@@ -20,7 +20,7 @@
 
 
 
-    public class FormHandlerFactory : IFormHandlerFactory
+    public sealed class HardCodedFormHandlerFactory : IFormHandlerFactory
     {
         private readonly IAuthenticationService<Domain.Entities.User.User> _authenticationService;
         private readonly IEmployeeService _employeeService;
@@ -31,7 +31,7 @@
 
 
 
-        public FormHandlerFactory(
+        public HardCodedFormHandlerFactory(
             IEmployeeService employeeService,
             IRegistrationService registrationService,
             IUserService userService,
@@ -56,6 +56,11 @@
                 return new EditEmployeeFormHandler(_employeeService, _departmentService) as IFormHandler<TForm>;
             if (typeof(TForm) == typeof(DeleteEmployeeForm))
                 return new DeleteEmployeeFormHandler(_employeeService) as IFormHandler<TForm>;
+            
+            if (typeof(TForm) == typeof(EditDepartmentForm))
+                return new EditDepartmentFormHandler(_departmentService) as IFormHandler<TForm>;
+            if (typeof(TForm) == typeof(DeleteDepartmentForm))
+                return new DeleteDepartmentFormHandler(_departmentService) as IFormHandler<TForm>;
 
             if (typeof(TForm) == typeof(RegisterComingForm))
                 return new RegisterComingFormHandler(_registrationService, _employeeService) as IFormHandler<TForm>;

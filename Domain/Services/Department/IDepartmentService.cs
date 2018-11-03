@@ -18,5 +18,9 @@ namespace Domain.Services.Department
         IEnumerable<Department> All();
 
         IEnumerable<Department> AllActive();
+
+
+
+        void Rename(Department department, string name);
     }
 }

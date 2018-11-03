@@ -28,7 +28,7 @@ namespace Domain.Entities.Department
 
 
         
-        public void Rename(string name)
+        protected internal void Rename(string name)
         {
             if (string.IsNullOrWhiteSpace(name))
                 throw new ArgumentException("Value cannot be null or whitespace.", nameof(name));

@@ -24,22 +24,16 @@
         }
 
 
+        
         protected bool RoleIs(params Roles[] roles)
         {
-            try
-            {
-                return _authorizationService
-                       .AuthorizeAsync(
-                           User,
-                           roles,
-                           new RoleRequirement())
-                       .Result
-                       .Succeeded;
-            }
-            catch (Exception e)
-            {
-                throw;
-            }
+            return _authorizationService
+                   .AuthorizeAsync(
+                       User,
+                       roles,
+                       new RoleRequirement())
+                   .Result
+                   .Succeeded;
         }
 
         protected IActionResult Form<TForm>(TForm form, Func<IActionResult> success, Func<IActionResult> failure)

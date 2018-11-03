@@ -29,7 +29,7 @@ namespace Domain.Services.Department.Implementations
                 throw new ArgumentNullException(nameof(department));
 
             if (_departmentRepository.All().SingleOrDefault(x => x.Name == department.Name) != null)
-                throw new EntityAlreadyCreatedException($"Отдел с именем \"{department.Name}\" уже существует.");
+                throw new EntityAlreadyExistsException($"Отдел с именем \"{department.Name}\" уже существует.");
 
             _departmentRepository.Add(department);
 
@@ -44,14 +44,14 @@ namespace Domain.Services.Department.Implementations
             if (_departmentRepository.All().SingleOrDefault(x =>
                                                               x.Name == department.Name &&
                                                               x.Id != department.Id) != null)
-                throw new EntityAlreadyCreatedException($"Отдел с именем \"{department.Name}\" уже существует.");
+                throw new EntityAlreadyExistsException($"Отдел с именем \"{department.Name}\" уже существует.");
 
             _departmentRepository.Update(department);
         }
 
         public Department GetById(int id)
         {
-            return _departmentRepository.FindById(id);
+            return _departmentRepository.AllInclude(x => x.Employees).FirstOrDefault(x => x.Id == id);
         }
 
         public void Delete(int id)
@@ -68,12 +68,25 @@ namespace Domain.Services.Department.Implementations
 
         public IEnumerable<Department> All()
         {
-            return _departmentRepository.All();
+            return _departmentRepository.AllInclude(x => x.Employees);
         }
 
         public IEnumerable<Department> AllActive()
         {
-            return _departmentRepository.AllActive();
+            return _departmentRepository.AllInclude(x => x.Employees).Where(x => x.DeletedAtUtc == null);
+        }
+
+        
+        
+        public void Rename(Department department, string name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+                throw new Exception("Empty department name.");
+            
+            if (_departmentRepository.AllActive().Any(x => string.Equals(x.Name, name, StringComparison.InvariantCultureIgnoreCase)))
+                throw new EntityAlreadyExistsException($"Отдел с именем {name} уже существует.");
+            
+            department.Rename(name);
         }
     }
 }

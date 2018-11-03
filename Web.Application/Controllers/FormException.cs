@@ -4,7 +4,7 @@
 
 
 
-    public class FormException : Exception
+    internal sealed class FormException : Exception
     {
         public FormException(string message) : base(message) { }
     }

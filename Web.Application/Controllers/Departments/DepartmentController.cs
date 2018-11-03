@@ -12,7 +12,7 @@ namespace Web.Application.Controllers.Departments
 
 
 
-    public class DepartmentController : FormControllerBase
+    public sealed class DepartmentController : FormControllerBase
     {
         private readonly IDepartmentService _departmentService;
         private readonly IMapper _mapper;
@@ -37,7 +37,8 @@ namespace Web.Application.Controllers.Departments
         [HttpGet]
         public IActionResult List()
         {
-            if (!RoleIs(Roles.Administrator, Roles.Manager, Roles.SecurityGuard)) return Forbid();
+            if (!RoleIs(Roles.Administrator, Roles.Manager, Roles.SecurityGuard))
+                return Forbid();
             
             
             IEnumerable<Department> departments = _departmentService.AllActive();
@@ -48,9 +49,27 @@ namespace Web.Application.Controllers.Departments
         }
 
         [HttpGet]
+        public IActionResult View(int id)
+        {
+            if (!RoleIs(Roles.Administrator, Roles.Manager, Roles.SecurityGuard))
+                return Forbid();
+
+            
+            var department = _departmentService.GetById(id);
+
+            if (department is null)
+                return NotFound();
+
+            var departmentViewModel = _mapper.Map<DepartmentViewModel>(department);
+            
+            return View(departmentViewModel);
+        }
+        
+        [HttpGet]
         public IActionResult Create()
         {
-            if (!RoleIs(Roles.Administrator)) return Forbid();
+            if (!RoleIs(Roles.Administrator))
+                return Forbid();
             
             
             return View(new CreateDepartmentForm());
@@ -59,13 +78,57 @@ namespace Web.Application.Controllers.Departments
         [HttpPost]
         public IActionResult Create(CreateDepartmentForm form)
         {
-            if (!RoleIs(Roles.Administrator)) return Forbid();
+            if (!RoleIs(Roles.Administrator))
+                return Forbid();
             
             
             return Form(
                 form,
-                (int departmentId) => this.RedirectToAction(c => c.List()),
+                (int id) => this.RedirectToAction(c => c.View(id)),
                 () => View(form));
+        }
+
+        [HttpGet]
+        public IActionResult Edit(int id)
+        {
+            if (!RoleIs(Roles.Administrator))
+                return Forbid();
+            
+            
+            var department = _departmentService.GetById(id);
+
+            if (department is null)
+                return NotFound();
+
+            var form = _mapper.Map<EditDepartmentForm>(department);
+
+            return View(form);
+        }
+
+        [HttpPost]
+        public IActionResult Edit(EditDepartmentForm form)
+        {
+            if (!RoleIs(Roles.Administrator))
+                return Forbid();
+
+            
+            return Form(
+                form,
+                () => this.RedirectToAction(x => x.View(form.Id.Value)),
+                () => View(form));
+        }
+        
+        [HttpPost]
+        public IActionResult Delete(DeleteDepartmentForm form)
+        {
+            if (!RoleIs(Roles.Administrator))
+                return Forbid();
+            
+            
+            return Form(
+                form,
+                () => this.RedirectToAction(x => x.List()),
+                () => this.RedirectToAction(x => x.List()));
         }
     }
 }
