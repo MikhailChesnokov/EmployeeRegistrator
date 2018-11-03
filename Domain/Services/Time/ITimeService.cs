@@ -1,10 +1,11 @@
 ﻿namespace Domain.Services.Time
 {
     using System;
+    using System.Collections.Generic;
 
 
 
-    public interface ITimeService : IDomainService
+    public interface ITimeService
     {
         DateTime Now { get; }
 
@@ -15,5 +16,10 @@
         TimeSpan WorkDayEndsAt { get; }
 
         TimeSpan TotalWorkDayTimeSpan { get; }
+
+
+        TimeSpan RevisionPeriod { get; }
+
+        IEnumerable<TimeSpan> NotifyAfter { get; }
     }
 }

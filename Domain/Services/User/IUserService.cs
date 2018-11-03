@@ -9,7 +9,7 @@
     {
         void SignUp(string login, string password);
 
-        User Create(string login, string password, Roles role);
+        User Create(string login, string password, Roles role, string email = null, bool needNotify = false);
 
         User GetById(int id);
 

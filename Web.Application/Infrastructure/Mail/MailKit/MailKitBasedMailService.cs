@@ -1,19 +1,20 @@
-namespace Web.Application.Services.Mail.MailKit
+namespace Web.Application.Infrastructure.Mail.MailKit
 {
     using global::MailKit.Net.Smtp;
+    using Mail;
     using MimeKit;
 
 
 
-    public sealed class MailKitService : IMailService
+    public sealed class MailKitBasedMailService : IMailService
     {
-        private readonly MailKitSettings _settings;
+        private readonly MailKitBasedMailServiceSettings _basedMailServiceSettings;
         
         
         
-        public MailKitService(MailKitSettings settings)
+        public MailKitBasedMailService(MailKitBasedMailServiceSettings settings)
         {
-            _settings = settings;
+            _basedMailServiceSettings = settings;
         }
 
 
@@ -31,17 +32,17 @@ namespace Web.Application.Services.Mail.MailKit
                 Body = bodyBuilder.ToMessageBody()
             };
             
-            message.From.Add(new MailboxAddress(_settings.From));
+            message.From.Add(new MailboxAddress(_basedMailServiceSettings.From));
             message.To.Add(new MailboxAddress(addressee));
 
             using (var smtpClient = new SmtpClient())
             {
                 smtpClient.ServerCertificateValidationCallback = (s, c, h, e) => true;
 
-                smtpClient.Connect(_settings.Host, _settings.Port, _settings.UseSsl);
+                smtpClient.Connect(_basedMailServiceSettings.Host, _basedMailServiceSettings.Port, _basedMailServiceSettings.UseSsl);
 
-                if (_settings.NeedAuthentication)
-                    smtpClient.Authenticate(_settings.Login, _settings.Password);
+                if (_basedMailServiceSettings.NeedAuthentication)
+                    smtpClient.Authenticate(_basedMailServiceSettings.Login, _basedMailServiceSettings.Password);
 
                 smtpClient.Send(message);
 

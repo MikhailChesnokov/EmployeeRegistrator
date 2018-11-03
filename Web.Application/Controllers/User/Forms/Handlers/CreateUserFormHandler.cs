@@ -39,7 +39,7 @@
 
             try
             {
-                user = _userService.Create(form.Login, form.Password, form.Role.Value);
+                user = _userService.Create(form.Login, form.Password, form.Role.Value, form.Email, form.NeedNotify ?? false);
             }
             catch (UserAlreadyExistsException e)
             {

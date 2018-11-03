@@ -12,11 +12,17 @@
 
 
 
-        protected User(string login, string password, Roles role)
+        protected User(
+            string login,
+            string password,
+            Roles role,
+            string email = null,
+            bool needNotify = false)
         {
             SetLogin(login);
             SetPassword(password);
             SetRole(role);
+            SetNotification(email, needNotify);
         }
 
 
@@ -25,7 +31,13 @@
 
         public Password Password { get; protected set; }
 
+        
+
         public Roles Role { get; protected set; }
+        
+        public string Email { get; protected set; }
+
+        public bool NeedNotify { get; protected set; }
 
         public int Id { get; set; }
 
@@ -50,6 +62,15 @@
         private void SetRole(Roles role)
         {
             Role = role;
+        }
+
+        private void SetNotification(string email, bool needNotify)
+        {
+            if (string.IsNullOrWhiteSpace(email) && needNotify)
+                throw new ArgumentException("Empty email when need notification.");
+
+            Email = email;
+            NeedNotify = needNotify;
         }
 
 

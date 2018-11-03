@@ -38,7 +38,7 @@
             _userRepository.Add(user);
         }
 
-        public User Create(string login, string password, Roles role)
+        public User Create(string login, string password, Roles role, string email = null, bool needNotify = false)
         {
             if (string.IsNullOrWhiteSpace(login))
                 throw new ArgumentException("Value cannot be null or whitespace.", nameof(login));
@@ -53,7 +53,7 @@
             switch (role)
             {
                 case Roles.Administrator:
-                    user = new Administrator(login, password);
+                    user = new Administrator(login, password, email, needNotify);
                     break;
                 case Roles.Manager:
                     user = new Manager(login, password);

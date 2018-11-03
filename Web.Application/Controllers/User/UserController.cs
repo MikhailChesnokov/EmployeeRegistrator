@@ -9,13 +9,12 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Rendering;
-    using Registration.Enums;
     using ViewModels;
 
 
 
     [Authorize]
-    public class UserController : FormControllerBase
+    public sealed class UserController : FormControllerBase
     {
         private readonly IUserService _userService;
         private readonly IMapper _mapper;
@@ -50,6 +49,22 @@
             return View(userViewModels);
         }
 
+        [HttpGet]
+        public IActionResult View(int id)
+        {
+            if (!RoleIs(Roles.Administrator)) return Forbid();
+
+
+            var user = _userService.GetById(id);
+
+            if (user is null)
+                return NotFound();
+
+            var userViewModel = _mapper.Map<UserViewModel>(user);
+
+            return View(userViewModel);
+        }
+        
         [HttpGet]
         public IActionResult Create()
         {

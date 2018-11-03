@@ -23,6 +23,7 @@
     <input-group
         name="ConfirmPassword"
         label="Подтверждение пароля"
+        placeholder="Подтвердите пароль ..."
         invalid-feedback="Некорректное подтверждение пароля"
         is-password="true"
         value="@Model.ConfirmPassword"/>
@@ -32,6 +33,32 @@
         label="Роль"
         invalid-feedback="Роль не выбрана"
         items="@Model.Roles"/>
+    
+    <input-group
+        name="Email"
+        label="Электронная почта"
+        placeholder="Введите адрес электронной почты"
+        invalid-feedback="Некорректный адрес электронной почты"
+        value="@Model.Email"/>
+    
+    <div class="form-check">
+        <input class="form-check-input" type="checkbox" id="NeedNotify" name="NeedNotify" @(Model.NeedNotify ?? false ? "checked" : string.Empty) disabled="disabled">
+        <label class="form-check-label" for="NeedNotify">
+            Присылать уведомления об опозданиях
+        </label>
+    </div>
 
     <button type="submit" class="btn btn-primary lower-button">Сохранить</button>
 </form>
+
+@section Scripts{
+    <script type="text/javascript">
+        $('#Role').change(() => {
+            if ($('#Role').val() === "Administrator") {
+                $('#NeedNotify').prop( "disabled", false );
+            } else {
+                $('#NeedNotify').prop( "disabled", true );
+            }
+        });
+    </script>
+}

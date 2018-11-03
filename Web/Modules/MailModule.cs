@@ -1,7 +1,8 @@
 namespace Web.Modules
 {
-    using Application.Services.Mail;
-    using Application.Services.Mail.MailKit;
+    using Application.Infrastructure.Mail;
+    using Application.Infrastructure.Mail.Fake;
+    using Application.Infrastructure.Mail.MailKit;
     using Autofac;
     using Microsoft.Extensions.Configuration;
 
@@ -12,9 +13,9 @@ namespace Web.Modules
         protected override void Load(ContainerBuilder builder)
         {
             builder
-                .RegisterType<MailKitService>()
+                .RegisterType<MailKitBasedMailService>()
                 .As<IMailService>()
-                .WithParameter("settings", ConfigurationRoot.GetSection("Mail").Get<MailKitSettings>())
+                .WithParameter("settings", ConfigurationRoot.GetSection("Mail:Smtp").Get<MailKitBasedMailServiceSettings>())
                 .SingleInstance();
         }
     }

@@ -11,7 +11,8 @@ namespace Web.Application.Controllers.Departments
     using ViewModels;
 
 
-
+    
+    [Authorize]
     public sealed class DepartmentController : FormControllerBase
     {
         private readonly IDepartmentService _departmentService;

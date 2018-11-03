@@ -29,7 +29,7 @@ namespace Web.Application.Controllers.Departments.Forms.Handlers
             }
             catch (CannotDeleteEntityInUseException e)
             {
-                throw new FormException("Невозможно удалить отдел, так как на него ссылаются один или несколько сотрудников.");
+                throw new FormException(e.Message);
             }
         }
     }

@@ -1,6 +1,6 @@
-namespace Web.Application.Services.Mail.MailKit
+namespace Web.Application.Infrastructure.Mail.MailKit
 {
-    public class MailKitSettings
+    public class MailKitBasedMailServiceSettings
     {
         public string Host { get; set; }
         

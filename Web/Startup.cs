@@ -1,6 +1,7 @@
 ﻿namespace Web
 {
     using Application.Infrastructure.Filters;
+    using Application.Infrastructure.ScheduledTasks;
     using Extensions;
     using Autofac;
     using Microsoft.AspNetCore.Builder;
@@ -28,7 +29,9 @@
         public void ConfigureServices(IServiceCollection services)
         {
             services
-                .AddScoped<ExceptionFilter>();
+                .AddScoped<ExceptionFilter>()
+                .AddHostedService<TimedHostedService>()
+                ;
 
             services
                 .AddMvc(options => options.Filters.AddService<ExceptionFilter>())

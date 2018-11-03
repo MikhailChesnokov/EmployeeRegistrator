@@ -1,4 +1,4 @@
-namespace Web.Application.Services.Mail
+namespace Web.Application.Infrastructure.Mail
 {
     public interface IMailService
     {

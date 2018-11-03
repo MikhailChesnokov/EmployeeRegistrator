@@ -4,7 +4,7 @@
 
 
 
-    public class Manager : User
+    public sealed class Manager : User
     {
         [Obsolete("Only for reflection", true)]
         public Manager() { }
