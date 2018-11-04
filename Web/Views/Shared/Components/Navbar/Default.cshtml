@@ -43,6 +43,22 @@
                         }
                     </div>
                 </li>
+                
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Отделы
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        @if (Model.UserRole is Roles.Administrator || Model.UserRole is Roles.Manager || Model.UserRole is Roles.SecurityGuard)
+                        {
+                            <a class="dropdown-item" href="@(Url.Action<DepartmentController>(c => c.List()))">Список отделов</a>
+                        }
+                        @if (Model.UserRole is Roles.Administrator)
+                        {
+                            <a class="dropdown-item" href="@(Url.Action<DepartmentController>(c => c.Create(With.No<CreateDepartmentForm>())))">Добавить отдел</a>
+                        }
+                    </div>
+                </li>
 
                 @if (Model.UserRole is Roles.Administrator || Model.UserRole is Roles.Manager)
                 {

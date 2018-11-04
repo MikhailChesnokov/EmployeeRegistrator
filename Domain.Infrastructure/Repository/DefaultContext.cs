@@ -1,31 +1,32 @@
 ﻿namespace Domain.Infrastructure.Repository
 {
     using System;
-    using System.IO;
     using Entities.Employee;
     using Entities.Registration;
     using Entities.User;
     using Microsoft.EntityFrameworkCore;
-    using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
 
 
 
     public sealed class DefaultContext : DbContext
     {
+        private readonly EntityFrameworkSettings _settings;
         private readonly ILoggerFactory _loggerFactory;
 
-        public DefaultContext(ILoggerFactory loggerFactory)
+        
+        
+        public DefaultContext(
+            ILoggerFactory loggerFactory,
+            EntityFrameworkSettings settings)
         {
             _loggerFactory = loggerFactory;
-            SetConfigurationRoot();
+            _settings = settings;
             
             Database.EnsureCreated();
         }
 
 
-
-        private IConfigurationRoot ConfigurationRoot { get; set; }
 
         public DbSet<Employee> Employees { get; set; }
 
@@ -37,26 +38,26 @@
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            switch (ConfigurationRoot["Database"].ToLower())
+            switch (_settings.Database)
             {
-                case "sqlserver":
-                    optionsBuilder.UseSqlServer(ConfigurationRoot.GetConnectionString("SqlServer"));
+                case Repository.Database.SqlServer:
+                    optionsBuilder.UseSqlServer(_settings.ConnectionStrings.SqlServer);
                     break;
 
-                case "mysql":
-                    optionsBuilder.UseMySQL(ConfigurationRoot.GetConnectionString("MySql"));
+                case Repository.Database.MySql:
+                    optionsBuilder.UseMySQL(_settings.ConnectionStrings.MySql);
                     break;
 
-                case "sqlite":
-                    optionsBuilder.UseSqlite(ConfigurationRoot.GetConnectionString("SQLite"));
+                case Repository.Database.SqLite:
+                    optionsBuilder.UseSqlite(_settings.ConnectionStrings.SqLite);
                     break;
 
-                case "inmemory":
-                    optionsBuilder.UseInMemoryDatabase(ConfigurationRoot.GetConnectionString("InMemory"));
+                case Repository.Database.InMemory:
+                    optionsBuilder.UseInMemoryDatabase(_settings.ConnectionStrings.InMemory);
                     break;
 
                 default:
-                    throw new InvalidOperationException("Unexpected \"Database\" parameter in appsettings.json. Try \"SqlServer\", \"MySql\" or \"SQLite\".");
+                    throw new InvalidOperationException("Unexpected \"Database\" parameter in appsettings.json.");
             }
 
             optionsBuilder.UseLoggerFactory(_loggerFactory);
@@ -66,9 +67,9 @@
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            switch (ConfigurationRoot["Database"].ToLower())
+            switch (_settings.Database)
             {
-                case "sqlserver":
+                case Repository.Database.SqlServer:
                     modelBuilder.Entity<User>().OwnsOne(x => x.Password, pw =>
                     {
                         pw.Property(x => x.Salt).IsRequired().HasColumnType("varbinary(40)").HasMaxLength(40);
@@ -76,7 +77,7 @@
                     });
                     break;
 
-                case "mysql":
+                case Repository.Database.MySql:
                     modelBuilder.Entity<User>().OwnsOne(x => x.Password, pw =>
                     {
                         pw.Property(x => x.Salt).IsRequired().HasColumnType("MEDIUMBLOB").HasMaxLength(40);
@@ -84,7 +85,7 @@
                     });
                     break;
 
-                case "sqlite":
+                case Repository.Database.SqLite:
                     modelBuilder.Entity<User>().OwnsOne(x => x.Password, pw =>
                     {
                         pw.Property(x => x.Salt).IsRequired().HasColumnType("BLOB").HasMaxLength(40);
@@ -92,7 +93,7 @@
                     });
                     break;
 
-                case "inmemory":
+                case Repository.Database.InMemory:
                     modelBuilder.Entity<User>().OwnsOne(x => x.Password, pw =>
                     {
                         pw.Property(x => x.Salt).IsRequired().HasColumnType("varbinary(40)").HasMaxLength(40);
@@ -101,20 +102,10 @@
                     break;
 
                 default:
-                    throw new InvalidOperationException("Unexpected \"Database\" parameter in appsettings.json. Try \"SqlServer\", \"MySql\" or \"SQLite\".");
+                    throw new InvalidOperationException("Unexpected \"Database\" parameter in appsettings.json.");
             }
 
             base.OnModelCreating(modelBuilder);
-        }
-
-        private void SetConfigurationRoot()
-        {
-            ConfigurationBuilder configBuilder = new ConfigurationBuilder();
-            configBuilder.SetBasePath(Directory.GetCurrentDirectory());
-            configBuilder.AddJsonFile("appsettings.json");
-            IConfigurationRoot config = configBuilder.Build();
-
-            ConfigurationRoot = config;
         }
     }
 }

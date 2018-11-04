@@ -33,6 +33,15 @@
         label="Табельный номер"
         value="@Model.PersonnelNumber"/>
 
+    <select-group
+        name="DepartmentId"
+        label="Отдел"
+        invalid-feedback="Отдел не выбран"
+        placeholder="Выберите отдел ..."
+        items="@Model.Departments"
+        value="@Model.DepartmentId"
+        grouping="false"/>
+    
     <div class="form-check">
         <input class="form-check-input" type="checkbox" id="WorkplacePresenceRequired" name="WorkplacePresenceRequired" @(Model.WorkplacePresenceRequired ? "checked" : string.Empty)>
         <label class="form-check-label" for="WorkplacePresenceRequired">

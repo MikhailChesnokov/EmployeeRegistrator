@@ -1,7 +1,7 @@
 ﻿namespace Web.Modules
 {
     using Application.Controllers;
-    using global::Autofac;
+    using Autofac;
 
 
 
@@ -10,7 +10,7 @@
         protected override void Load(ContainerBuilder builder)
         {
             builder
-                .RegisterType<FormHandlerFactory>()
+                .RegisterType<HardCodedFormHandlerFactory>()
                 .As<IFormHandlerFactory>()
                 .InstancePerLifetimeScope();
         }

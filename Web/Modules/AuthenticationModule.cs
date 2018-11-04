@@ -3,7 +3,7 @@
     using Application.Authorization.UserProviders;
     using Domain.Entities.User;
     using Domain.Infrastructure.Authentication;
-    using global::Autofac;
+    using Autofac;
 
 
 

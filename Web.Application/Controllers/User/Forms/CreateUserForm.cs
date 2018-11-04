@@ -32,6 +32,11 @@
         [EnumDataType(typeof(Roles))]
         public Roles? Role { get; set; }
 
+        [EmailAddress]
+        public string Email { get; set; }
+
+        public bool? NeedNotify { get; set; }
+
         public IEnumerable<SelectListItem> Roles { get; set; }
     }
 }

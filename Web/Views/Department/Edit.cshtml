@@ -1,0 +1,21 @@
+@model EditDepartmentForm
+
+@{ ViewBag.Title = "Изменить отдел"; }
+
+<h4>Изменить отдел</h4>
+
+<form method="post" id="department-form">
+
+    <root-errors/>
+
+    <input type="hidden" name="Id" value="@Model.Id">
+    
+    <input-group
+        name="Name"
+        label="Название отдела"
+        invalid-feedback="Некорректное название отдела"
+        placeholder="Введите название отдела ..."
+        value="@Model.Name"/>
+
+    <button type="submit" class="btn btn-primary lower-button">Сохранить</button>
+</form>

@@ -4,7 +4,18 @@
 
 <h4>Список регистраций</h4>
 
-<partial name="ReportFilterPartial" model="@Model.FilterForm" />
+
+@if (Model.IsDocument)
+{
+    <h5>Дата: @DateTime.Now.ToLongDateString()</h5>
+    
+    <partial name="ReportFilterPartialVIew" model="@Model.FilterForm"/>
+}
+else
+{
+    <partial name="ReportFilterPartial" model="@Model.FilterForm" />
+}
+
 
 @if (Model.DayRegistrations?.Any() != true)
 {
@@ -13,8 +24,8 @@
 else
 {
     <table class="table table-bordered table-sm">
-        <thead>
-            <tr>
+        <thead style="display: table-header-group">
+            <tr style="page-break-inside: avoid">
                 <th>День</th>
                 <th>Сотрудник</th>
                 <th>Время</th>
@@ -25,47 +36,49 @@ else
             </tr>
         </thead>
 
-        <tbody>
-            @foreach (var dayRegistrations in Model.DayRegistrations)
+        <tbody style="display: table-row-group">
+        
+        @foreach (var dayRegistrations in Model.DayRegistrations)
+        {
+            foreach (var dayEmployeeRegistraions in dayRegistrations.DayEmployeeRegistraions)
             {
-                foreach (var dayEmployeeRegistraions in dayRegistrations.DayEmployeeRegistraions)
+                foreach (var dayEmployeeRegistraionRow in dayEmployeeRegistraions.RegistrationRows)
                 {
-                    foreach (var dayEmployeeRegistraionRow in dayEmployeeRegistraions.RegistrationRows)
-                    {
-                        string dayAndEmployee = $"{dayRegistrations.Day.Date}-{dayEmployeeRegistraions.EmployeeId}-";
-                        int dayEmployeeRowsCount = dayEmployeeRegistraions.TotalDayEmployeeRegistrationsCount;
-                        const string timeSpanFormat = "hh\\:mm";
+                    string dayAndEmployee = $"{dayRegistrations.Day.Date}-{dayEmployeeRegistraions.EmployeeId}-";
+                    int dayEmployeeRowsCount = dayEmployeeRegistraions.TotalDayEmployeeRegistrationsCount;
+                    const string timeSpanFormat = "hh\\:mm";
 
-                        <tr>
-                            <td rowspan="@dayRegistrations.TotalDayRegistrationsCount" rowspan-id="@dayRegistrations.Day.Date">@dayRegistrations.Day.ToShortDateString()</td>
+                    <tr style="page-break-inside: avoid">
+                        <td rowspan="@dayRegistrations.TotalDayRegistrationsCount" rowspan-id="@dayRegistrations.Day.Date">@dayRegistrations.Day.ToShortDateString()</td>
 
-                            <td rowspan="@dayEmployeeRowsCount" rowspan-id="@dayAndEmployee-emp">@dayEmployeeRegistraions.Employee</td>
+                        <td rowspan="@dayEmployeeRowsCount" rowspan-id="@dayAndEmployee-emp">@dayEmployeeRegistraions.Employee</td>
 
-                            <td>@dayEmployeeRegistraionRow.Time.ToString(timeSpanFormat)</td>
+                        <td>@dayEmployeeRegistraionRow.Time.ToString(timeSpanFormat)</td>
 
-                            <td>@(dayEmployeeRegistraionRow.Event == RegistrationEventType.Coming ? "Вход" : "Выход")</td>
+                        <td>@(dayEmployeeRegistraionRow.Event == RegistrationEventType.Coming ? "Вход" : "Выход")</td>
 
-                            @if (dayEmployeeRegistraionRow.CheckResult is RegistrationCheckResult.Ok && dayEmployeeRegistraionRow.Event is RegistrationEventType.Coming)
-                            {
-                                <td rowspan="2">@dayEmployeeRegistraionRow.WorkTimeInterval.ToString(timeSpanFormat)</td>
-                            }
-                            else if (dayEmployeeRegistraionRow.CheckResult is RegistrationCheckResult.Violation)
-                            {
-                                <td class="table-danger">-</td>
-                            }
+                        @if (dayEmployeeRegistraionRow.CheckResult is RegistrationCheckResult.Ok && dayEmployeeRegistraionRow.Event is RegistrationEventType.Coming)
+                        {
+                            <td rowspan="2">@dayEmployeeRegistraionRow.WorkTimeInterval.ToString(timeSpanFormat)</td>
+                        }
+                        else if (dayEmployeeRegistraionRow.CheckResult is RegistrationCheckResult.Violation)
+                        {
+                            <td class="table-danger">-</td>
+                        }
 
-                            <td rowspan="@dayEmployeeRowsCount" rowspan-id="@dayAndEmployee-work">@dayEmployeeRegistraions.TotalWorkDayTimeInterval.ToString(timeSpanFormat)</td>
+                        <td rowspan="@dayEmployeeRowsCount" rowspan-id="@dayAndEmployee-work">@dayEmployeeRegistraions.TotalWorkDayTimeInterval.ToString(timeSpanFormat)</td>
 
-                            <td rowspan="@dayEmployeeRowsCount" rowspan-id="@dayAndEmployee-late" class="@(dayEmployeeRegistraions.EmployeeWasLate? "table-warning" : string.Empty)">@dayEmployeeRegistraions.LatenessTimeInterval.ToString(timeSpanFormat)</td>
-                        </tr>
-                    }
+                        <td rowspan="@dayEmployeeRowsCount" rowspan-id="@dayAndEmployee-late" class="@(dayEmployeeRegistraions.EmployeeWasLate ? "table-warning" : string.Empty)">@dayEmployeeRegistraions.LatenessTimeInterval.ToString(timeSpanFormat)</td>
+                    </tr>
                 }
             }
+        }
         </tbody>
     </table>
 }
 
-@section Scripts{
+@section Scripts
+{
     <script type="text/javascript">
         window.$('#EmployeeId').select2();
 

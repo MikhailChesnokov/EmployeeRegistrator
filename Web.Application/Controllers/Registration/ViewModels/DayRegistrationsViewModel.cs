@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
 
 
 
@@ -12,5 +13,7 @@
         public DateTime Day { get; set; }
 
         public IEnumerable<DayEmployeeRegistraionsViewModel> DayEmployeeRegistraions { get; set; }
+
+        public int DayEmployeeRegistrationsCount => DayEmployeeRegistraions.Sum(x => x.TotalDayEmployeeRegistrationsCount);
     }
 }

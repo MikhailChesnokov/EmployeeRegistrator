@@ -1,0 +1,27 @@
+@model DepartmentViewModel
+
+@{ ViewBag.Title = "Отдел"; }
+
+<h4>Отдел</h4>
+
+<form>
+
+    <view-group
+        name="Name"
+        label="Название"
+        value="@Model.Name"/>
+    
+    <view-group
+        name="EmployeesCount"
+        label="Количество сотрудников"
+        value="@Model.Employees.Count()"/>
+
+</form>
+
+<form asp-action="Delete">
+    <input type="hidden" name="Id" value="@Model.Id">
+
+    <a class="btn btn-primary lower-button" href="@(Url.Action<DepartmentController>(c => c.Edit(Model.Id)))">Редактировать</a>
+
+    <input type="submit" class="btn btn-primary lower-button" value="Удалить">
+</form>

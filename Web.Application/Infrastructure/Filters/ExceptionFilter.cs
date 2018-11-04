@@ -13,7 +13,7 @@
     {
         public async Task OnExceptionAsync(ExceptionContext context)
         {
-            OnException(context);
+            await Task.Run(() => OnException(context));
         }
 
         public void OnException(ExceptionContext context)

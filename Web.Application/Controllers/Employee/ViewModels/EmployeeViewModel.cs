@@ -1,6 +1,7 @@
 ﻿namespace Web.Application.Controllers.Employee.ViewModels
 {
     using System.Collections.Generic;
+    using Departments.ViewModels;
 
 
 
@@ -17,6 +18,8 @@
         public string Fio { get; set; }
 
         public string PersonnelNumber { get; set; }
+
+        public DepartmentViewModel Department { get; set; }
 
         public bool WorkplacePresenceRequired { get; set; }
     }

@@ -28,6 +28,15 @@
         label="Отчество"
         invalid-feedback="Некорректное отчество сотрудника"
         value="@Model.Patronymic"/>
+    
+    <select-group
+        name="DepartmentId"
+        label="Отдел"
+        invalid-feedback="Отдел не выбран"
+        placeholder="Выберите отдел ..."
+        items="@Model.Departments"
+        value="@Model.DepartmentId"
+        grouping="false"/>
 
     <input-group
         name="PersonnelNumber"

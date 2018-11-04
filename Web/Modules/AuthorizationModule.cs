@@ -1,7 +1,7 @@
 ﻿namespace Web.Modules
 {
     using Application.Authorization.Requirements.Handlers;
-    using global::Autofac;
+    using Autofac;
     using Microsoft.AspNetCore.Authorization;
 
 

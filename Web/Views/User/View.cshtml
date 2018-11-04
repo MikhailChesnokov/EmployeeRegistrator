@@ -1,0 +1,29 @@
+@model UserViewModel
+
+@{ ViewBag.Title = "Пользователь"; }
+
+<h4>Пользователь</h4>
+
+<form>
+
+    <view-group
+        name="Login"
+        label="Логин"
+        value="@Model.Login"/>
+
+    <view-group
+        name="Email"
+        label="Электронная почта"
+        value="@Model.Email"/>
+
+    <view-group
+        name="Role"
+        label="Роль"
+        value="@(typeof(Roles).GetField(Enum.GetName(typeof(Roles), Model.Role)).GetCustomAttributes(false).OfType<DisplayAttribute>().Single().Name)"/>
+
+    <view-group
+        name="NeedNotify"
+        label="Оповещения об опозданиях"
+        value="@(Model.NeedNotify? "Да" : "Нет")"/>
+
+</form>

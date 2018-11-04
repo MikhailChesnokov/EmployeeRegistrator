@@ -1,0 +1,38 @@
+@model ReportFilterForm
+
+<form method="post">
+    <table class="table table-borderless my-4">
+        <tbody>
+        <tr>
+            <td>
+                <view-group
+                    name="EmployeeId"
+                    label="Сотрудник"
+                    value="@(Model.EmployeeId.HasValue ? Model.Employees.FirstOrDefault(x => x.Selected)?.Text : "Все")"/>
+            </td>
+            <td>
+                <view-group
+                    name="DateFrom"
+                    label="Начальная дата"
+                    value="@(Model.DateFrom.HasValue ? Model.DateFrom.Value.ToShortDateString() : "Не указана")"/>
+
+                <view-group
+                    name="DateTo"
+                    label="Конечная дата"
+                    value="@(Model.DateTo.HasValue ? Model.DateTo.Value.ToShortDateString() : "Не указана")"/>
+            </td>
+            <td>
+                <view-group
+                    name="Lateness"
+                    label="Опоздание"
+                    value="@(Model.Lateness.HasValue ? Model.LatenessSelectListItems.FirstOrDefault(x => x.Selected)?.Text : "Не указано")"/>
+
+                <view-group
+                    name="StrictSchedule"
+                    label="Строгий график"
+                    value="@(Model.StrictSchedule.HasValue ? Model.StrictScheduleSelecrListItems.FirstOrDefault(x => x.Selected)?.Text : "Не указано")"/>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</form>
