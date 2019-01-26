@@ -67,6 +67,9 @@
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<User>().Property(x => x.NeedNotify).HasConversion<int>();
+            modelBuilder.Entity<Employee>().Property(x => x.WorkplacePresenceRequired).HasConversion<int>();
+            
             switch (_settings.Database)
             {
                 case Repository.Database.SqlServer:
