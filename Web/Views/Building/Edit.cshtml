@@ -1,0 +1,21 @@
+@model EditBuildingForm
+
+@{ ViewBag.Title = "Изменить здание"; }
+
+<h4>Изменить здание</h4>
+
+<form method="post" id="building-form">
+
+    <root-errors/>
+
+    <input type="hidden" name="Id" value="@Model.Id">
+    
+    <input-group
+        name="Address"
+        label="Адрес"
+        invalid-feedback="Некорректное название адреса"
+        placeholder="Введите адрес ..."
+        value="@Model.Address"/>
+
+    <button type="submit" class="btn btn-primary lower-button">Сохранить</button>
+</form>
