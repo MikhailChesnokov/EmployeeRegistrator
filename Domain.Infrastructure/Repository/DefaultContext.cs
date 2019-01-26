@@ -1,5 +1,6 @@
 ﻿namespace Domain.Infrastructure.Repository
 {
+    using Entities.Building;
     using System;
     using Entities.Employee;
     using Entities.Registration;
@@ -33,6 +34,8 @@
         public DbSet<Registration> Registrations { get; set; }
 
         public DbSet<User> Users { get; set; }
+        
+        public DbSet<Building> Buildings { get; set; }
 
 
 
