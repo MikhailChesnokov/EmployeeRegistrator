@@ -1,7 +1,7 @@
 ﻿namespace Domain.Entities.User
 {
     using System;
-
+    using Entrance;
 
 
     public class SecurityGuard : User
@@ -11,13 +11,25 @@
 
         public SecurityGuard(
             string login,
-            string password)
+            string password,
+            Entrance entrance)
             : base(
                 login,
                 password,
-                Roles.SecurityGuard)
+                Role.SecurityGuard)
         {
+            ChangeEntrance(entrance);
+        }
 
+
+        
+        public Entrance Entrance { get; protected set; }
+
+
+        
+        protected internal void ChangeEntrance(Entrance entrance)
+        {
+            Entrance = entrance ?? throw new ArgumentNullException(nameof(entrance));
         }
     }
 }

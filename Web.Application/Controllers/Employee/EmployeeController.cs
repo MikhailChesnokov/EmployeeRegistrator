@@ -45,7 +45,7 @@
         [HttpGet]
         public IActionResult List()
         {
-            if (!RoleIs(Roles.Administrator, Roles.Manager, Roles.SecurityGuard)) return Forbid();
+            if (!RoleIs(Role.Administrator, Role.Manager, Role.SecurityGuard)) return Forbid();
 
 
             IEnumerable<Employee> employees = _employeeService.AllActive();
@@ -58,7 +58,7 @@
         [HttpGet]
         public IActionResult Registration()
         {
-            if (!RoleIs(Roles.SecurityGuard)) return Forbid();
+            if (!RoleIs(Role.SecurityGuard)) return Forbid();
 
 
             return View();
@@ -66,7 +66,7 @@
 
         public IActionResult RegistrationAjax()
         {
-            if (!RoleIs(Roles.SecurityGuard)) return Forbid();
+            if (!RoleIs(Role.SecurityGuard)) return Forbid();
 
 
             IEnumerable<Employee> employees = _employeeService.AllActive();
@@ -79,7 +79,7 @@
         [HttpGet]
         public IActionResult View(int id)
         {
-            if (!RoleIs(Roles.Administrator, Roles.Manager)) return Forbid();
+            if (!RoleIs(Role.Administrator, Role.Manager)) return Forbid();
 
 
             Employee employee = _employeeService.GetById(id);
@@ -92,7 +92,7 @@
         [HttpGet]
         public IActionResult Create()
         {
-            if (!RoleIs(Roles.Administrator)) return Forbid();
+            if (!RoleIs(Role.Administrator)) return Forbid();
 
             
             var departments = _departmentService.AllActive();
@@ -103,7 +103,7 @@
         [HttpPost]
         public IActionResult Create(CreateEmployeeForm form)
         {
-            if (!RoleIs(Roles.Administrator)) return Forbid();
+            if (!RoleIs(Role.Administrator)) return Forbid();
 
 
             return Form(
@@ -122,7 +122,7 @@
         [HttpGet]
         public IActionResult Edit(int id)
         {
-            if (!RoleIs(Roles.Administrator)) return Forbid();
+            if (!RoleIs(Role.Administrator)) return Forbid();
 
 
             Employee employee = _employeeService.GetById(id);
@@ -139,7 +139,7 @@
         [HttpPost]
         public IActionResult Edit(EditEmployeeForm form)
         {
-            if (!RoleIs(Roles.Administrator)) return Forbid();
+            if (!RoleIs(Role.Administrator)) return Forbid();
 
 
             return Form(
@@ -158,7 +158,7 @@
         [HttpPost]
         public IActionResult Delete(DeleteEmployeeForm form)
         {
-            if (!RoleIs(Roles.Administrator)) return Forbid();
+            if (!RoleIs(Role.Administrator)) return Forbid();
 
 
             return Form(

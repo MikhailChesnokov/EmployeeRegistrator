@@ -2,21 +2,25 @@
 {
     using System;
     using Employee;
-
+    using Entrance;
 
 
     public class Registration : IEntity
     {
         [Obsolete("only for reflection", true)]
-        public Registration() { }
+        public Registration()
+        {
+        }
 
         public Registration(
             Employee employee,
-            RegistrationEventType eventType)
+            RegistrationEventType eventType,
+            Entrance entrance)
         {
             SetDateTime();
             SetEventType(eventType);
             SetEmployee(employee);
+            SetEntrance(entrance);
         }
 
 
@@ -26,6 +30,8 @@
         public RegistrationEventType EventType { get; protected set; }
 
         public Employee Employee { get; protected set; }
+
+        public Entrance Entrance { get; protected set; }
 
         public int Id { get; protected set; }
 
@@ -44,6 +50,11 @@
         private void SetEmployee(Employee employee)
         {
             Employee = employee ?? throw new ArgumentNullException(nameof(employee));
+        }
+
+        private void SetEntrance(Entrance entrance)
+        {
+            Entrance = entrance ?? throw new ArgumentNullException(nameof(entrance));
         }
     }
 }

@@ -3,7 +3,6 @@ namespace Web.Modules
     using Application.Infrastructure.ScheduledTasks.Tasks;
     using Application.Infrastructure.ScheduledTasks.Tasks.EmailNotifications;
     using Autofac;
-    using Microsoft.Extensions.Configuration;
 
 
 

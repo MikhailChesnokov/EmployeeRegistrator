@@ -11,6 +11,16 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain.Infrastructure", "Do
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Web.Application", "Web.Application\Web.Application.csproj", "{4DA2F5A9-3C66-4BE6-9D5E-46E909034D95}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionItems", "{56840048-3A58-4C7D-AA69-50B58677F4C4}"
+ProjectSection(SolutionItems) = preProject
+	TestData.SqlServer.sql = TestData.SqlServer.sql
+	TestData.MySql.sql = TestData.MySql.sql
+EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Turnstile", "Turnstile", "{80D4CFEE-D205-4454-AAA5-95DA8289EAC6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TurnstileSimulator", "TurnstileSimulator\TurnstileSimulator.csproj", "{50B480F4-AEE5-4319-A55A-695FE2826AC4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,11 +43,18 @@ Global
 		{4DA2F5A9-3C66-4BE6-9D5E-46E909034D95}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4DA2F5A9-3C66-4BE6-9D5E-46E909034D95}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4DA2F5A9-3C66-4BE6-9D5E-46E909034D95}.Release|Any CPU.Build.0 = Release|Any CPU
+		{50B480F4-AEE5-4319-A55A-695FE2826AC4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{50B480F4-AEE5-4319-A55A-695FE2826AC4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{50B480F4-AEE5-4319-A55A-695FE2826AC4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{50B480F4-AEE5-4319-A55A-695FE2826AC4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1CE7632F-BB1F-44C3-8B82-82C3F7BEE0E7}
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{50B480F4-AEE5-4319-A55A-695FE2826AC4} = {80D4CFEE-D205-4454-AAA5-95DA8289EAC6}
 	EndGlobalSection
 EndGlobal

@@ -1,0 +1,30 @@
+@model IEnumerable<BuildingViewModel>
+
+@{ ViewBag.Title = "Список зданий"; }
+
+<h4>Список зданий</h4>
+
+@if (Model?.Any() != true)
+{
+    <p>Список зданий пуст</p>
+}
+else
+{
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th scope="col">Адрес</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var building in Model)
+        {
+            <tr>
+                <td>
+                    <a href="@(Url.Action<BuildingController>(c => c.View(building.Id)))">@building.Address</a>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}

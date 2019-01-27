@@ -25,7 +25,7 @@ else
                         <a href="@(Url.Action<UserController>(c => c.View(user.Id)))">@user.Login</a>
                     </td>
                     <td>
-                        @(typeof(Roles).GetField(Enum.GetName(typeof(Roles), user.Role)).GetCustomAttributes(false).OfType<DisplayAttribute>().Single().Name)
+                        @(typeof(Role).GetField(Enum.GetName(typeof(Role), user.Role)).GetCustomAttributes(false).OfType<DisplayAttribute>().Single().Name)
                     </td>
                 </tr>
             }

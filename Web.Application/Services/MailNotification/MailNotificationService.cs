@@ -42,7 +42,7 @@ namespace Web.Application.Services.MailNotification
 
             var lastRegistrationsByEmployee =
                 _registrationService
-                    .AllInclude(x => x.Employee)
+                    .AllInclude(x => x.Employee, x => x.Entrance)
                     .GroupBy(x => x.Employee)
                     .Select(x => new
                     {

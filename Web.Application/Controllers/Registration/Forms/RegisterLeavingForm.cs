@@ -8,6 +8,12 @@
     {
         [Required]
         [Range(1, int.MaxValue)]
-        public int EmployeeId { get; set; }
+        public int? EmployeeId { get; set; }
+        
+        
+        
+        [Required]
+        [Range(1, int.MaxValue)]
+        public int? EntranceId { get; set; }
     }
 }

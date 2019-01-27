@@ -6,8 +6,6 @@
     using Domain.Repository;
     using Entities;
     using Microsoft.EntityFrameworkCore;
-    using Microsoft.EntityFrameworkCore.Query;
-
 
 
     public sealed class EntityFrameworkCoreRepository<TEntity> : IRepository<TEntity>
@@ -17,14 +15,12 @@
         private readonly DbSet<TEntity> _entities;
 
 
-
         public EntityFrameworkCoreRepository(
             DbContext context)
         {
             _context = context;
             _entities = _context.Set<TEntity>();
         }
-
 
 
         public void Add(TEntity entity)
@@ -50,34 +46,50 @@
             return _entities;
         }
 
-        public IQueryable<TEntity> AllInclude<TProperty>(params Expression<Func<TEntity, TProperty>>[] expressions)
+        public IQueryable<TEntity> AllInclude<TProperty>(
+            Expression<Func<TEntity, TProperty>> expression)
         {
-            IIncludableQueryable<TEntity, TProperty> res = _entities.Include(expressions.First());
-
-            foreach (Expression<Func<TEntity, TProperty>> expression in expressions.Skip(1))
-            {
-                res.Include(expression);
-            }
-
-            return res;
+            return _entities.Include(expression);
+        }
+        
+        public IQueryable<TEntity> AllInclude<TProperty1, TProperty2>(
+            Expression<Func<TEntity, TProperty1>> expression1,
+            Expression<Func<TEntity, TProperty2>> expression2)
+        {
+            return _entities.Include(expression1).Include(expression2);
         }
 
         public IQueryable<TEntity> AllActive()
         {
-            if (typeof(IRemovableEntity).IsAssignableFrom(typeof(TEntity)))
-            {
-                return _entities
-                       .Cast<IRemovableEntity>()
-                       .Where(x => !x.IsDeleted())
-                       .Cast<TEntity>();
-            }
+            return
+                typeof(IRemovableEntity).IsAssignableFrom(typeof(TEntity))
+                    ? _entities.Where(x => !((IRemovableEntity) x).IsDeleted())
+                    : _entities;
+        }
 
-            return _entities;
+        public IQueryable<TEntity> AllActiveInclude<TProperty>(
+            Expression<Func<TEntity, TProperty>> expression)
+        {
+            var includedEntities = AllInclude(expression);
+
+            return
+                typeof(IRemovableEntity).IsAssignableFrom(typeof(TEntity))
+                    ? includedEntities.Where(x => !((IRemovableEntity) x).IsDeleted())
+                    : includedEntities;
         }
 
         public TEntity FindById(int id)
         {
-            return _entities.FirstOrDefault(x => x.Id == id);
+            return
+                typeof(IRemovableEntity).IsAssignableFrom(typeof(TEntity))
+                    ? _entities.Where(x => !((IRemovableEntity) x).IsDeleted()).FirstOrDefault(x => x.Id == id)
+                    : _entities.FirstOrDefault(x => x.Id == id);
+        }
+
+        
+        public TEntity FindByIdInclude<TProperty>(int id, Expression<Func<TEntity, TProperty>> expression)
+        {
+            return AllActiveInclude(expression).FirstOrDefault(x => x.Id == id);
         }
     }
 }

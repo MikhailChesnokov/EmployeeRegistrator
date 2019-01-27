@@ -5,7 +5,7 @@
 
 
 
-    public class User : IEntity
+    public abstract class User : IEntity
     {
         [Obsolete("Only for reflection", true)]
         public User() { }
@@ -15,7 +15,7 @@
         protected User(
             string login,
             string password,
-            Roles role,
+            Role role,
             string email = null,
             bool needNotify = false)
         {
@@ -33,7 +33,7 @@
 
         
 
-        public Roles Role { get; protected set; }
+        public Role Role { get; protected set; }
         
         public string Email { get; protected set; }
 
@@ -59,7 +59,7 @@
             Password = new Password(password);
         }
 
-        private void SetRole(Roles role)
+        private void SetRole(Role role)
         {
             Role = role;
         }

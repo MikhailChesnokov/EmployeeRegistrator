@@ -1,7 +1,10 @@
 ﻿namespace Domain.Infrastructure.Repository
 {
+    using Entities.Building;
     using System;
+    using Entities.Department;
     using Entities.Employee;
+    using Entities.Entrance;
     using Entities.Registration;
     using Entities.User;
     using Microsoft.EntityFrameworkCore;
@@ -33,6 +36,18 @@
         public DbSet<Registration> Registrations { get; set; }
 
         public DbSet<User> Users { get; set; }
+        
+        public DbSet<Administrator> Administrators { get; set; }
+        
+        public DbSet<Manager> Managers { get; set; }
+        
+        public DbSet<SecurityGuard> SecurityGuards { get; set; }
+        
+        public DbSet<Department> Departments { get; set; }
+        
+        public DbSet<Building> Buildings { get; set; }
+        
+        public DbSet<Entrance> Entrances { get; set; }
 
 
 
@@ -67,6 +82,19 @@
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<User>()
+                .HasDiscriminator<Role>(nameof(Role))
+                .HasValue<Administrator>(Role.Administrator)
+                .HasValue<Manager>(Role.Manager)
+                .HasValue<SecurityGuard>(Role.SecurityGuard);
+            
+            modelBuilder.Entity<Administrator>().HasBaseType<User>();
+            modelBuilder.Entity<Manager>().HasBaseType<User>();
+            modelBuilder.Entity<SecurityGuard>().HasBaseType<User>();
+
+            modelBuilder.Entity<User>().Property(x => x.NeedNotify).HasConversion<int>();
+            modelBuilder.Entity<Employee>().Property(x => x.WorkplacePresenceRequired).HasConversion<int>();
+            
             switch (_settings.Database)
             {
                 case Repository.Database.SqlServer:

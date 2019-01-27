@@ -1,4 +1,5 @@
-﻿@model RegistrationsViewModel
+﻿@using Domain.Infrastructure.Extensions
+@model RegistrationsViewModel
 
 @{ ViewBag.Title = "Список регистраций"; }
 
@@ -30,6 +31,7 @@ else
                 <th>Сотрудник</th>
                 <th>Время</th>
                 <th>Событие</th>
+                <th>Место</th>
                 <th>Отработано за период</th>
                 <th>Отработано за день</th>
                 <th>Опоздание</th>
@@ -40,22 +42,24 @@ else
         
         @foreach (var dayRegistrations in Model.DayRegistrations)
         {
-            foreach (var dayEmployeeRegistraions in dayRegistrations.DayEmployeeRegistraions)
+            foreach (var dayEmployeeRegistrations in dayRegistrations.DayEmployeeRegistraions)
             {
-                foreach (var dayEmployeeRegistraionRow in dayEmployeeRegistraions.RegistrationRows)
+                foreach (var dayEmployeeRegistraionRow in dayEmployeeRegistrations.RegistrationRows)
                 {
-                    string dayAndEmployee = $"{dayRegistrations.Day.Date}-{dayEmployeeRegistraions.EmployeeId}-";
-                    int dayEmployeeRowsCount = dayEmployeeRegistraions.TotalDayEmployeeRegistrationsCount;
+                    string dayAndEmployee = $"{dayRegistrations.Day.Date}-{dayEmployeeRegistrations.EmployeeId}-";
+                    int dayEmployeeRowsCount = dayEmployeeRegistrations.TotalDayEmployeeRegistrationsCount;
                     const string timeSpanFormat = "hh\\:mm";
 
                     <tr style="page-break-inside: avoid">
                         <td rowspan="@dayRegistrations.TotalDayRegistrationsCount" rowspan-id="@dayRegistrations.Day.Date">@dayRegistrations.Day.ToShortDateString()</td>
 
-                        <td rowspan="@dayEmployeeRowsCount" rowspan-id="@dayAndEmployee-emp">@dayEmployeeRegistraions.Employee</td>
+                        <td rowspan="@dayEmployeeRowsCount" rowspan-id="@dayAndEmployee-emp">@dayEmployeeRegistrations.Employee</td>
 
                         <td>@dayEmployeeRegistraionRow.Time.ToString(timeSpanFormat)</td>
 
-                        <td>@(dayEmployeeRegistraionRow.Event == RegistrationEventType.Coming ? "Вход" : "Выход")</td>
+                        <td>@dayEmployeeRegistraionRow.Event.DisplayName()</td>
+                        
+                        <td>@dayEmployeeRegistraionRow.EntranceCompleteName</td>
 
                         @if (dayEmployeeRegistraionRow.CheckResult is RegistrationCheckResult.Ok && dayEmployeeRegistraionRow.Event is RegistrationEventType.Coming)
                         {
@@ -66,9 +70,9 @@ else
                             <td class="table-danger">-</td>
                         }
 
-                        <td rowspan="@dayEmployeeRowsCount" rowspan-id="@dayAndEmployee-work">@dayEmployeeRegistraions.TotalWorkDayTimeInterval.ToString(timeSpanFormat)</td>
+                        <td rowspan="@dayEmployeeRowsCount" rowspan-id="@dayAndEmployee-work">@dayEmployeeRegistrations.TotalWorkDayTimeInterval.ToString(timeSpanFormat)</td>
 
-                        <td rowspan="@dayEmployeeRowsCount" rowspan-id="@dayAndEmployee-late" class="@(dayEmployeeRegistraions.EmployeeWasLate ? "table-warning" : string.Empty)">@dayEmployeeRegistraions.LatenessTimeInterval.ToString(timeSpanFormat)</td>
+                        <td rowspan="@dayEmployeeRowsCount" rowspan-id="@dayAndEmployee-late" class="@(dayEmployeeRegistrations.EmployeeWasLate ? "table-warning" : string.Empty)">@dayEmployeeRegistrations.LatenessTimeInterval.ToString(timeSpanFormat)</td>
                     </tr>
                 }
             }
