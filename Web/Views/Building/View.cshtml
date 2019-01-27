@@ -1,2 +1,22 @@
 @model BuildingViewModel
 
+@{ ViewBag.Title = "Здание"; }
+
+<h4>Здание</h4>
+
+<form>
+
+    <view-group
+        name="Address"
+        label="Адрес"
+        value="@Model.Address"/>
+
+</form>
+
+<form asp-action="Delete">
+    <input type="hidden" name="Id" value="@Model.Id">
+
+    <a class="btn btn-primary lower-button" href="@(Url.Action<BuildingController>(c => c.Edit(Model.Id)))">Редактировать</a>
+
+    <input type="submit" class="btn btn-primary lower-button" value="Удалить">
+</form>

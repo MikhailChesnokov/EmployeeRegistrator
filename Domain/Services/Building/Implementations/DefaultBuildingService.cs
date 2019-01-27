@@ -57,7 +57,7 @@ namespace Domain.Services.Building.Implementations
 
         public IEnumerable<Building> All()
         {
-            return _buildingsRepository.All();
+            return _buildingsRepository.AllActive();
         }
 
         public IEnumerable<Building> AllActive()
@@ -83,7 +83,7 @@ namespace Domain.Services.Building.Implementations
             if (building == null)
                 throw new ArgumentNullException(nameof(building));
 
-            if (_buildingsRepository.All().Any(x => x.Address == address && x.Id != building.Id))
+            if (_buildingsRepository.AllActive().Any(x => x.Id != building.Id && string.Equals(x.Address, address, StringComparison.InvariantCultureIgnoreCase)))
                 throw new EntityAlreadyExistsException($"Здание с адресом \"{address}\" уже существует.");
         }
     }

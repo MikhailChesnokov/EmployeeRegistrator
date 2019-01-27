@@ -21,7 +21,7 @@ namespace Web.Application.Controllers.Departments.Forms.Handlers
         
         public int Execute(CreateDepartmentForm form)
         {
-            Department department = new Department(form.Name);
+            var department = new Department(form.Name);
             
             try
             {

@@ -27,9 +27,7 @@
             RoleRequirement requirement,
             IEnumerable<Roles> resource)
         {
-            User user = _userProvider.User;
-
-            if (resource.Contains(user.Role))
+            if (_userProvider.User is User user && resource.Contains(user.Role))
             {
                 context.Succeed(requirement);
             }
