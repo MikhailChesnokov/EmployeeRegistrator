@@ -3,6 +3,7 @@ namespace Domain.Services.Entrance.Implementations
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Entities.Building;
     using Entities.Entrance;
     using Exceptions;
     using Repository;
@@ -26,29 +27,34 @@ namespace Domain.Services.Entrance.Implementations
             _entranceRepository.Add(entrance);
 
             return _entranceRepository
-                .AllActiveInclude(x => x.Building)
+                .AllActive()
                 .Single(x =>
                     x.Building.Id == entrance.Building.Id &&
                     x.Name.Equals(entrance.Name, StringComparison.InvariantCultureIgnoreCase));
         }
 
-        public void Update(Entrance building)
+        public void Update(Entrance entrance, Building building)
         {
-            CheckForSameName(building, building.Name);
+            if (entrance == null) throw new ArgumentNullException(nameof(entrance));
+            if (building == null) throw new ArgumentNullException(nameof(building));
 
-            _entranceRepository.Update(building);
+            entrance.ChangeBuilding(building);
+            
+            _entranceRepository.Update(entrance);
         }
 
         public Entrance GetById(int id)
         {
-            return _entranceRepository.FindById(id);
+            return _entranceRepository.FindByIdInclude(id, x => x.Building);
         }
 
         public void Delete(Entrance entrance)
         {
+            if (entrance == null) throw new ArgumentNullException(nameof(entrance));
+            
             entrance.Delete();
 
-            Update(entrance);
+            _entranceRepository.Update(entrance);
         }
 
         public IEnumerable<Entrance> All()
@@ -69,7 +75,7 @@ namespace Domain.Services.Entrance.Implementations
 
             entrance.Rename(name);
 
-            Update(entrance);
+            _entranceRepository.Update(entrance);
         }
 
         private void CheckForSameName(Entrance entrance, string name)
@@ -78,7 +84,7 @@ namespace Domain.Services.Entrance.Implementations
                 throw new ArgumentException("Value cannot be null or whitespace.", nameof(name));
 
             if (_entranceRepository
-                .AllActiveInclude(x => x.Building)
+                .AllActive()
                 .Any(x =>
                     x.Id != entrance.Id &&
                     x.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase) &&

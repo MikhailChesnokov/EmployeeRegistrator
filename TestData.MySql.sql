@@ -6,7 +6,7 @@ INSERT INTO Users
 VALUES
   ('admin', 0x55F3E83D9D8F50A2481487B562511F261556894B6AD6B563D6F32547C017FD22, 0x4CC7C0212EAC253FC5CFA6A40D9E77C7E26F25D452642A34FD18C389050509EB7E1611CB7C8967BA, 1, '89194485838@mail.ru', TRUE);
 
-INSERT INTO Department
+INSERT INTO Departments
   (Name, DeletedAtUtc)
 VALUES
   ('Отдел маркетинга', NULL),
@@ -155,3 +155,18 @@ VALUES
   ('2018-05-04 13:03:00', 4, 2),
   ('2018-05-04 14:37:00', 4, 1),
   ('2018-05-04 17:50:00', 4, 2);
+  
+INSERT INTO buildings
+  (Address, DeletedAtUtc)
+VALUES
+  ('Бульвар Гагарина, 37а', NULL),
+  ('Студенческая, 38', NULL)
+GO
+
+INSERT INTO entrances
+  (Name, DeletedAtUtc, BuildingId)
+VALUES
+  ('Главный вход', NULL, 1),
+  ('Главный вход', NULL, 2),
+  ('Вход с торца', NULL, 2)
+GO

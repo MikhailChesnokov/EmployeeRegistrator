@@ -1,6 +1,7 @@
 namespace Domain.Services.Entrance
 {
     using System.Collections.Generic;
+    using Entities.Building;
     using Entities.Entrance;
 
     
@@ -9,7 +10,7 @@ namespace Domain.Services.Entrance
     {
         Entrance Add(Entrance entrance);
 
-        void Update(Entrance building);
+        void Update(Entrance entrance, Building building);
 
         Entrance GetById(int id);
 

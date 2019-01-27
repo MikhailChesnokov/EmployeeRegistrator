@@ -12,10 +12,13 @@
     using Domain.Repository;
     using Domain.Services.Department;
     using Domain.Services.Employee;
+    using Domain.Services.Entrance;
     using Domain.Services.Registration;
     using Domain.Services.User;
     using Employee.Forms;
     using Employee.Forms.Handlers;
+    using Entrance.Forms;
+    using Entrance.Forms.Handlers;
     using Registration.Forms;
     using Registration.Forms.Handlers;
     using User.Forms;
@@ -32,7 +35,7 @@
         private readonly IUserService _userService;
         private readonly IDepartmentService _departmentService;
         private readonly IBuildingService _buildingService;
-
+        private readonly IEntranceService _entranceService;
 
 
         public HardCodedFormHandlerFactory(
@@ -41,7 +44,9 @@
             IUserService userService,
             IAuthenticationService<Domain.Entities.User.User> authenticationService,
             IRepository<Domain.Entities.User.User> userRepository,
-            IDepartmentService departmentService, IBuildingService buildingService)
+            IDepartmentService departmentService,
+            IBuildingService buildingService,
+            IEntranceService entranceService)
         {
             _employeeService = employeeService;
             _registrationService = registrationService;
@@ -50,6 +55,7 @@
             _userRepository = userRepository;
             _departmentService = departmentService;
             _buildingService = buildingService;
+            _entranceService = entranceService;
         }
 
 
@@ -71,6 +77,11 @@
                 return new EditBuildingFormHandler(_buildingService) as IFormHandler<TForm>;
             if (typeof(TForm) == typeof(DeleteBuildingForm))
                 return new DeleteBuildingFormHandler(_buildingService) as IFormHandler<TForm>;
+            
+            if (typeof(TForm) == typeof(EditEntranceForm))
+                return new EditEntranceFormHandler(_buildingService, _entranceService) as IFormHandler<TForm>;
+            if (typeof(TForm) == typeof(DeleteEntranceForm))
+                return new DeleteEntranceFormHandler(_entranceService) as IFormHandler<TForm>;
             
             if (typeof(TForm) == typeof(RegisterComingForm))
                 return new RegisterComingFormHandler(_registrationService, _employeeService) as IFormHandler<TForm>;
@@ -99,6 +110,9 @@
             
             if (typeof(TForm) == typeof(CreateBuildingForm))
                 return new CreateBuildingFormHandler(_buildingService) as IFormHandler<TForm, TFormResult>;
+            
+            if (typeof(TForm) == typeof(CreateEntranceForm))
+                return new CreateEntranceFormHandler(_entranceService, _buildingService) as IFormHandler<TForm, TFormResult>;
 
             throw new InvalidOperationException("Undefined type");
         }

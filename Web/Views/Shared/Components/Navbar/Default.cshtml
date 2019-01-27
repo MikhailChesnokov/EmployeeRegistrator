@@ -69,9 +69,17 @@
                         {
                             <a class="dropdown-item" href="@(Url.Action<BuildingController>(c => c.List()))">Список зданий</a>
                         }
+                        @if (Model.UserRole is Roles.Administrator || Model.UserRole is Roles.Manager || Model.UserRole is Roles.SecurityGuard)
+                        {
+                            <a class="dropdown-item" href="@(Url.Action<EntranceController>(c => c.List()))">Список входов в здания</a>
+                        }
                         @if (Model.UserRole is Roles.Administrator)
                         {
                             <a class="dropdown-item" href="@(Url.Action<BuildingController>(c => c.Create(With.No<CreateBuildingForm>())))">Добавить здание</a>
+                        }
+                        @if (Model.UserRole is Roles.Administrator)
+                        {
+                            <a class="dropdown-item" href="@(Url.Action<EntranceController>(c => c.Create(With.No<CreateEntranceForm>())))">Добавить вход в здание</a>
                         }
                     </div>
                 </li>

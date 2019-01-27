@@ -1,28 +1,25 @@
-USE EmployeeRegistrator
-GO
+USE EmployeeRegistrator;
 
 -- admin 12345678
 INSERT INTO Users
   (Login, Password_Hash, Password_Salt, Role, Email, NeedNotify)
 VALUES
-  ('admin', 0x55F3E83D9D8F50A2481487B562511F261556894B6AD6B563D6F32547C017FD22, 0x4CC7C0212EAC253FC5CFA6A40D9E77C7E26F25D452642A34FD18C389050509EB7E1611CB7C8967BA, 1, '89194485838@mail.ru', 'true')
-GO
+  ('admin', 0x55F3E83D9D8F50A2481487B562511F261556894B6AD6B563D6F32547C017FD22, 0x4CC7C0212EAC253FC5CFA6A40D9E77C7E26F25D452642A34FD18C389050509EB7E1611CB7C8967BA, 1, '89194485838@mail.ru', TRUE);
 
-INSERT INTO Department
+
+INSERT INTO Departments
   (Name, DeletedAtUtc)
 VALUES
   ('Отдел маркетинга', NULL),
-  ('Отдел разработки', NULL)
-GO
+  ('Отдел разработки', NULL);
 
 INSERT INTO Employees
   (FirstName, Surname, Patronymic, WorkplacePresenceRequired, PersonnelNumber, DepartmentId, DeletedAtUtc)
 VALUES
-  ('Иван', 'Иванов', 'Иванович', 'true', 1, 1, NULL),
-  ('Петр', 'Петров', 'Петрович', 'false', 2, 1, NULL),
-  ('Сидор', 'Сидоров', 'Сидорович', 'true', 3, 2, NULL),
-  ('Владимир', 'Владимиров', 'Владимирович', 'true', 4, 2, NULL)
-GO
+  ('Иван', 'Иванов', 'Иванович', TRUE, 1, 1, NULL),
+  ('Петр', 'Петров', 'Петрович', FALSE, 2, 1, NULL),
+  ('Сидор', 'Сидоров', 'Сидорович', TRUE, 3, 2, NULL),
+  ('Владимир', 'Владимиров', 'Владимирович', TRUE, 4, 2, NULL);
 
 -- Иванов (Ходит редко и без опозданий)
 INSERT INTO Registrations
@@ -46,8 +43,7 @@ VALUES
 
   -- Пт
   ('2018-05-04 09:54:00', 1, 1),
-  ('2018-05-04 18:04:00', 1, 2)
-GO
+  ('2018-05-04 18:04:00', 1, 2);
 
 
 -- Петров (Ходит часто, с опозданиями, присутствие необязательно)
@@ -86,8 +82,7 @@ VALUES
   ('2018-05-04 10:07:00', 2, 1),
   ('2018-05-04 13:04:00', 2, 2),
   ('2018-05-04 14:35:00', 2, 1),
-  ('2018-05-04 17:59:00', 2, 2)
-GO
+  ('2018-05-04 17:59:00', 2, 2);
 
 -- Сидоров (Ходит часто, с опозданиями, присутствие обязательно)
 INSERT INTO Registrations
@@ -125,8 +120,7 @@ VALUES
   ('2018-05-04 10:02:00', 3, 1),
   ('2018-05-04 13:03:00', 3, 2),
   ('2018-05-04 14:37:00', 3, 1),
-  ('2018-05-04 17:50:00', 3, 2)
-GO
+  ('2018-05-04 17:50:00', 3, 2);
 
 -- Владимир Владимирович (Ходит редко, с без опозданий, иногда через окно)
 INSERT INTO Registrations
@@ -161,5 +155,17 @@ VALUES
   ('2018-05-04 10:02:00', 4, 1),
   ('2018-05-04 13:03:00', 4, 2),
   ('2018-05-04 14:37:00', 4, 1),
-  ('2018-05-04 17:50:00', 4, 2)
-GO
+  ('2018-05-04 17:50:00', 4, 2);
+  
+INSERT INTO buildings
+  (Address, DeletedAtUtc)
+VALUES
+  ('Бульвар Гагарина, 37а', NULL),
+  ('Студенческая, 38', NULL);
+
+INSERT INTO entrances
+  (Name, DeletedAtUtc, BuildingId)
+VALUES
+  ('Главный вход', NULL, 1),
+  ('Главный вход', NULL, 2),
+  ('Вход с торца', NULL, 2);

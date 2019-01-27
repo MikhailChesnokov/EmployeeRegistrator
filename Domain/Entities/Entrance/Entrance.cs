@@ -13,7 +13,7 @@ namespace Domain.Entities.Entrance
         public Entrance(Building building, string name)
         {
             Rename(name);
-            SetBuilding(building);
+            ChangeBuilding(building);
         }
     
         
@@ -38,7 +38,7 @@ namespace Domain.Entities.Entrance
             Name = name;
         }
         
-        protected void SetBuilding(Building building)
+        protected internal void ChangeBuilding(Building building)
         {
             Building = building ?? throw new ArgumentNullException(nameof(building));
         }
