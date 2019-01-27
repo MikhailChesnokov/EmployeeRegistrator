@@ -60,6 +60,22 @@
                     </div>
                 </li>
 
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Здания
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        @if (Model.UserRole is Roles.Administrator || Model.UserRole is Roles.Manager || Model.UserRole is Roles.SecurityGuard)
+                        {
+                            <a class="dropdown-item" href="@(Url.Action<BuildingController>(c => c.List()))">Список зданий</a>
+                        }
+                        @if (Model.UserRole is Roles.Administrator)
+                        {
+                            <a class="dropdown-item" href="@(Url.Action<BuildingController>(c => c.Create(With.No<CreateBuildingForm>())))">Добавить здание</a>
+                        }
+                    </div>
+                </li>
+                
                 @if (Model.UserRole is Roles.Administrator || Model.UserRole is Roles.Manager)
                 {
                     <li class="nav-item dropdown">

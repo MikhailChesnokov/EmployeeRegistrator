@@ -54,7 +54,7 @@
             builder.RegisterConfiguredModulesFromAssemblyContaining<RepositoryModule>(Configuration as IConfigurationRoot);
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IApplicationLifetime lifetime)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())
             {

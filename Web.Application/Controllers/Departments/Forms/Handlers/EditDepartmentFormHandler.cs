@@ -1,5 +1,6 @@
 namespace Web.Application.Controllers.Departments.Forms.Handlers
 {
+    using Domain.Exceptions;
     using System;
     using Domain.Services.Department;
 
@@ -25,8 +26,15 @@ namespace Web.Application.Controllers.Departments.Forms.Handlers
                 throw new Exception("Department Id required.");
             
             var department = _departmentService.GetById(form.Id.Value);
-            
-            _departmentService.Rename(department, form.Name);
+
+            try
+            {
+                _departmentService.Rename(department, form.Name);
+            }
+            catch (EntityAlreadyExistsException e)
+            {
+                throw new FormException(e.Message);
+            }
         }
     }
 }
