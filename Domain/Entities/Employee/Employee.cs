@@ -54,6 +54,8 @@
             if (string.IsNullOrWhiteSpace(firstName))
                 throw new ArgumentException("Value cannot be null or whitespace.", nameof(firstName));
 
+            firstName = firstName.Trim();
+            
             FirstName = firstName;
         }
 
@@ -62,6 +64,8 @@
             if (string.IsNullOrWhiteSpace(surname))
                 throw new ArgumentException("Value cannot be null or whitespace.", nameof(surname));
 
+            Surname = surname.Trim();
+            
             Surname = surname;
         }
 
@@ -70,6 +74,8 @@
             if (string.IsNullOrWhiteSpace(patronymic))
                 throw new ArgumentException("Value cannot be null or whitespace.", nameof(patronymic));
 
+            patronymic = patronymic.Trim();
+            
             Patronymic = patronymic;
         }
 

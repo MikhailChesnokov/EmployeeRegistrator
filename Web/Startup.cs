@@ -30,8 +30,7 @@
         {
             services
                 .AddScoped<ExceptionFilter>()
-                .AddHostedService<TimedHostedService>()
-                ;
+                .AddHostedService<TimedHostedService>();
 
             services
                 .AddMvc(options => options.Filters.AddService<ExceptionFilter>())
