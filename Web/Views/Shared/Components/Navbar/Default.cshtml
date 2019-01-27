@@ -10,7 +10,7 @@
         <div class="collapse navbar-collapse" id="menu">
             <ul class="navbar-nav mr-auto">
 
-                @if (Model.UserRole is Roles.Administrator)
+                @if (Model.UserRole is Role.Administrator)
                 {
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -29,15 +29,15 @@
                         Сотрудники
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                        @if (Model.UserRole is Roles.Administrator || Model.UserRole is Roles.Manager || Model.UserRole is Roles.SecurityGuard)
+                        @if (Model.UserRole is Role.Administrator || Model.UserRole is Role.Manager || Model.UserRole is Role.SecurityGuard)
                         {
                             <a class="dropdown-item" href="@(Url.Action<EmployeeController>(c => c.List()))">Список сотрудников</a>
                         }
-                        @if (Model.UserRole is Roles.Administrator)
+                        @if (Model.UserRole is Role.Administrator)
                         {
                             <a class="dropdown-item" href="@(Url.Action<EmployeeController>(c => c.Create(With.No<CreateEmployeeForm>())))">Добавить сотрудника</a>
                         }
-                        @if (Model.UserRole is Roles.SecurityGuard)
+                        @if (Model.UserRole is Role.SecurityGuard)
                         {
                             <a class="dropdown-item" href="@(Url.Action<EmployeeController>(c => c.Registration()))">Регистрация сотрудников</a>
                         }
@@ -49,18 +49,42 @@
                         Отделы
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                        @if (Model.UserRole is Roles.Administrator || Model.UserRole is Roles.Manager || Model.UserRole is Roles.SecurityGuard)
+                        @if (Model.UserRole is Role.Administrator || Model.UserRole is Role.Manager || Model.UserRole is Role.SecurityGuard)
                         {
                             <a class="dropdown-item" href="@(Url.Action<DepartmentController>(c => c.List()))">Список отделов</a>
                         }
-                        @if (Model.UserRole is Roles.Administrator)
+                        @if (Model.UserRole is Role.Administrator)
                         {
                             <a class="dropdown-item" href="@(Url.Action<DepartmentController>(c => c.Create(With.No<CreateDepartmentForm>())))">Добавить отдел</a>
                         }
                     </div>
                 </li>
 
-                @if (Model.UserRole is Roles.Administrator || Model.UserRole is Roles.Manager)
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Здания
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        @if (Model.UserRole is Role.Administrator || Model.UserRole is Role.Manager || Model.UserRole is Role.SecurityGuard)
+                        {
+                            <a class="dropdown-item" href="@(Url.Action<BuildingController>(c => c.List()))">Список зданий</a>
+                        }
+                        @if (Model.UserRole is Role.Administrator || Model.UserRole is Role.Manager || Model.UserRole is Role.SecurityGuard)
+                        {
+                            <a class="dropdown-item" href="@(Url.Action<EntranceController>(c => c.List()))">Список входов в здания</a>
+                        }
+                        @if (Model.UserRole is Role.Administrator)
+                        {
+                            <a class="dropdown-item" href="@(Url.Action<BuildingController>(c => c.Create(With.No<CreateBuildingForm>())))">Добавить здание</a>
+                        }
+                        @if (Model.UserRole is Role.Administrator)
+                        {
+                            <a class="dropdown-item" href="@(Url.Action<EntranceController>(c => c.Create(With.No<CreateEntranceForm>())))">Добавить вход в здание</a>
+                        }
+                    </div>
+                </li>
+                
+                @if (Model.UserRole is Role.Administrator || Model.UserRole is Role.Manager)
                 {
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

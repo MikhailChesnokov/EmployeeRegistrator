@@ -10,7 +10,7 @@
 
         public string Login { get; set; }
 
-        public Roles Role { get; set; }
+        public Role Role { get; set; }
 
         public string Email { get; set; }
 

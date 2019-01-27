@@ -16,7 +16,7 @@ namespace Domain.Infrastructure.Extensions
                     .GetFields()
                     .FirstOrDefault(x => x.Name == eventType.ToString())
                     ?.GetCustomAttributes<DisplayAttribute>()
-                    ?.FirstOrDefault()
+                    .FirstOrDefault()
                     ?.Name;
         }
     }

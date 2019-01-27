@@ -30,8 +30,7 @@
         {
             services
                 .AddScoped<ExceptionFilter>()
-                .AddHostedService<TimedHostedService>()
-                ;
+                .AddHostedService<TimedHostedService>();
 
             services
                 .AddMvc(options => options.Filters.AddService<ExceptionFilter>())
@@ -54,7 +53,7 @@
             builder.RegisterConfiguredModulesFromAssemblyContaining<RepositoryModule>(Configuration as IConfigurationRoot);
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IApplicationLifetime lifetime)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())
             {

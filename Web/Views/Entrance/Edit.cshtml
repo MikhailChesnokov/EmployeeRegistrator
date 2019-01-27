@@ -1,0 +1,30 @@
+@model EditEntranceForm
+
+@{ ViewBag.Title = "Изменить вход"; }
+
+<h4>Изменить вход в здание</h4>
+
+<form method="post" id="entrance-form">
+
+    <root-errors/>
+
+    <input type="hidden" name="Id" value="@Model.Id">
+
+    <input-group
+        name="Name"
+        label="Название"
+        invalid-feedback="Некорректное название входа"
+        placeholder="Введите название входа ..."
+        value="@Model.Name"/>
+
+    <select-group
+        name="BuildingId"
+        label="Здание"
+        invalid-feedback="Здание не выбрано"
+        placeholder="Выберите здание ..."
+        items="@Model.Buildings"
+        value="@Model.BuildingId"
+        grouping="false"/>
+
+    <button type="submit" class="btn btn-primary lower-button">Сохранить</button>
+</form>

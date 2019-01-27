@@ -8,6 +8,6 @@
     {
         public bool IsUserAuthorized { get; set; }
 
-        public Roles? UserRole { get; set; }
+        public Role? UserRole { get; set; }
     }
 }

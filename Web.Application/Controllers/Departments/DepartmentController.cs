@@ -38,7 +38,7 @@ namespace Web.Application.Controllers.Departments
         [HttpGet]
         public IActionResult List()
         {
-            if (!RoleIs(Roles.Administrator, Roles.Manager, Roles.SecurityGuard))
+            if (!RoleIs(Role.Administrator, Role.Manager, Role.SecurityGuard))
                 return Forbid();
             
             
@@ -52,7 +52,7 @@ namespace Web.Application.Controllers.Departments
         [HttpGet]
         public IActionResult View(int id)
         {
-            if (!RoleIs(Roles.Administrator, Roles.Manager, Roles.SecurityGuard))
+            if (!RoleIs(Role.Administrator, Role.Manager, Role.SecurityGuard))
                 return Forbid();
 
             
@@ -69,7 +69,7 @@ namespace Web.Application.Controllers.Departments
         [HttpGet]
         public IActionResult Create()
         {
-            if (!RoleIs(Roles.Administrator))
+            if (!RoleIs(Role.Administrator))
                 return Forbid();
             
             
@@ -79,7 +79,7 @@ namespace Web.Application.Controllers.Departments
         [HttpPost]
         public IActionResult Create(CreateDepartmentForm form)
         {
-            if (!RoleIs(Roles.Administrator))
+            if (!RoleIs(Role.Administrator))
                 return Forbid();
             
             
@@ -92,7 +92,7 @@ namespace Web.Application.Controllers.Departments
         [HttpGet]
         public IActionResult Edit(int id)
         {
-            if (!RoleIs(Roles.Administrator))
+            if (!RoleIs(Role.Administrator))
                 return Forbid();
             
             
@@ -109,7 +109,7 @@ namespace Web.Application.Controllers.Departments
         [HttpPost]
         public IActionResult Edit(EditDepartmentForm form)
         {
-            if (!RoleIs(Roles.Administrator))
+            if (!RoleIs(Role.Administrator))
                 return Forbid();
 
             
@@ -122,7 +122,7 @@ namespace Web.Application.Controllers.Departments
         [HttpPost]
         public IActionResult Delete(DeleteDepartmentForm form)
         {
-            if (!RoleIs(Roles.Administrator))
+            if (!RoleIs(Role.Administrator))
                 return Forbid();
             
             

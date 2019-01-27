@@ -53,9 +53,10 @@ namespace Web.Application.Services.ExcelGenerator
                 Employee = "B",
                 EventTime = "C",
                 Event = "D",
-                WorkTime = "E",
-                DayWorkTime = "F",
-                Lateness = "G"
+                Place = "E",
+                WorkTime = "F",
+                DayWorkTime = "G",
+                Lateness = "H"
             };
 
             
@@ -134,6 +135,10 @@ namespace Web.Application.Services.ExcelGenerator
                             package
                                 .Write(registration.Event.DisplayName())
                                 .To(columns.Event, registrationRowIndex);
+                            
+                            package
+                                .Write(registration.EntranceCompleteName)
+                                .To(columns.Place, registrationRowIndex);
 
                             if (registration.Event is RegistrationEventType.Coming &&
                                 registration.CheckResult is RegistrationCheckResult.Ok)

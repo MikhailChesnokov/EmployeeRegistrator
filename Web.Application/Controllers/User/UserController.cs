@@ -1,8 +1,11 @@
 ﻿namespace Web.Application.Controllers.User
 {
     using System.Collections.Generic;
+    using System.Linq;
     using AutoMapper;
+    using Domain.Entities.Entrance;
     using Domain.Entities.User;
+    using Domain.Services.Entrance;
     using Domain.Services.User;
     using Forms;
     using Infrastructure.Extensions;
@@ -12,39 +15,39 @@
     using ViewModels;
 
 
-
     [Authorize]
     public sealed class UserController : FormControllerBase
     {
         private readonly IUserService _userService;
+        private readonly IEntranceService _entranceService;
         private readonly IMapper _mapper;
-
 
 
         public UserController(
             IFormHandlerFactory formHandlerFactory,
             IUserService userService,
             IMapper mapper,
-            IAuthorizationService authorizationService)
+            IAuthorizationService authorizationService,
+            IEntranceService entranceService)
             : base(
                 formHandlerFactory,
                 authorizationService)
         {
             _userService = userService;
             _mapper = mapper;
+            _entranceService = entranceService;
         }
-
 
 
         [HttpGet]
         public IActionResult List()
         {
-            if (!RoleIs(Roles.Administrator)) return Forbid();
+            if (!RoleIs(Role.Administrator)) return Forbid();
 
 
-            IEnumerable<User> users = _userService.GetAllActive();
+            var users = _userService.GetAllActive();
 
-            IEnumerable<UserViewModel> userViewModels = _mapper.Map<IEnumerable<UserViewModel>>(users);
+            var userViewModels = _mapper.Map<IEnumerable<UserViewModel>>(users);
 
             return View(userViewModels);
         }
@@ -52,7 +55,7 @@
         [HttpGet]
         public IActionResult View(int id)
         {
-            if (!RoleIs(Roles.Administrator)) return Forbid();
+            if (!RoleIs(Role.Administrator)) return Forbid();
 
 
             var user = _userService.GetById(id);
@@ -64,14 +67,17 @@
 
             return View(userViewModel);
         }
-        
+
         [HttpGet]
         public IActionResult Create()
         {
-            if (!RoleIs(Roles.Administrator)) return Forbid();
+            if (!RoleIs(Role.Administrator)) return Forbid();
 
 
-            CreateUserForm form = new CreateUserForm();
+            var form = new CreateUserForm
+            {
+                Entrances = GetEntranceItems(_entranceService.AllActive())
+            };
 
             SetRoles(form);
 
@@ -81,7 +87,7 @@
         [HttpPost]
         public IActionResult Create(CreateUserForm form)
         {
-            if (!RoleIs(Roles.Administrator)) return Forbid();
+            if (!RoleIs(Role.Administrator)) return Forbid();
 
 
             return Form(
@@ -91,13 +97,15 @@
                 {
                     SetRoles(form);
 
+                    form.Entrances = GetEntranceItems(_entranceService.AllActive(), form.EntranceId);
+
                     return View(form);
                 });
         }
 
         private void SetRoles(CreateUserForm form, bool includeAll = false)
         {
-            List<SelectListItem> items = new List<SelectListItem>();
+            var items = new List<SelectListItem>();
 
             if (includeAll)
             {
@@ -111,9 +119,28 @@
                 });
             }
 
-            items.AddRange(typeof(Roles).ToSelectList());
+            items.AddRange(typeof(Role).ToSelectList());
 
             form.Roles = items;
+        }
+
+        private IEnumerable<SelectListItem> GetEntranceItems(IEnumerable<Entrance> entrances, int? selectedId = null)
+        {
+            return
+                from buildingEntrances in entrances.GroupBy(x => x.Building)
+                let building = new SelectListGroup
+                {
+                    Name = buildingEntrances.Key.Address
+                }
+                from entrance in buildingEntrances
+                select new SelectListItem
+                {
+                    Text = entrance.Name,
+                    Value = entrance.Id.ToString(),
+                    Selected = selectedId != null && selectedId == entrance.Id,
+                    Disabled = false,
+                    Group = building
+                };
         }
     }
 }

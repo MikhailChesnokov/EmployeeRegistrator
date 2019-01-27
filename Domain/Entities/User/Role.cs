@@ -4,7 +4,7 @@
 
 
 
-    public enum Roles
+    public enum Role
     {
         [Display(Name = "Администратор")]
         Administrator = 1,

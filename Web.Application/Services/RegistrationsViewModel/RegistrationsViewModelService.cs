@@ -78,7 +78,8 @@
                         Event = dayEmployeeRegistration.Registration.EventType,
                         Time = dayEmployeeRegistration.Registration.DateTime.TimeOfDay,
                         CheckResult = dayEmployeeRegistration.CheckResult,
-                        WorkTimeInterval = dayEmployeeRegistration.WorkPeriodTime
+                        WorkTimeInterval = dayEmployeeRegistration.WorkPeriodTime,
+                        EntranceCompleteName = dayEmployeeRegistration.Registration.EntranceCompleteName
                     });
         }
 

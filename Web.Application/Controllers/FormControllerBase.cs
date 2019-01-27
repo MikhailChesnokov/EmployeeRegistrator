@@ -25,12 +25,12 @@
 
 
         
-        protected bool RoleIs(params Roles[] roles)
+        protected bool RoleIs(params Role[] role)
         {
             return _authorizationService
                    .AuthorizeAsync(
                        User,
-                       roles,
+                       role,
                        new RoleRequirement())
                    .Result
                    .Succeeded;
