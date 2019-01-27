@@ -11,6 +11,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain.Infrastructure", "Do
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Web.Application", "Web.Application\Web.Application.csproj", "{4DA2F5A9-3C66-4BE6-9D5E-46E909034D95}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionItems", "{56840048-3A58-4C7D-AA69-50B58677F4C4}"
+ProjectSection(SolutionItems) = preProject
+	TestData.sql = TestData.sql
+EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

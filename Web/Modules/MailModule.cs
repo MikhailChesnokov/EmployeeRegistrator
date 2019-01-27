@@ -1,7 +1,6 @@
 namespace Web.Modules
 {
     using Application.Infrastructure.Mail;
-    using Application.Infrastructure.Mail.Fake;
     using Application.Infrastructure.Mail.MailKit;
     using Autofac;
     using Microsoft.Extensions.Configuration;

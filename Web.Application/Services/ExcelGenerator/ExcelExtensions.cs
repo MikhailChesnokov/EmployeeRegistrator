@@ -29,7 +29,7 @@ namespace Web.Application.Services.ExcelGenerator
             };
         }
 
-        internal static WriteContext Fill(this WriteContext context, System.Drawing.Color color)
+        internal static WriteContext Fill(this WriteContext context, Color color)
         {
             context.Color = color;
 
