@@ -13,6 +13,8 @@
     {
         void RegisterEmployee(Employee employee, RegistrationEventType eventType, Entrance entrance);
 
-        IQueryable<Registration> AllInclude<TProperty>(Expression<Func<Registration, TProperty>> expression);
+        IQueryable<Registration> AllInclude<TProperty1, TProperty2>(
+            Expression<Func<Registration, TProperty1>> expression1,
+            Expression<Func<Registration, TProperty2>> expression2);
     }
 }

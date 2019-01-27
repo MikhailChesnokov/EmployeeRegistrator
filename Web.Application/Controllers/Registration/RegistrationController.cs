@@ -65,7 +65,8 @@
         [HttpGet]
         public IActionResult RegisterComing(RegisterComingForm form)
         {
-            if (!RoleIs(Role.SecurityGuard)) return Forbid();
+            if (!RoleIs(Role.SecurityGuard))
+                return Forbid();
 
             return Form(form, Ok, BadRequest);
         }
@@ -73,7 +74,8 @@
         [HttpGet]
         public IActionResult RegisterLeaving(RegisterLeavingForm form)
         {
-            if (!RoleIs(Role.SecurityGuard)) return Forbid();
+            if (!RoleIs(Role.SecurityGuard))
+                return Forbid();
 
             return Form(form, Ok, BadRequest);
         }
@@ -82,13 +84,9 @@
         public IActionResult List()
         {
             if (!RoleIs(Role.Administrator, Role.Manager))
-            {
                 return Forbid();
-            }
 
-            var registrations =
-                _registrationService
-                    .AllInclude(x => x.Employee);
+            var registrations = _registrationService.AllInclude(x => x.Employee, x => x.Entrance.Building);
 
             return View(GetViewModel(registrations, new ReportFilterForm()));
         }
@@ -103,11 +101,12 @@
 
             var registrations =
                 _registrationService
-                    .AllInclude(x => x.Employee)
+                    .AllInclude(x => x.Employee, x => x.Entrance.Building)
                     .ForEmployee(form.EmployeeId)
                     .ForPeriod(form.DateFrom, form.DateTo)
                     .WithStrictScheduleRestriction(form.StrictSchedule)
-                    .WithLateness(_timeService, form.Lateness);
+                    .WithLateness(_timeService, form.Lateness)
+                    .ToList();
 
             var viewModel = GetViewModel(registrations, form);
 
@@ -142,20 +141,19 @@
         {
             var registrationViewModels = _mapper.Map<IEnumerable<RegistrationViewModel>>(registrations);
 
-            string selectedLateness =
-                form.Lateness.HasValue ? Enum.GetName(typeof(Lateness), form.Lateness) : string.Empty;
-            string selectedScheduleRestriction = form.StrictSchedule.HasValue
+            var selectedLateness = form.Lateness.HasValue
+                ? Enum.GetName(typeof(Lateness), form.Lateness)
+                : string.Empty;
+            var selectedScheduleRestriction = form.StrictSchedule.HasValue
                 ? Enum.GetName(typeof(StrictSchedureRequirement), form.StrictSchedule)
                 : string.Empty;
 
             form.Registrations = registrationViewModels;
             form.Employees = _employeeService.All().ToSelectList();
             form.LatenessSelectListItems = typeof(Lateness).ToSelectList(selectedLateness);
-            form.StrictScheduleSelecrListItems =
-                typeof(StrictSchedureRequirement).ToSelectList(selectedScheduleRestriction);
+            form.StrictScheduleSelecrListItems = typeof(StrictSchedureRequirement).ToSelectList(selectedScheduleRestriction);
 
-            RegistrationsViewModel registrationsViewModel =
-                _registrationsViewModelService.ToRegistrationsViewModel(registrationViewModels, form);
+            var registrationsViewModel = _registrationsViewModelService.ToRegistrationsViewModel(registrationViewModels, form);
 
             return registrationsViewModel;
         }
@@ -171,7 +169,7 @@
 
             var registrations =
                 _registrationService
-                    .AllInclude(x => x.Employee);
+                    .AllInclude(x => x.Employee, x => x.Entrance.Building);
 
             return StackedBar(registrations, new ReportFilterForm());
         }
@@ -186,7 +184,7 @@
 
             var registrations =
                 _registrationService
-                    .AllInclude(x => x.Employee)
+                    .AllInclude(x => x.Employee, x => x.Entrance.Building)
                     .ForEmployee(form.EmployeeId)
                     .ForPeriod(form.DateFrom, form.DateTo)
                     .WithStrictScheduleRestriction(form.StrictSchedule)

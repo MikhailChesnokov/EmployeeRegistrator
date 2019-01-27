@@ -15,5 +15,7 @@
         public EmployeeViewModel Employee { get; set; } = new EmployeeViewModel();
 
         public int Id { get; set; }
+        
+        public string EntranceCompleteName { get; set; }
     }
 }

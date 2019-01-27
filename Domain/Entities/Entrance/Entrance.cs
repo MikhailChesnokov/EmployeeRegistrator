@@ -32,6 +32,8 @@ namespace Domain.Entities.Entrance
 
         public IList<Registration> Registrations { get; protected set; }
 
+        public string CompleteName  => $"{Building?.Address} ({Name})";
+
 
 
         protected internal void Rename(string name)

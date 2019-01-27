@@ -18,14 +18,16 @@
 
         IQueryable<TEntity> All();
         
-        IQueryable<TEntity> AllInclude<TProperty>(params Expression<Func<TEntity, TProperty>>[] expression);
+        IQueryable<TEntity> AllInclude<TProperty>(Expression<Func<TEntity, TProperty>> expression);
+        
+        IQueryable<TEntity> AllInclude<TProperty1, TProperty2>(Expression<Func<TEntity, TProperty1>> expression1, Expression<Func<TEntity, TProperty2>> expression2);
 
         IQueryable<TEntity> AllActive();
 
-        IQueryable<TEntity> AllActiveInclude<TProperty>(params Expression<Func<TEntity, TProperty>>[] expressions);
+        IQueryable<TEntity> AllActiveInclude<TProperty>(Expression<Func<TEntity, TProperty>> expression);
 
         TEntity FindById(int id);
         
-        TEntity FindByIdInclude<TProperty>(int id, params Expression<Func<TEntity, TProperty>>[] expressions);
+        TEntity FindByIdInclude<TProperty>(int id, Expression<Func<TEntity, TProperty>> expression);
     }
 }

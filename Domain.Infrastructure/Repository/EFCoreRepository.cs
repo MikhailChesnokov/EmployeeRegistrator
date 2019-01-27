@@ -47,13 +47,17 @@
             return _entities;
         }
 
-        public IQueryable<TEntity> AllInclude<TProperty>(params Expression<Func<TEntity, TProperty>>[] expressions)
+        public IQueryable<TEntity> AllInclude<TProperty>(
+            Expression<Func<TEntity, TProperty>> expression)
         {
-            IIncludableQueryable<TEntity, TProperty> res = _entities.Include(expressions.First());
-
-            expressions.Skip(1).ToList().ForEach(x => res.Include(x));
-
-            return res;
+            return _entities.Include(expression);
+        }
+        
+        public IQueryable<TEntity> AllInclude<TProperty1, TProperty2>(
+            Expression<Func<TEntity, TProperty1>> expression1,
+            Expression<Func<TEntity, TProperty2>> expression2)
+        {
+            return _entities.Include(expression1).Include(expression2);
         }
 
         public IQueryable<TEntity> AllActive()
@@ -65,9 +69,9 @@
         }
 
         public IQueryable<TEntity> AllActiveInclude<TProperty>(
-            params Expression<Func<TEntity, TProperty>>[] expressions)
+            Expression<Func<TEntity, TProperty>> expression)
         {
-            var includedEntities = AllInclude(expressions);
+            var includedEntities = AllInclude(expression);
 
             return
                 typeof(IRemovableEntity).IsAssignableFrom(typeof(TEntity))
@@ -84,9 +88,9 @@
         }
 
         
-        public TEntity FindByIdInclude<TProperty>(int id, params Expression<Func<TEntity, TProperty>>[] expressions)
+        public TEntity FindByIdInclude<TProperty>(int id, Expression<Func<TEntity, TProperty>> expression)
         {
-            return AllActiveInclude(expressions).FirstOrDefault(x => x.Id == id);
+            return AllActiveInclude(expression).FirstOrDefault(x => x.Id == id);
         }
     }
 }
