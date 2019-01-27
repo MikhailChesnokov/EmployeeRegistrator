@@ -4,7 +4,6 @@ namespace Web.Application.Controllers.Entrance
     using System.Linq;
     using AutoMapper;
     using Domain.Entities.Building;
-    using Domain.Entities.Department;
     using Domain.Entities.User;
     using Domain.Services.Building;
     using Domain.Services.Entrance;
@@ -43,7 +42,7 @@ namespace Web.Application.Controllers.Entrance
         [HttpGet]
         public IActionResult List()
         {
-            if (!RoleIs(Roles.Administrator, Roles.Manager, Roles.SecurityGuard))
+            if (!RoleIs(Role.Administrator, Role.Manager, Role.SecurityGuard))
                 return Forbid();
             
             
@@ -57,7 +56,7 @@ namespace Web.Application.Controllers.Entrance
         [HttpGet]
         public IActionResult View(int id)
         {
-            if (!RoleIs(Roles.Administrator, Roles.Manager, Roles.SecurityGuard))
+            if (!RoleIs(Role.Administrator, Role.Manager, Role.SecurityGuard))
                 return Forbid();
 
             
@@ -74,7 +73,7 @@ namespace Web.Application.Controllers.Entrance
         [HttpGet]
         public IActionResult Create()
         {
-            if (!RoleIs(Roles.Administrator))
+            if (!RoleIs(Role.Administrator))
                 return Forbid();
             
             
@@ -87,7 +86,7 @@ namespace Web.Application.Controllers.Entrance
         [HttpPost]
         public IActionResult Create(CreateEntranceForm form)
         {
-            if (!RoleIs(Roles.Administrator))
+            if (!RoleIs(Role.Administrator))
                 return Forbid();
             
             
@@ -105,7 +104,7 @@ namespace Web.Application.Controllers.Entrance
         [HttpGet]
         public IActionResult Edit(int id)
         {
-            if (!RoleIs(Roles.Administrator))
+            if (!RoleIs(Role.Administrator))
                 return Forbid();
             
             
@@ -124,7 +123,7 @@ namespace Web.Application.Controllers.Entrance
         [HttpPost]
         public IActionResult Edit(EditEntranceForm form)
         {
-            if (!RoleIs(Roles.Administrator))
+            if (!RoleIs(Role.Administrator))
                 return Forbid();
 
             
@@ -142,7 +141,7 @@ namespace Web.Application.Controllers.Entrance
         [HttpPost]
         public IActionResult Delete(DeleteEntranceForm form)
         {
-            if (!RoleIs(Roles.Administrator))
+            if (!RoleIs(Role.Administrator))
                 return Forbid();
             
             

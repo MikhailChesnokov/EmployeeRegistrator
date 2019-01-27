@@ -77,8 +77,12 @@
 
         public TEntity FindById(int id)
         {
-            return _entities.FirstOrDefault(x => x.Id == id);
+            return
+                typeof(IRemovableEntity).IsAssignableFrom(typeof(TEntity))
+                    ? _entities.Where(x => !((IRemovableEntity) x).IsDeleted()).FirstOrDefault(x => x.Id == id)
+                    : _entities.FirstOrDefault(x => x.Id == id);
         }
+
         
         public TEntity FindByIdInclude<TProperty>(int id, params Expression<Func<TEntity, TProperty>>[] expressions)
         {

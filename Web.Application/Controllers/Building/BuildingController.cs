@@ -36,7 +36,7 @@ namespace Web.Application.Controllers.Building
         [HttpGet]
         public IActionResult List()
         {
-            if (!RoleIs(Roles.Administrator, Roles.Manager, Roles.SecurityGuard))
+            if (!RoleIs(Role.Administrator, Role.Manager, Role.SecurityGuard))
                 return Forbid();
             
             
@@ -50,7 +50,7 @@ namespace Web.Application.Controllers.Building
         [HttpGet]
         public IActionResult View(int id)
         {
-            if (!RoleIs(Roles.Administrator, Roles.Manager, Roles.SecurityGuard))
+            if (!RoleIs(Role.Administrator, Role.Manager, Role.SecurityGuard))
                 return Forbid();
 
             
@@ -67,7 +67,7 @@ namespace Web.Application.Controllers.Building
         [HttpGet]
         public IActionResult Create()
         {
-            if (!RoleIs(Roles.Administrator))
+            if (!RoleIs(Role.Administrator))
                 return Forbid();
             
             
@@ -77,7 +77,7 @@ namespace Web.Application.Controllers.Building
         [HttpPost]
         public IActionResult Create(CreateBuildingForm form)
         {
-            if (!RoleIs(Roles.Administrator))
+            if (!RoleIs(Role.Administrator))
                 return Forbid();
             
             
@@ -90,7 +90,7 @@ namespace Web.Application.Controllers.Building
         [HttpGet]
         public IActionResult Edit(int id)
         {
-            if (!RoleIs(Roles.Administrator))
+            if (!RoleIs(Role.Administrator))
                 return Forbid();
             
             
@@ -107,7 +107,7 @@ namespace Web.Application.Controllers.Building
         [HttpPost]
         public IActionResult Edit(EditBuildingForm form)
         {
-            if (!RoleIs(Roles.Administrator))
+            if (!RoleIs(Role.Administrator))
                 return Forbid();
 
             
@@ -120,7 +120,7 @@ namespace Web.Application.Controllers.Building
         [HttpPost]
         public IActionResult Delete(DeleteBuildingForm form)
         {
-            if (!RoleIs(Roles.Administrator))
+            if (!RoleIs(Role.Administrator))
                 return Forbid();
             
             

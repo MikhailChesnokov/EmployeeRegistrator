@@ -10,7 +10,10 @@
     {
         public UserProfile()
         {
-            CreateMap<User, UserViewModel>();
+            CreateMap<User, UserViewModel>()
+                .Include<SecurityGuard, SecurityGuardViewModel>();
+
+            CreateMap<SecurityGuard, SecurityGuardViewModel>();
         }
     }
 }

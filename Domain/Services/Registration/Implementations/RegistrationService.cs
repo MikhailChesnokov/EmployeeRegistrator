@@ -4,6 +4,7 @@
     using System.Linq;
     using System.Linq.Expressions;
     using Entities.Employee;
+    using Entities.Entrance;
     using Entities.Registration;
     using Repository;
 
@@ -26,12 +27,12 @@
 
 
 
-        public void RegisterEmployee(Employee employee, RegistrationEventType eventType)
+        public void RegisterEmployee(Employee employee, RegistrationEventType eventType, Entrance entrance)
         {
             if (employee == null)
                 throw new ArgumentNullException(nameof(employee));
 
-            Registration registration = new Registration(employee, eventType);
+            var registration = new Registration(employee, eventType, entrance);
 
             _registrationRepository.Add(registration);
         }

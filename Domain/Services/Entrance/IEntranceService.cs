@@ -20,8 +20,7 @@ namespace Domain.Services.Entrance
 
         IEnumerable<Entrance> AllActive();
 
-
-
+        
         void Rename(Entrance entrance, string name);
     }
 }

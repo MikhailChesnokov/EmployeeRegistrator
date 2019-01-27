@@ -10,7 +10,7 @@
 
 
     public class IdClaimBasedUserProvider<TUser> : UserProviderBase<TUser>
-        where TUser : class, IEntity, new()
+        where TUser : class, IEntity
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IUserService _userService;

@@ -84,16 +84,16 @@
                 return new DeleteEntranceFormHandler(_entranceService) as IFormHandler<TForm>;
             
             if (typeof(TForm) == typeof(RegisterComingForm))
-                return new RegisterComingFormHandler(_registrationService, _employeeService) as IFormHandler<TForm>;
+                return new RegisterComingFormHandler(_registrationService, _employeeService, _entranceService) as IFormHandler<TForm>;
             if (typeof(TForm) == typeof(RegisterLeavingForm))
-                return new RegisterLeavingFormHandler(_registrationService, _employeeService) as IFormHandler<TForm>;
+                return new RegisterLeavingFormHandler(_registrationService, _employeeService, _entranceService) as IFormHandler<TForm>;
 
             if (typeof(TForm) == typeof(SignInForm))
                 return new SignInFormHandler(_authenticationService, _userRepository) as IFormHandler<TForm>;
             if (typeof(TForm) == typeof(SignUpForm))
                 return new SignUpFormHandler(_userService) as IFormHandler<TForm>;
 
-            throw new InvalidOperationException("Undefined type");
+            throw new ArgumentOutOfRangeException(nameof(TForm));
         }
 
         public IFormHandler<TForm, TFormResult> Create<TForm, TFormResult>()
@@ -114,7 +114,7 @@
             if (typeof(TForm) == typeof(CreateEntranceForm))
                 return new CreateEntranceFormHandler(_entranceService, _buildingService) as IFormHandler<TForm, TFormResult>;
 
-            throw new InvalidOperationException("Undefined type");
+            throw new ArgumentOutOfRangeException(nameof(TForm));
         }
     }
 }

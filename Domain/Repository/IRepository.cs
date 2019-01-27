@@ -8,7 +8,7 @@
 
 
     public interface IRepository<TEntity>
-        where TEntity : class, IEntity, new()
+        where TEntity : class, IEntity
     {
         void Add(TEntity entity);
 

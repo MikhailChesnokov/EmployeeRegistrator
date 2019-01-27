@@ -15,7 +15,7 @@
             : base(
                 login,
                 password,
-                Roles.Manager)
+                Role.Manager)
         {
 
         }

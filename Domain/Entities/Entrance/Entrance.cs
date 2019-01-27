@@ -1,9 +1,11 @@
 namespace Domain.Entities.Entrance
 {
     using System;
+    using System.Collections.Generic;
     using Building;
+    using Registration;
+    using User;
 
-    
 
     public class Entrance : IRemovableEntity
     {
@@ -26,6 +28,10 @@ namespace Domain.Entities.Entrance
 
         public Building Building { get; protected set; }
 
+        public User SecurityGuard { get; protected set; }
+
+        public IList<Registration> Registrations { get; protected set; }
+
 
 
         protected internal void Rename(string name)
@@ -41,6 +47,19 @@ namespace Domain.Entities.Entrance
         protected internal void ChangeBuilding(Building building)
         {
             Building = building ?? throw new ArgumentNullException(nameof(building));
+        }
+
+        public void ChangeSecurityGuard(SecurityGuard securityGuard)
+        {
+            SecurityGuard = securityGuard ?? throw new ArgumentNullException(nameof(securityGuard));
+        }
+        
+        public void AddRegistration(Registration registration)
+        {
+            if (registration == null)
+                throw new ArgumentNullException(nameof(registration));
+            
+            Registrations.Add(registration);
         }
         
         public bool IsDeleted()
