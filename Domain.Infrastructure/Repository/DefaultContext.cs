@@ -3,6 +3,7 @@
     using Entities.Building;
     using System;
     using Entities.Employee;
+    using Entities.Entrance;
     using Entities.Registration;
     using Entities.User;
     using Microsoft.EntityFrameworkCore;
@@ -36,6 +37,8 @@
         public DbSet<User> Users { get; set; }
         
         public DbSet<Building> Buildings { get; set; }
+        
+        public DbSet<Entrance> Entrances { get; set; }
 
 
 

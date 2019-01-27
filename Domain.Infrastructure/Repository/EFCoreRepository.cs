@@ -9,13 +9,11 @@
     using Microsoft.EntityFrameworkCore.Query;
 
 
-
     public sealed class EntityFrameworkCoreRepository<TEntity> : IRepository<TEntity>
         where TEntity : class, IEntity, new()
     {
         private readonly DbContext _context;
         private readonly DbSet<TEntity> _entities;
-
 
 
         public EntityFrameworkCoreRepository(
@@ -24,7 +22,6 @@
             _context = context;
             _entities = _context.Set<TEntity>();
         }
-
 
 
         public void Add(TEntity entity)
@@ -54,30 +51,38 @@
         {
             IIncludableQueryable<TEntity, TProperty> res = _entities.Include(expressions.First());
 
-            foreach (Expression<Func<TEntity, TProperty>> expression in expressions.Skip(1))
-            {
-                res.Include(expression);
-            }
+            expressions.Skip(1).ToList().ForEach(x => res.Include(x));
 
             return res;
         }
 
         public IQueryable<TEntity> AllActive()
         {
-            if (typeof(IRemovableEntity).IsAssignableFrom(typeof(TEntity)))
-            {
-                return _entities
-                       .Cast<IRemovableEntity>()
-                       .Where(x => !x.IsDeleted())
-                       .Cast<TEntity>();
-            }
+            return
+                typeof(IRemovableEntity).IsAssignableFrom(typeof(TEntity))
+                    ? _entities.Where(x => !((IRemovableEntity) x).IsDeleted())
+                    : _entities;
+        }
 
-            return _entities;
+        public IQueryable<TEntity> AllActiveInclude<TProperty>(
+            params Expression<Func<TEntity, TProperty>>[] expressions)
+        {
+            var includedEntities = AllInclude(expressions);
+
+            return
+                typeof(IRemovableEntity).IsAssignableFrom(typeof(TEntity))
+                    ? includedEntities.Where(x => !((IRemovableEntity) x).IsDeleted())
+                    : includedEntities;
         }
 
         public TEntity FindById(int id)
         {
             return _entities.FirstOrDefault(x => x.Id == id);
+        }
+        
+        public TEntity FindByIdInclude<TProperty>(int id, params Expression<Func<TEntity, TProperty>>[] expressions)
+        {
+            return AllActiveInclude(expressions).FirstOrDefault(x => x.Id == id);
         }
     }
 }

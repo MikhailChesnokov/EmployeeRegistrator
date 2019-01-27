@@ -17,11 +17,15 @@
         void Delete(TEntity entity);
 
         IQueryable<TEntity> All();
+        
+        IQueryable<TEntity> AllInclude<TProperty>(params Expression<Func<TEntity, TProperty>>[] expression);
 
         IQueryable<TEntity> AllActive();
 
-        IQueryable<TEntity> AllInclude<TProperty>(params Expression<Func<TEntity, TProperty>>[] expression);
+        IQueryable<TEntity> AllActiveInclude<TProperty>(params Expression<Func<TEntity, TProperty>>[] expressions);
 
         TEntity FindById(int id);
+        
+        TEntity FindByIdInclude<TProperty>(int id, params Expression<Func<TEntity, TProperty>>[] expressions);
     }
 }
