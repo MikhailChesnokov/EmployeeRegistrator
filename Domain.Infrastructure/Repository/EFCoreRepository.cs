@@ -6,7 +6,6 @@
     using Domain.Repository;
     using Entities;
     using Microsoft.EntityFrameworkCore;
-    using Microsoft.EntityFrameworkCore.Query;
 
 
     public sealed class EntityFrameworkCoreRepository<TEntity> : IRepository<TEntity>

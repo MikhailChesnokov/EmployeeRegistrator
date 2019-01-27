@@ -17,7 +17,7 @@
             : base(
                 login,
                 password,
-                Entities.User.Role.Administrator,
+                Role.Administrator,
                 email,
                 needNotify)
         {
