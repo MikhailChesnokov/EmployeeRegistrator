@@ -15,5 +15,7 @@
         public RegistrationCheckResult CheckResult { get; set; }
 
         public TimeSpan WorkTimeInterval { get; set; }
+
+        public string EntranceCompleteName { get; set; }
     }
 }

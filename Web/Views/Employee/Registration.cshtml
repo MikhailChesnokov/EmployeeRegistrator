@@ -1,4 +1,8 @@
-﻿@{ ViewBag.Title = "Список сотрудников"; }
+﻿@inject IUserProvider<User> UserProvider
+
+@{
+    ViewBag.Title = "Список сотрудников";
+}
 
 <h4>Список сотрудников</h4>
 
@@ -17,29 +21,45 @@
 
         function registerComing(employeeId) {
             $.get(
-                '@(Url.Action<RegistrationController>(x => x.RegisterComing(With.No<int>())))',
+                '@(Url.Action<RegistrationController>(x => x.RegisterComing(With.No<RegisterComingForm>())))',
                 {
-                    id: employeeId
+                    employeeId: employeeId,
+                    entranceId: @(((SecurityGuard)UserProvider.User).Entrance.Id)
                 },
-                function(data) {
-                    new PNotify({
-                        title: 'КПП',
-                        text: 'Сотрудник впущен'
-                    });
+                function(data, status) {
+                    if (status === 'success') {
+                        const notify = new PNotify({
+                            title: 'КПП',
+                            text: 'Сотрудник впущен'
+                        });
+                    } else {
+                        const notify = new PNotify({
+                            title: 'КПП',
+                            text: 'Ошибка при попытке пропуска'
+                        });
+                    }
                 });
         }
 
         function registerLeaving(employeeId) {
             $.get(
-                '@(Url.Action<RegistrationController>(x => x.RegisterLeaving(With.No<int>())))',
+                '@(Url.Action<RegistrationController>(x => x.RegisterLeaving(With.No<RegisterLeavingForm>())))',
                 {
-                    id: employeeId
+                    employeeId: employeeId,
+                    entranceId: @(((SecurityGuard)UserProvider.User).Entrance.Id)
                 },
-                function(data) {
-                    new PNotify({
-                        title: 'КПП',
-                        text: 'Сотрудник выпущен'
-                    });
+                function(data, status) {
+                    if (status === 'success') {
+                        const notify = new PNotify({
+                            title: 'КПП',
+                            text: 'Сотрудник выпущен'
+                        });
+                    } else {
+                        const notify = new PNotify({
+                            title: 'КПП',
+                            text: 'Ошибка при попытке пропуска'
+                        });
+                    }
                 });
         }
     </script>

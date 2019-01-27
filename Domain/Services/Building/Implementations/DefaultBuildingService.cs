@@ -57,12 +57,12 @@ namespace Domain.Services.Building.Implementations
 
         public IEnumerable<Building> All()
         {
-            return _buildingsRepository.AllActive();
+            return _buildingsRepository.All();
         }
 
         public IEnumerable<Building> AllActive()
         {
-            return _buildingsRepository.All().Where(x => x.DeletedAtUtc == null);
+            return _buildingsRepository.AllActive();
         }
 
         public void ChangeAddress(Building building, string address)

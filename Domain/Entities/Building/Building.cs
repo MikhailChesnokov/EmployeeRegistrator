@@ -1,9 +1,10 @@
 namespace Domain.Entities.Building
 {
     using System;
+    using System.Collections.Generic;
+    using Entrance;
 
-    
-    
+
     public class Building : IRemovableEntity
     {
         [Obsolete("Only for reflection", true)]
@@ -21,6 +22,8 @@ namespace Domain.Entities.Building
         public string Address { get; protected set; }
         
         public DateTime? DeletedAtUtc { get; protected set; }
+        
+        public IList<Entrance> Entrances { get; protected set; }
 
 
 
@@ -33,7 +36,21 @@ namespace Domain.Entities.Building
 
             Address = address;
         }
-        
+
+        public void AddEntrance(Entrance entrance)
+        {
+            if (entrance == null) throw new ArgumentNullException(nameof(entrance));
+            
+            Entrances.Add(entrance);
+        }
+
+        public void RemoveEntrance(Entrance entrance)
+        {
+            if (entrance == null) throw new ArgumentNullException(nameof(entrance));
+
+            Entrances.Remove(entrance);
+        }
+
         public bool IsDeleted()
         {
             return DeletedAtUtc.HasValue;

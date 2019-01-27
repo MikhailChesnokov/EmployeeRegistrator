@@ -9,7 +9,7 @@
 
 
 
-    public class RoleRequirementHandler : AuthorizationHandler<RoleRequirement, IEnumerable<Roles>>
+    public class RoleRequirementHandler : AuthorizationHandler<RoleRequirement, IEnumerable<Role>>
     {
         private readonly IUserProvider<User> _userProvider;
 
@@ -25,7 +25,7 @@
         protected override async Task HandleRequirementAsync(
             AuthorizationHandlerContext context,
             RoleRequirement requirement,
-            IEnumerable<Roles> resource)
+            IEnumerable<Role> resource)
         {
             if (_userProvider.User is User user && resource.Contains(user.Role))
             {

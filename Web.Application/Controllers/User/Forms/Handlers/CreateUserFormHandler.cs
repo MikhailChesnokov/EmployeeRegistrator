@@ -34,12 +34,15 @@
 
             if (!form.Password.Equals(form.ConfirmPassword))
                 throw new FormException("Пароли не совпадают.");
+            
+            if (form.Role.HasValue && form.Role.Value == Role.SecurityGuard && !form.EntranceId.HasValue)
+                throw new FormException("Вход в здание не выбран.");
 
             User user;
 
             try
             {
-                user = _userService.Create(form.Login, form.Password, form.Role.Value, form.Email, form.NeedNotify ?? false);
+                user = _userService.Create(form.Login, form.Password, form.Role.Value, form.Email, form.NeedNotify ?? false, form.EntranceId);
             }
             catch (UserAlreadyExistsException e)
             {

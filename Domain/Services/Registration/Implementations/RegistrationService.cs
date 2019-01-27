@@ -4,6 +4,7 @@
     using System.Linq;
     using System.Linq.Expressions;
     using Entities.Employee;
+    using Entities.Entrance;
     using Entities.Registration;
     using Repository;
 
@@ -11,37 +12,35 @@
 
     public class RegistrationService : IRegistrationService
     {
-        private readonly IRepository<Employee> _employeeRepository;
         private readonly IRepository<Registration> _registrationRepository;
 
 
 
         public RegistrationService(
-            IRepository<Registration> registrationRepository,
-            IRepository<Employee> employeeRepository)
+            IRepository<Registration> registrationRepository)
         {
             _registrationRepository = registrationRepository;
-            _employeeRepository = employeeRepository;
         }
 
 
 
-        public void RegisterEmployee(Employee employee, RegistrationEventType eventType)
+        public void RegisterEmployee(Employee employee, RegistrationEventType eventType, Entrance entrance)
         {
             if (employee == null)
                 throw new ArgumentNullException(nameof(employee));
+            if (entrance == null)
+                throw new ArgumentNullException(nameof(entrance));
 
-            Registration registration = new Registration(employee, eventType);
+            var registration = new Registration(employee, eventType, entrance);
 
             _registrationRepository.Add(registration);
         }
 
-        public IQueryable<Registration> AllInclude<TProperty>(Expression<Func<Registration, TProperty>> expression)
+        public IQueryable<Registration> AllInclude<TProperty1, TProperty2>(
+            Expression<Func<Registration, TProperty1>> expression1,
+            Expression<Func<Registration, TProperty2>> expression2)
         {
-            return
-                _registrationRepository
-                    .AllInclude(expression)
-                    .Where(x => x.DateTime.Year == DateTime.Now.Year);
+            return _registrationRepository.AllInclude(expression1, expression2);
         }
     }
 }

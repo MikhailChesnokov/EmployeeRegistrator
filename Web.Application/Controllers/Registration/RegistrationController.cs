@@ -9,13 +9,11 @@
     using Domain.Services.Employee;
     using Domain.Services.Registration;
     using Domain.Services.Time;
-    using Employee;
     using Enums;
     using Filters;
     using Forms;
     using Infrastructure.Extensions;
     using Microsoft.AspNetCore.Authorization;
-    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Newtonsoft.Json;
     using Services.ExcelGenerator;
@@ -23,7 +21,6 @@
     using Services.PdfGenerator;
     using Services.RegistrationsViewModel;
     using ViewModels;
-
 
 
     [Authorize]
@@ -37,7 +34,6 @@
         private readonly IRazorHtmlLayoutGenerator _htmlLayoutGenerator;
         private readonly IPdfGenerator _pdfGenerator;
         private readonly IExcelGenerator _excelGenerator;
-
 
 
         public RegistrationController(
@@ -66,54 +62,31 @@
         }
 
 
-
-        [HttpPost]
-        public IActionResult RegisterComing([FromBody] RegisterComingForm form)
+        [HttpGet]
+        public IActionResult RegisterComing(RegisterComingForm form)
         {
-            return Form(form, Ok, () => StatusCode(StatusCodes.Status409Conflict));
-        }
+            if (!RoleIs(Role.SecurityGuard))
+                return Forbid();
 
-        [HttpPost]
-        public IActionResult RegisterLeaving([FromBody] RegisterLeavingForm form)
-        {
-            return Form(form, Ok, () => StatusCode(StatusCodes.Status409Conflict));
+            return Form(form, Ok, BadRequest);
         }
 
         [HttpGet]
-        public IActionResult RegisterComing(int id)
+        public IActionResult RegisterLeaving(RegisterLeavingForm form)
         {
-            if (!RoleIs(Roles.SecurityGuard)) return Forbid();
+            if (!RoleIs(Role.SecurityGuard))
+                return Forbid();
 
-
-            return Form(
-                new RegisterComingForm {EmployeeId = id},
-                () => this.RedirectToAction<EmployeeController>(c => c.Registration()),
-                () => this.RedirectToAction<EmployeeController>(c => c.Registration()));
-        }
-
-        [HttpGet]
-        public IActionResult RegisterLeaving(int id)
-        {
-            if (!RoleIs(Roles.SecurityGuard)) return Forbid();
-
-
-            return Form(
-                new RegisterLeavingForm {EmployeeId = id},
-                () => this.RedirectToAction<EmployeeController>(c => c.Registration()),
-                () => this.RedirectToAction<EmployeeController>(c => c.Registration()));
+            return Form(form, Ok, BadRequest);
         }
 
         [HttpGet]
         public IActionResult List()
         {
-            if (!RoleIs(Roles.Administrator, Roles.Manager))
-            {
+            if (!RoleIs(Role.Administrator, Role.Manager))
                 return Forbid();
-            }
 
-            var registrations =
-                _registrationService
-                    .AllInclude(x => x.Employee);
+            var registrations = _registrationService.AllInclude(x => x.Employee, x => x.Entrance.Building);
 
             return View(GetViewModel(registrations, new ReportFilterForm()));
         }
@@ -121,42 +94,46 @@
         [HttpPost]
         public IActionResult List(ReportFilterForm form, string pdf, string excel)
         {
-            if (!RoleIs(Roles.Administrator, Roles.Manager))
+            if (!RoleIs(Role.Administrator, Role.Manager))
             {
                 return Forbid();
             }
 
             var registrations =
                 _registrationService
-                    .AllInclude(x => x.Employee)
+                    .AllInclude(x => x.Employee, x => x.Entrance.Building)
                     .ForEmployee(form.EmployeeId)
                     .ForPeriod(form.DateFrom, form.DateTo)
                     .WithStrictScheduleRestriction(form.StrictSchedule)
-                    .WithLateness(_timeService, form.Lateness);
+                    .WithLateness(_timeService, form.Lateness)
+                    .ToList();
 
             var viewModel = GetViewModel(registrations, form);
 
             if (string.IsNullOrWhiteSpace(pdf) &&
                 string.IsNullOrWhiteSpace(excel))
             {
-                return View(viewModel);    
+                return View(viewModel);
             }
 
             viewModel.IsDocument = true;
 
             if (pdf != null)
             {
-                var htmlContent = _htmlLayoutGenerator.RenderAsync($"Registration/{nameof(List)}", viewModel).GetAwaiter().GetResult();
+                var htmlContent = _htmlLayoutGenerator.RenderAsync($"Registration/{nameof(List)}", viewModel)
+                    .GetAwaiter().GetResult();
 
                 var file = _pdfGenerator.GenerateAsync(htmlContent).GetAwaiter().GetResult();
 
-                return File(file, "application/json", $"Отчет_{DateTime.Now.ToShortDateString()}_{DateTime.Now.ToShortTimeString()}.pdf");
+                return File(file, "application/json",
+                    $"Отчет_{DateTime.Now.ToShortDateString()}_{DateTime.Now.ToShortTimeString()}.pdf");
             }
             else
             {
                 var file = _excelGenerator.GenerateAsync(viewModel).GetAwaiter().GetResult();
 
-                return File(file, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", $"Отчет_{DateTime.Now.ToShortDateString()}_{DateTime.Now.ToShortTimeString()}.xlsx");
+                return File(file, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                    $"Отчет_{DateTime.Now.ToShortDateString()}_{DateTime.Now.ToShortTimeString()}.xlsx");
             }
         }
 
@@ -164,33 +141,35 @@
         {
             var registrationViewModels = _mapper.Map<IEnumerable<RegistrationViewModel>>(registrations);
 
-            string selectedLateness = form.Lateness.HasValue ? Enum.GetName(typeof(Lateness), form.Lateness) : string.Empty;
-            string selectedScheduleRestriction = form.StrictSchedule.HasValue ? Enum.GetName(typeof(StrictSchedureRequirement), form.StrictSchedule) : string.Empty;
+            var selectedLateness = form.Lateness.HasValue
+                ? Enum.GetName(typeof(Lateness), form.Lateness)
+                : string.Empty;
+            var selectedScheduleRestriction = form.StrictSchedule.HasValue
+                ? Enum.GetName(typeof(StrictSchedureRequirement), form.StrictSchedule)
+                : string.Empty;
 
             form.Registrations = registrationViewModels;
             form.Employees = _employeeService.All().ToSelectList();
             form.LatenessSelectListItems = typeof(Lateness).ToSelectList(selectedLateness);
             form.StrictScheduleSelecrListItems = typeof(StrictSchedureRequirement).ToSelectList(selectedScheduleRestriction);
 
-            RegistrationsViewModel registrationsViewModel = _registrationsViewModelService.ToRegistrationsViewModel(registrationViewModels, form);
+            var registrationsViewModel = _registrationsViewModelService.ToRegistrationsViewModel(registrationViewModels, form);
 
             return registrationsViewModel;
         }
 
-        
-        
-        
+
         [HttpGet]
         public IActionResult StackedBar()
         {
-            if (!RoleIs(Roles.Administrator, Roles.Manager))
+            if (!RoleIs(Role.Administrator, Role.Manager))
             {
                 return Forbid();
             }
 
             var registrations =
                 _registrationService
-                    .AllInclude(x => x.Employee);
+                    .AllInclude(x => x.Employee, x => x.Entrance.Building);
 
             return StackedBar(registrations, new ReportFilterForm());
         }
@@ -198,14 +177,14 @@
         [HttpPost]
         public IActionResult StackedBar(ReportFilterForm form)
         {
-            if (!RoleIs(Roles.Administrator, Roles.Manager))
+            if (!RoleIs(Role.Administrator, Role.Manager))
             {
                 return Forbid();
             }
 
             var registrations =
                 _registrationService
-                    .AllInclude(x => x.Employee)
+                    .AllInclude(x => x.Employee, x => x.Entrance.Building)
                     .ForEmployee(form.EmployeeId)
                     .ForPeriod(form.DateFrom, form.DateTo)
                     .WithStrictScheduleRestriction(form.StrictSchedule)
@@ -216,30 +195,38 @@
 
         private ViewResult StackedBar(IEnumerable<Registration> registrations, ReportFilterForm form)
         {
-            IEnumerable<RegistrationViewModel> registrationViewModels = _mapper.Map<IEnumerable<RegistrationViewModel>>(registrations);
+            IEnumerable<RegistrationViewModel> registrationViewModels =
+                _mapper.Map<IEnumerable<RegistrationViewModel>>(registrations);
 
-            string selectedLateness = form.Lateness.HasValue ? Enum.GetName(typeof(Lateness), form.Lateness) : string.Empty;
-            string selectedScheduleRestriction = form.StrictSchedule.HasValue ? Enum.GetName(typeof(StrictSchedureRequirement), form.StrictSchedule) : string.Empty;
+            string selectedLateness =
+                form.Lateness.HasValue ? Enum.GetName(typeof(Lateness), form.Lateness) : string.Empty;
+            string selectedScheduleRestriction = form.StrictSchedule.HasValue
+                ? Enum.GetName(typeof(StrictSchedureRequirement), form.StrictSchedule)
+                : string.Empty;
 
             form.Registrations = registrationViewModels;
             form.Employees = _employeeService.All().ToSelectList();
             form.LatenessSelectListItems = typeof(Lateness).ToSelectList(selectedLateness);
-            form.StrictScheduleSelecrListItems = typeof(StrictSchedureRequirement).ToSelectList(selectedScheduleRestriction);
+            form.StrictScheduleSelecrListItems =
+                typeof(StrictSchedureRequirement).ToSelectList(selectedScheduleRestriction);
 
-            RegistrationsViewModel registraionsViewModel = _registrationsViewModelService.ToRegistrationsViewModel(registrationViewModels, form);
+            RegistrationsViewModel registraionsViewModel =
+                _registrationsViewModelService.ToRegistrationsViewModel(registrationViewModels, form);
 
             List<StackedBarDayViewModel> barViewModels =
                 registraionsViewModel
                     .DayRegistrations
                     .Select(dayRegistrations =>
                     {
-                        IOrderedEnumerable<DayEmployeeRegistraionsViewModel> orderedDayEmployeeRegistrations = dayRegistrations.DayEmployeeRegistraions.OrderBy(x => x.EmployeeId);
+                        IOrderedEnumerable<DayEmployeeRegistraionsViewModel> orderedDayEmployeeRegistrations =
+                            dayRegistrations.DayEmployeeRegistraions.OrderBy(x => x.EmployeeId);
 
 
                         return new StackedBarDayViewModel
                         {
                             Day = dayRegistrations.Day.DayOfYear.ToString(),
-                            Names = JsonConvert.SerializeObject(orderedDayEmployeeRegistrations.Select(x => x.Employee)),
+                            Names =
+                                JsonConvert.SerializeObject(orderedDayEmployeeRegistrations.Select(x => x.Employee)),
                             WorkTimes = JsonConvert.SerializeObject(orderedDayEmployeeRegistrations.Select(x =>
                             {
                                 int totalMinutes = (int) x.TotalWorkDayTimeInterval.TotalMinutes;
@@ -250,7 +237,7 @@
 
                                     if (last.Event.Equals(RegistrationEventType.Coming))
                                     {
-                                        totalMinutes += (int)(_timeService.TimeNow - last.Time).TotalMinutes;
+                                        totalMinutes += (int) (_timeService.TimeNow - last.Time).TotalMinutes;
                                     }
                                 }
 
@@ -268,12 +255,15 @@
                                     {
                                         if (totalMinutes < 1 && last.Time >= _timeService.WorkDayStartsAt)
                                         {
-                                            totalMinutes = (int)(last.Time - _timeService.WorkDayStartsAt).TotalMinutes;
+                                            totalMinutes = (int) (last.Time - _timeService.WorkDayStartsAt)
+                                                .TotalMinutes;
                                         }
                                     }
-                                } else if (x.RegistrationRows.All(z => z.CheckResult == RegistrationCheckResult.Violation))
+                                }
+                                else if (x.RegistrationRows.All(z =>
+                                    z.CheckResult == RegistrationCheckResult.Violation))
                                 {
-                                    totalMinutes = (int)_timeService.TotalWorkDayTimeSpan.TotalMinutes;
+                                    totalMinutes = (int) _timeService.TotalWorkDayTimeSpan.TotalMinutes;
                                 }
 
                                 return totalMinutes.ToString();

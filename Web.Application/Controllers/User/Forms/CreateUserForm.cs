@@ -29,13 +29,18 @@
         public string ConfirmPassword { get; set; }
 
         [Required]
-        [EnumDataType(typeof(Roles))]
-        public Roles? Role { get; set; }
+        [EnumDataType(typeof(Role))]
+        public Role? Role { get; set; }
 
         [EmailAddress]
         public string Email { get; set; }
 
         public bool? NeedNotify { get; set; }
+
+        
+        public int? EntranceId { get; set; }
+
+        public IEnumerable<SelectListItem> Entrances { get; set; }
 
         public IEnumerable<SelectListItem> Roles { get; set; }
     }
