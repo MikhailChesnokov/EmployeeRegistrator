@@ -5,7 +5,7 @@ GO
 INSERT INTO Users
   (Login, Password_Hash, Password_Salt, Role, Email, NeedNotify)
 VALUES
-  ('admin', 0x55F3E83D9D8F50A2481487B562511F261556894B6AD6B563D6F32547C017FD22, 0x4CC7C0212EAC253FC5CFA6A40D9E77C7E26F25D452642A34FD18C389050509EB7E1611CB7C8967BA, 1, '89194485838@mail.ru', 'true')
+  ('admin', 0x55F3E83D9D8F50A2481487B562511F261556894B6AD6B563D6F32547C017FD22, 0x4CC7C0212EAC253FC5CFA6A40D9E77C7E26F25D452642A34FD18C389050509EB7E1611CB7C8967BA, 1, '89194485838@mail.ru', 1)
 GO
 
 
@@ -19,10 +19,10 @@ GO
 INSERT INTO Employees
   (FirstName, Surname, Patronymic, WorkplacePresenceRequired, PersonnelNumber, DepartmentId, DeletedAtUtc)
 VALUES
-  ('Иван', 'Иванов', 'Иванович', 'true', 1, 1, NULL),
-  ('Петр', 'Петров', 'Петрович', 'false', 2, 1, NULL),
-  ('Сидор', 'Сидоров', 'Сидорович', 'true', 3, 2, NULL),
-  ('Владимир', 'Владимиров', 'Владимирович', 'true', 4, 2, NULL)
+  ('Иван', 'Иванов', 'Иванович', 1, 1, 1, NULL),
+  ('Петр', 'Петров', 'Петрович', 0, 2, 1, NULL),
+  ('Сидор', 'Сидоров', 'Сидорович', 1, 3, 2, NULL),
+  ('Владимир', 'Владимиров', 'Владимирович', 1, 4, 2, NULL)
 GO
 
 INSERT INTO buildings
