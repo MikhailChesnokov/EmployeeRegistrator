@@ -31,7 +31,15 @@
         <view-group
             name="Entrance"
             label="Здание (вход)"
-            value="@securityGuard.Entrance.Building.Address (@securityGuard.Entrance.Name)"/>
+            value="@securityGuard.Entrance?.Building.Address (@securityGuard.Entrance?.Name)"/>
     }
 
+</form>
+
+<form asp-action="Delete">
+    <input type="hidden" name="Id" value="@Model.Id">
+
+    <a class="btn btn-primary lower-button" href="@(Url.Action<UserController>(c => c.Edit(Model.Id)))">Редактировать</a>
+
+    <input type="submit" class="btn btn-primary lower-button" value="Удалить">
 </form>

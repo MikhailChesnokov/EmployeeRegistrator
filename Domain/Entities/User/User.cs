@@ -19,10 +19,10 @@
             string email = null,
             bool needNotify = false)
         {
-            SetLogin(login);
+            ChangeLogin(login);
             SetPassword(password);
-            SetRole(role);
-            SetNotification(email, needNotify);
+            ChangeRole(role);
+            ChangeNotification(email, needNotify);
         }
 
 
@@ -43,7 +43,7 @@
 
 
 
-        private void SetLogin(string login)
+        protected internal void ChangeLogin(string login)
         {
             if (string.IsNullOrWhiteSpace(login))
                 throw new ArgumentException("Value cannot be null or whitespace.", nameof(login));
@@ -59,12 +59,12 @@
             Password = new Password(password);
         }
 
-        private void SetRole(Role role)
+        public void ChangeRole(Role role)
         {
             Role = role;
         }
 
-        private void SetNotification(string email, bool needNotify)
+        public void ChangeNotification(string email, bool needNotify)
         {
             if (string.IsNullOrWhiteSpace(email) && needNotify)
                 throw new ArgumentException("Empty email when need notification.");

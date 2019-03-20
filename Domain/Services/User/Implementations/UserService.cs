@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Domain.Exceptions;
     using Entities.User;
     using Entrance;
     using Exceptions;
@@ -104,9 +105,22 @@
             return _userRepository.AllActive().SingleOrDefault(x => x.Login.Equals(login));
         }
 
+        public void ChangeLogin(User user, string login)
+        {
+            if (GetByLogin(login) is User otherUser && user.Id != otherUser.Id)
+                throw new EntityAlreadyExistsException($"Пользователь с логином '{login}' уже существует.");
+            
+            user.ChangeLogin(login);
+        }
+
         public IEnumerable<User> GetAllActive()
         {
             return _userRepository.AllActive();
+        }
+
+        public void Delete(User user)
+        {
+            _userRepository.Delete(user);
         }
     }
 }

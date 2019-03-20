@@ -2,6 +2,7 @@
 {
     using AutoMapper;
     using Domain.Entities.User;
+    using Forms;
     using ViewModels;
 
 
@@ -14,6 +15,8 @@
                 .Include<SecurityGuard, SecurityGuardViewModel>();
 
             CreateMap<SecurityGuard, SecurityGuardViewModel>();
+
+            CreateMap<User, EditUserForm>();
         }
     }
 }

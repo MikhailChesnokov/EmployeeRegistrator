@@ -1,0 +1,83 @@
+@model EditUserForm
+
+@{ ViewBag.Title = "Редактировать пользователя"; }
+
+<h4>@ViewBag.Title</h4>
+
+<form method="post" id="employee-form">
+
+    <root-errors/>
+
+    <input asp-for="Id">
+    
+    <input-group
+        name="Login"
+        label="Логин"
+        value="@Model.Login"/>
+    
+    <select-group
+        id="entrance-form-group"
+        name="EntranceId"
+        label="Здание (вход)"
+        invalid-feedback="Вход в здание не выбран"
+        placeholder="Выберите здание и вход ..."
+        items="@Model.Entrances"
+        value="@Model.EntranceId"
+        grouping="true"/>
+
+    <select-group
+        name="Role"
+        label="Роль"
+        invalid-feedback="Роль не выбрана"
+        items="@Model.Roles"/>
+    
+    <input-group
+        name="Email"
+        label="Электронная почта"
+        placeholder="Введите адрес электронной почты"
+        invalid-feedback="Некорректный адрес электронной почты"
+        value="@Model.Email"/>
+    
+    <div class="form-check" id="need-notify-group">
+        <input class="form-check-input" asp-for="NeedNotify">
+        <label class="form-check-label" for="NeedNotify">
+            Присылать уведомления об опозданиях
+        </label>
+        <span asp-validation-for="NeedNotify"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary lower-button">Сохранить</button>
+</form>
+
+@section Scripts{
+    <script type="text/javascript">
+        let role = $('#Role');
+        let entrance = $('#entrance-form-group');
+        let needNotify = $('#need-notify-group');
+        
+        function Update() {
+            switch (role.val()) {
+                case 'Administrator':
+                    entrance.hide();
+                    needNotify.show();
+                    break;
+                case 'Manager':
+                    entrance.hide();
+                    needNotify.hide();
+                    break;
+                case 'SecurityGuard':
+                    entrance.show();
+                    needNotify.hide();
+                    break;
+                default:
+                    entrance.hide();
+                    needNotify.hide();
+                    break;
+            }
+        }
+
+        Update();
+        
+        role.change(() => { Update(); });
+    </script>
+}

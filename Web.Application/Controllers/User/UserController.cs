@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Linq;
+    using Authorization.UserProviders;
     using AutoMapper;
     using Domain.Entities.Entrance;
     using Domain.Entities.User;
@@ -21,6 +22,7 @@
         private readonly IUserService _userService;
         private readonly IEntranceService _entranceService;
         private readonly IMapper _mapper;
+        private readonly IUserProvider<User> _userProvider;
 
 
         public UserController(
@@ -28,7 +30,8 @@
             IUserService userService,
             IMapper mapper,
             IAuthorizationService authorizationService,
-            IEntranceService entranceService)
+            IEntranceService entranceService,
+            IUserProvider<User> userProvider)
             : base(
                 formHandlerFactory,
                 authorizationService)
@@ -36,6 +39,7 @@
             _userService = userService;
             _mapper = mapper;
             _entranceService = entranceService;
+            _userProvider = userProvider;
         }
 
 
@@ -103,7 +107,60 @@
                 });
         }
 
-        private void SetRoles(CreateUserForm form, bool includeAll = false)
+        [HttpGet]
+        public IActionResult Edit(int id)
+        {
+            if (!RoleIs(Role.Administrator))
+                return Forbid();
+
+            var user = _userService.GetById(id);
+
+            if (user is null)
+                return NotFound();
+
+            var form = _mapper.Map<EditUserForm>(user);
+
+            form.Entrances = GetEntranceItems(_entranceService.AllActive());
+            
+            SetRoles(form, false, user.Role.ToString());
+
+            return View(form);
+        }
+        
+        [HttpPost]
+        public IActionResult Edit(EditUserForm form)
+        {
+            if (!RoleIs(Role.Administrator))
+                return Forbid();
+            
+            return Form(
+                form,
+                () => this.RedirectToAction(x => x.View(form.Id)),
+                () =>
+                {
+                    var user = _userService.GetById(form.Id);
+                    
+                    SetRoles(form, false, user.Role.ToString());
+
+                    form.Entrances = GetEntranceItems(_entranceService.AllActive(), form.EntranceId);
+
+                    return View(form);
+                });
+        }
+        
+        [HttpPost]
+        public IActionResult Delete(DeleteUserForm form)
+        {
+            if (!RoleIs(Role.Administrator))
+                return Forbid();
+            
+            return Form(
+                form,
+                () => this.RedirectToAction(x => x.List()),
+                () => this.RedirectToAction(x => x.List()));
+        }
+
+        private static void SetRoles(CreateUserForm form, bool includeAll = false)
         {
             var items = new List<SelectListItem>();
 
@@ -123,8 +180,29 @@
 
             form.Roles = items;
         }
+        
+        private static void SetRoles(EditUserForm form, bool includeAll = false, string role = null)
+        {
+            var items = new List<SelectListItem>();
 
-        private IEnumerable<SelectListItem> GetEntranceItems(IEnumerable<Entrance> entrances, int? selectedId = null)
+            if (includeAll)
+            {
+                items.Add(new SelectListItem
+                {
+                    Value = null,
+                    Text = "Все роли",
+                    Group = default,
+                    Selected = false,
+                    Disabled = false
+                });
+            }
+
+            items.AddRange(typeof(Role).ToSelectList(role));
+
+            form.Roles = items;
+        }
+
+        private static IEnumerable<SelectListItem> GetEntranceItems(IEnumerable<Entrance> entrances, int? selectedId = null)
         {
             return
                 from buildingEntrances in entrances.GroupBy(x => x.Building)

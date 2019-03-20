@@ -15,6 +15,10 @@
 
         User GetByLogin(string login);
 
+        void ChangeLogin(User user, string login);
+
         IEnumerable<User> GetAllActive();
+
+        void Delete(User user);
     }
 }
