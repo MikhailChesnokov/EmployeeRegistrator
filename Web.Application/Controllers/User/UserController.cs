@@ -4,8 +4,10 @@
     using System.Linq;
     using Authorization.UserProviders;
     using AutoMapper;
+    using Domain.Entities.Department;
     using Domain.Entities.Entrance;
     using Domain.Entities.User;
+    using Domain.Services.Department;
     using Domain.Services.Entrance;
     using Domain.Services.User;
     using Forms;
@@ -22,7 +24,8 @@
         private readonly IUserService _userService;
         private readonly IEntranceService _entranceService;
         private readonly IMapper _mapper;
-        private readonly IUserProvider<User> _userProvider;
+        private readonly IDepartmentService _departmentService;
+        
 
 
         public UserController(
@@ -31,7 +34,7 @@
             IMapper mapper,
             IAuthorizationService authorizationService,
             IEntranceService entranceService,
-            IUserProvider<User> userProvider)
+            IDepartmentService departmentService)
             : base(
                 formHandlerFactory,
                 authorizationService)
@@ -39,7 +42,7 @@
             _userService = userService;
             _mapper = mapper;
             _entranceService = entranceService;
-            _userProvider = userProvider;
+            _departmentService = departmentService;
         }
 
 
@@ -80,7 +83,8 @@
 
             var form = new CreateUserForm
             {
-                Entrances = GetEntranceItems(_entranceService.AllActive())
+                Entrances = GetEntranceItems(_entranceService.AllActive()),
+                Departments = GetDepartmentItems(_departmentService.AllActive())
             };
 
             SetRoles(form);
@@ -102,7 +106,8 @@
                     SetRoles(form);
 
                     form.Entrances = GetEntranceItems(_entranceService.AllActive(), form.EntranceId);
-
+                    form.Departments = GetDepartmentItems(_departmentService.AllActive(), form.DepartmentId);
+                    
                     return View(form);
                 });
         }
@@ -121,6 +126,7 @@
             var form = _mapper.Map<EditUserForm>(user);
 
             form.Entrances = GetEntranceItems(_entranceService.AllActive());
+            form.Departments = GetDepartmentItems(_departmentService.AllActive());
             
             SetRoles(form, false, user.Role.ToString());
 
@@ -143,7 +149,8 @@
                     SetRoles(form, false, user.Role.ToString());
 
                     form.Entrances = GetEntranceItems(_entranceService.AllActive(), form.EntranceId);
-
+                    form.Departments = GetDepartmentItems(_departmentService.AllActive(), form.DepartmentId);
+                    
                     return View(form);
                 });
         }
@@ -176,12 +183,12 @@
                 });
             }
 
-            items.AddRange(typeof(Role).ToSelectList());
+            items.AddRange(typeof(Role).ToSelectList(form.Role?.ToString()));
 
             form.Roles = items;
         }
         
-        private static void SetRoles(EditUserForm form, bool includeAll = false, string role = null)
+        private static void SetRoles(EditUserForm form, bool includeAll = false, string selected = null)
         {
             var items = new List<SelectListItem>();
 
@@ -197,7 +204,7 @@
                 });
             }
 
-            items.AddRange(typeof(Role).ToSelectList(role));
+            items.AddRange(typeof(Role).ToSelectList(selected ?? form.Role?.ToString()));
 
             form.Roles = items;
         }
@@ -218,6 +225,20 @@
                     Selected = selectedId != null && selectedId == entrance.Id,
                     Disabled = false,
                     Group = building
+                };
+        }
+        
+        private static IEnumerable<SelectListItem> GetDepartmentItems(IEnumerable<Department> departments, int? selectedId = null)
+        {
+            return
+                from department in departments
+                select new SelectListItem
+                {
+                    Text = department.Name,
+                    Value = department.Id.ToString(),
+                    Selected = selectedId != null && selectedId == department.Id,
+                    Disabled = false,
+                    Group = null
                 };
         }
     }

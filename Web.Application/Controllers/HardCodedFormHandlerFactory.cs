@@ -68,7 +68,7 @@
             where TForm : IForm
         {
             if (typeof(TForm) == typeof(EditUserForm))
-                return new EditUserFormHandler(_userService, _entranceService) as IFormHandler<TForm>;
+                return new EditUserFormHandler(_userService, _entranceService, _departmentService) as IFormHandler<TForm>;
             if (typeof(TForm) == typeof(DeleteUserForm))
                 return new DeleteUserFormHandler(_userService, _userProvider) as IFormHandler<TForm>;
             

@@ -3,7 +3,7 @@ namespace Domain.Entities.Department
     using System;
     using System.Collections.Generic;
     using Employee;
-
+    using User;
 
 
     public class Department : IRemovableEntity
@@ -25,6 +25,8 @@ namespace Domain.Entities.Department
         public DateTime? DeletedAtUtc { get; protected set; }
 
         public IList<Employee> Employees { get; protected set; }
+        
+        public IList<Manager> Managers { get; protected set; }
 
 
         

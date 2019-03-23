@@ -1,23 +1,30 @@
 namespace Web.Application.Controllers.User.Forms.Handlers
 {
+    using System;
     using Domain.Entities.User;
+    using Domain.Services.Department;
     using Domain.Services.Entrance;
     using Domain.Services.User;
     using Domain.Services.User.Exceptions;
 
+    
+    
     public class EditUserFormHandler : IFormHandler<EditUserForm>
     {
         private readonly IUserService _userService;
         private readonly IEntranceService _entranceService;
+        private readonly IDepartmentService _departmentService;
 
         
         
         public EditUserFormHandler(
             IUserService userService,
-            IEntranceService entranceService)
+            IEntranceService entranceService,
+            IDepartmentService departmentService)
         {
             _userService = userService;
             _entranceService = entranceService;
+            _departmentService = departmentService;
         }
 
         
@@ -45,16 +52,31 @@ namespace Web.Application.Controllers.User.Forms.Handlers
             {
                 user.ChangeRole(form.Role.Value);
 
-                if (form.Role.Value == Role.Administrator)
+                switch (form.Role)
                 {
-                    user.ChangeNotification(form.Email, form.NeedNotify);
-                }
-
-                if (form.Role == Role.SecurityGuard && user is SecurityGuard securityGuard && form.EntranceId.HasValue)
-                {
-                    var entrance = _entranceService.GetById(form.EntranceId.Value);
+                    case Role.Administrator:
+                    {
+                        user.ChangeNotification(form.Email, form.NeedNotify);
+                        break;
+                    }
+                    case Role.SecurityGuard when user is SecurityGuard securityGuard && form.EntranceId.HasValue:
+                    {
+                        var entrance = _entranceService.GetById(form.EntranceId.Value);
                     
-                    securityGuard.ChangeEntrance(entrance);
+                        securityGuard.ChangeEntrance(entrance);
+                        break;
+                    }
+                    case Role.Manager when user is Manager manager && form.DepartmentId.HasValue:
+                    {
+                        var department = _departmentService.GetById(form.DepartmentId.Value);
+                        
+                        manager.ChangeDepartment(department);
+                        
+                        manager.ChangeNotification(form.Email, false);
+                        break;
+                    }
+                    default:
+                        throw new ArgumentOutOfRangeException();
                 }
             }
         }

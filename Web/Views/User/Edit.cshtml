@@ -24,6 +24,16 @@
         items="@Model.Entrances"
         value="@Model.EntranceId"
         grouping="true"/>
+    
+    <select-group
+        id="department-form-group"
+        name="DepartmentId"
+        label="Отдел"
+        invalid-feedback="Отдел не выбран"
+        placeholder="Выберите отдел ..."
+        items="@Model.Departments"
+        value="@Model.DepartmentId"
+        grouping="false"/>
 
     <select-group
         name="Role"
@@ -54,24 +64,29 @@
         let role = $('#Role');
         let entrance = $('#entrance-form-group');
         let needNotify = $('#need-notify-group');
+        let department = $('#department-form-group');
         
         function Update() {
             switch (role.val()) {
                 case 'Administrator':
                     entrance.hide();
                     needNotify.show();
+                    department.hide();
                     break;
                 case 'Manager':
                     entrance.hide();
                     needNotify.hide();
+                    department.show();
                     break;
                 case 'SecurityGuard':
                     entrance.show();
                     needNotify.hide();
+                    department.hide();
                     break;
                 default:
                     entrance.hide();
                     needNotify.hide();
+                    department.hide();
                     break;
             }
         }

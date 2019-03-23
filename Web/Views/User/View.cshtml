@@ -33,7 +33,14 @@
             label="Здание (вход)"
             value="@securityGuard.Entrance?.Building.Address (@securityGuard.Entrance?.Name)"/>
     }
-
+    
+    @if (Model is ManagerViewModel manager)
+    {
+        <view-group
+            name="Department"
+            label="Отдел"
+            value="@(manager.Department?.Name)"/>
+    }
 </form>
 
 <form asp-action="Delete">

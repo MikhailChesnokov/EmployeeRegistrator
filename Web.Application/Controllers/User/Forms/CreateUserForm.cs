@@ -37,11 +37,14 @@
 
         public bool? NeedNotify { get; set; }
 
-        
         public int? EntranceId { get; set; }
+
+        public int? DepartmentId { get; set; }
 
         public IEnumerable<SelectListItem> Entrances { get; set; }
 
         public IEnumerable<SelectListItem> Roles { get; set; }
+        
+        public IEnumerable<SelectListItem> Departments { get; set; }
     }
 }

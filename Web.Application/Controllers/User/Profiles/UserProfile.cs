@@ -12,11 +12,22 @@
         public UserProfile()
         {
             CreateMap<User, UserViewModel>()
-                .Include<SecurityGuard, SecurityGuardViewModel>();
+                .Include<SecurityGuard, SecurityGuardViewModel>()
+                .Include<Manager, ManagerViewModel>()
+                .Include<Administrator, UserViewModel>();
 
             CreateMap<SecurityGuard, SecurityGuardViewModel>();
+            CreateMap<Manager, ManagerViewModel>();
+            CreateMap<Administrator, UserViewModel>();
 
-            CreateMap<User, EditUserForm>();
+            CreateMap<User, EditUserForm>()
+                .Include<Manager, EditUserForm>()
+                .Include<SecurityGuard, EditUserForm>()
+                .Include<Administrator, EditUserForm>();
+            
+            CreateMap<Manager, EditUserForm>();
+            CreateMap<SecurityGuard, EditUserForm>();
+            CreateMap<Administrator, EditUserForm>();
         }
     }
 }
