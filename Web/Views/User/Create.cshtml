@@ -29,6 +29,12 @@
         value="@Model.ConfirmPassword"/>
     
     <select-group
+        name="Role"
+        label="Роль"
+        invalid-feedback="Роль не выбрана"
+        items="@Model.Roles"/>
+    
+    <select-group
         id="entrance-form-group"
         name="EntranceId"
         label="Здание (вход)"
@@ -47,12 +53,6 @@
         items="@Model.Departments"
         value="@Model.DepartmentId"
         grouping="false"/>
-
-    <select-group
-        name="Role"
-        label="Роль"
-        invalid-feedback="Роль не выбрана"
-        items="@Model.Roles"/>
     
     <input-group
         name="Email"

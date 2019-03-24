@@ -1,5 +1,8 @@
 ﻿@using Domain.Infrastructure.Extensions
+@using Domain.Services.Time
 @model RegistrationsViewModel
+
+@inject ITimeService TimeService
 
 @{ ViewBag.Title = "Список регистраций"; }
 
@@ -8,7 +11,7 @@
 
 @if (Model.IsDocument)
 {
-    <h5>Дата: @DateTime.Now.ToLongDateString()</h5>
+    <h5>Дата: @TimeService.Now.ToLongDateString()</h5>
     
     <partial name="ReportFilterPartialVIew" model="@Model.FilterForm"/>
 }

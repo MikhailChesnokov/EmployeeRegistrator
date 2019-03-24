@@ -12,19 +12,22 @@
         value="@Model.Login"/>
 
     <view-group
-        name="Email"
-        label="Электронная почта"
-        value="@Model.Email"/>
-
-    <view-group
         name="Role"
         label="Роль"
         value="@(typeof(Role).GetField(Enum.GetName(typeof(Role), Model.Role)).GetCustomAttributes(false).OfType<DisplayAttribute>().Single().Name)"/>
 
     <view-group
-        name="NeedNotify"
-        label="Оповещения об опозданиях"
-        value="@(Model.NeedNotify? "Да" : "Нет")"/>
+        name="Email"
+        label="Электронная почта"
+        value="@Model.Email"/>
+    
+    @if (Model is AdministratorViewModel _)
+    {
+        <view-group
+            name="NeedNotify"
+            label="Оповещения об опозданиях"
+            value="@(Model.NeedNotify? "Да" : "Нет")"/>
+    }
     
     @if (Model is SecurityGuardViewModel securityGuard)
     {

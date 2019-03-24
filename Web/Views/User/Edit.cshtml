@@ -14,6 +14,12 @@
         name="Login"
         label="Логин"
         value="@Model.Login"/>
+
+    <select-group
+        name="Role"
+        label="Роль"
+        invalid-feedback="Роль не выбрана"
+        items="@Model.Roles"/>
     
     <select-group
         id="entrance-form-group"
@@ -34,12 +40,6 @@
         items="@Model.Departments"
         value="@Model.DepartmentId"
         grouping="false"/>
-
-    <select-group
-        name="Role"
-        label="Роль"
-        invalid-feedback="Роль не выбрана"
-        items="@Model.Roles"/>
     
     <input-group
         name="Email"

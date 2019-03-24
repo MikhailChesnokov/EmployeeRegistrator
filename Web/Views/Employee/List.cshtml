@@ -14,6 +14,7 @@ else
         <thead>
         <tr>
             <th scope="col">ФИО</th>
+            <th scope="col" style="width: 200px">Отдел</th>
             <th scope="col" style="width: 170px">Табельный номер</th>
         </tr>
         </thead>
@@ -23,6 +24,9 @@ else
             <tr>
                 <td>
                     <a href="@(Url.Action<EmployeeController>(c => c.View(employee.Id)))">@employee.Fio</a>
+                </td>
+                <td>
+                    <a href="@(Url.Action<DepartmentController>(c => c.View(employee.Department.Id)))">@employee.Department.Name</a>
                 </td>
                 <td style="text-align: center">
                     @employee.PersonnelNumber

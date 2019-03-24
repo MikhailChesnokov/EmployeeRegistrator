@@ -14,6 +14,7 @@ else
         <thead>
         <tr>
             <th scope="col">Название</th>
+            <th scope="col" style="width: 200px">Кол-во сотрудников</th>
         </tr>
         </thead>
         <tbody>
@@ -22,6 +23,9 @@ else
             <tr>
                 <td>
                     <a href="@(Url.Action<DepartmentController>(c => c.View(department.Id)))">@department.Name</a>
+                </td>
+                <td>
+                    @department.Employees.Count()
                 </td>
             </tr>
         }

@@ -18,6 +18,26 @@
 
 </form>
 
+<h4>Список сотрудников</h4>
+
+<table class="table table-bordered">
+    <thead>
+    <tr>
+        <th>ФИО</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var employee in Model.Employees)
+    {
+        <tr>
+            <td>
+                <a href="@(Url.Action<EmployeeController>(x => x.View(employee.Id)))">@employee.Fio</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
+
 <form asp-action="Delete">
     <input type="hidden" name="Id" value="@Model.Id">
 

@@ -14,11 +14,11 @@
             CreateMap<User, UserViewModel>()
                 .Include<SecurityGuard, SecurityGuardViewModel>()
                 .Include<Manager, ManagerViewModel>()
-                .Include<Administrator, UserViewModel>();
+                .Include<Administrator, AdministratorViewModel>();
 
             CreateMap<SecurityGuard, SecurityGuardViewModel>();
             CreateMap<Manager, ManagerViewModel>();
-            CreateMap<Administrator, UserViewModel>();
+            CreateMap<Administrator, AdministratorViewModel>();
 
             CreateMap<User, EditUserForm>()
                 .Include<Manager, EditUserForm>()
