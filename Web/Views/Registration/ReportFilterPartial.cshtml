@@ -1,6 +1,6 @@
 ﻿@model ReportFilterForm
 
-<form method="post">
+<form method="post" action="@(Url.Action<RegistrationController>(x => x.List(With.No<ReportFilterForm>(), With.No<string>(), With.No<string>())))">
 
     <root-errors/>
 

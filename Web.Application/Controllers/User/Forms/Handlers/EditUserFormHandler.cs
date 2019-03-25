@@ -37,6 +37,17 @@ namespace Web.Application.Controllers.User.Forms.Handlers
             if (form.Role.HasValue && form.Role.Value == Role.SecurityGuard && !form.EntranceId.HasValue)
                 throw new FormException("Вход в здание не выбран.");
             
+            if (form.Role.HasValue && form.Role.Value == Role.Manager && !form.DepartmentId.HasValue)
+                throw new FormException("Отдел не выбран.");
+            
+            if (form.Role.HasValue && form.Role.Value == Role.Administrator)
+            {
+                if (form.NeedNotify && string.IsNullOrWhiteSpace(form.Email))
+                {
+                    throw new FormException("Для получения уведомлений должен быть указан адрес электронной почты.");
+                }
+            }
+            
             var user = _userService.GetById(form.Id);
 
             try

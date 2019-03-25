@@ -28,7 +28,7 @@ namespace Domain.Services.Building.Implementations
             
             _buildingsRepository.Add(building);
 
-            return _buildingsRepository.All().Single(x => x.Address == building.Address);
+            return _buildingsRepository.AllActive().Single(x => x.Address == building.Address);
         }
 
         public void Update(Building building)

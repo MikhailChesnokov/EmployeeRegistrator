@@ -23,8 +23,8 @@ namespace Web.Application.Controllers.User.Forms.Handlers
         {
             var user = _userService.GetById(form.Id);
             
-            if (user is SecurityGuard securityGuard && securityGuard.Entrance != null)
-                throw new FormException($"Невозможно удалить охранника, так как он связан со входом '{securityGuard.Entrance.CompleteName}'.");
+            //if (user is SecurityGuard securityGuard && securityGuard.Entrance != null)
+            //    throw new FormException($"Невозможно удалить охранника, так как он связан со входом '{securityGuard.Entrance.CompleteName}'.");
             
             if (_userProvider.User.Id == user.Id)
                 throw new FormException("Невозможно удалить текущего пользователя.");

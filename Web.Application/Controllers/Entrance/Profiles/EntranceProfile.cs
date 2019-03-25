@@ -2,6 +2,7 @@ namespace Web.Application.Controllers.Entrance.Profiles
 {
     using AutoMapper;
     using Domain.Entities.Entrance;
+    using Forms;
     using ViewModels;
 
     
@@ -10,6 +11,8 @@ namespace Web.Application.Controllers.Entrance.Profiles
         public EntranceProfile()
         {
             CreateMap<Entrance, EntranceViewModel>();
+
+            CreateMap<Entrance, EditEntranceForm>();
         }
     }
 }

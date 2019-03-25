@@ -98,6 +98,9 @@
                     var entrance = _entranceService.GetById(entranceId.Value);
                     
                     user = new SecurityGuard(login, password, entrance);
+                    
+                    entrance.ChangeSecurityGuard((SecurityGuard) user);
+                    
                     break;
                 }
                 default: throw new ArgumentOutOfRangeException(nameof(role));

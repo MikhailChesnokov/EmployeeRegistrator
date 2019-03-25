@@ -164,7 +164,17 @@
             return Form(
                 form,
                 () => this.RedirectToAction(x => x.List()),
-                () => this.RedirectToAction(x => x.List()));
+                () =>
+                {
+                    var user = _userService.GetById(form.Id);
+
+                    if (user is null)
+                        return NotFound();
+
+                    var userViewModel = _mapper.Map<UserViewModel>(user);
+
+                    return View("View", userViewModel);
+                });
         }
 
         private static void SetRoles(CreateUserForm form, bool includeAll = false)

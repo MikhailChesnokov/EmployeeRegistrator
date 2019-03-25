@@ -62,8 +62,8 @@
         value="@Model.Email"/>
     
     <div class="form-check" id="need-notify-group">
-        <input class="form-check-input" type="checkbox" id="NeedNotify" name="NeedNotify" @(Model.NeedNotify ?? false ? "checked" : string.Empty)>
-        <label class="form-check-label" for="NeedNotify">
+        <input class="form-check-input" asp-for="NeedNotify">
+        <label class="form-check-label" asp-for="NeedNotify">
             Присылать уведомления об опозданиях
         </label>
     </div>

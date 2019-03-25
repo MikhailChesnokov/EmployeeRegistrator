@@ -35,7 +35,7 @@
         [EmailAddress]
         public string Email { get; set; }
 
-        public bool? NeedNotify { get; set; }
+        public bool NeedNotify { get; set; }
 
         public int? EntranceId { get; set; }
 

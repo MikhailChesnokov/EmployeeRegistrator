@@ -52,11 +52,22 @@ namespace Domain.Services.Department.Implementations
 
         public void Delete(int id)
         {
-            var department = _departmentRepository.FindById(id);
+            var department = _departmentRepository.FindByIdInclude(id, x => x.Employees);
 
             if (department is null)
                 throw new ArgumentException("Department not found.");
 
+            if (department.Employees?.Any() is true)
+                throw new CannotDeleteEntityInUseException("Невозможно удалить отдел, так как он содержит сотрудников.");
+            
+            department = _departmentRepository.FindByIdInclude(id, x => x.Managers);
+
+            if (department is null)
+                throw new ArgumentException("Department not found.");
+
+            if (department.Managers?.Any() is true)
+                throw new CannotDeleteEntityInUseException("Невозможно удалить отдел, так как он содержит менеджеров.");
+            
             department.Delete();
 
             _departmentRepository.Update(department);
