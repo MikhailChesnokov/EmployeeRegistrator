@@ -37,12 +37,30 @@
             
             if (form.Role.HasValue && form.Role.Value == Role.SecurityGuard && !form.EntranceId.HasValue)
                 throw new FormException("Вход в здание не выбран.");
+            
+            if (form.Role.HasValue && form.Role.Value == Role.Manager && !form.DepartmentId.HasValue)
+                throw new FormException("Отдел не выбран.");
+
+            if (form.Role.HasValue && form.Role.Value == Role.Administrator)
+            {
+                if (form.NeedNotify && string.IsNullOrWhiteSpace(form.Email))
+                {
+                    throw new FormException("Для получения уведомлений должен быть указан адрес электронной почты.");
+                }
+            }
 
             User user;
 
             try
             {
-                user = _userService.Create(form.Login, form.Password, form.Role.Value, form.Email, form.NeedNotify ?? false, form.EntranceId);
+                user = _userService.Create(
+                    form.Login,
+                    form.Password,
+                    form.Role.Value,
+                    form.Email,
+                    form.NeedNotify,
+                    form.EntranceId,
+                    form.DepartmentId);
             }
             catch (UserAlreadyExistsException e)
             {

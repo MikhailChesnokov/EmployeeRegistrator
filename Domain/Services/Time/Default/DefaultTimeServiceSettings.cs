@@ -7,6 +7,8 @@ namespace Domain.Services.Time.Default
 
     public class DefaultTimeServiceSettings
     {
+        public DateTime? Now { get; set; }
+
         public TimeSpan WorkDayStartsAt { get; set; }
 
         public TimeSpan WorkDayEndsAt { get; set; }

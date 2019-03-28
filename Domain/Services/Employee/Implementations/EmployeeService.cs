@@ -72,7 +72,7 @@
 
         public IEnumerable<Employee> AllActive()
         {
-            return _employeeRepository.AllActive();
+            return _employeeRepository.AllActiveInclude(x => x.Department);
         }
     }
 }

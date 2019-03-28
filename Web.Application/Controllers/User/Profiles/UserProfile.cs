@@ -2,6 +2,7 @@
 {
     using AutoMapper;
     using Domain.Entities.User;
+    using Forms;
     using ViewModels;
 
 
@@ -11,9 +12,22 @@
         public UserProfile()
         {
             CreateMap<User, UserViewModel>()
-                .Include<SecurityGuard, SecurityGuardViewModel>();
+                .Include<SecurityGuard, SecurityGuardViewModel>()
+                .Include<Manager, ManagerViewModel>()
+                .Include<Administrator, AdministratorViewModel>();
 
             CreateMap<SecurityGuard, SecurityGuardViewModel>();
+            CreateMap<Manager, ManagerViewModel>();
+            CreateMap<Administrator, AdministratorViewModel>();
+
+            CreateMap<User, EditUserForm>()
+                .Include<Manager, EditUserForm>()
+                .Include<SecurityGuard, EditUserForm>()
+                .Include<Administrator, EditUserForm>();
+            
+            CreateMap<Manager, EditUserForm>();
+            CreateMap<SecurityGuard, EditUserForm>();
+            CreateMap<Administrator, EditUserForm>();
         }
     }
 }

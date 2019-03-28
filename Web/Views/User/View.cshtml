@@ -6,15 +6,12 @@
 
 <form>
 
+    <root-errors/>
+    
     <view-group
         name="Login"
         label="Логин"
         value="@Model.Login"/>
-
-    <view-group
-        name="Email"
-        label="Электронная почта"
-        value="@Model.Email"/>
 
     <view-group
         name="Role"
@@ -22,16 +19,39 @@
         value="@(typeof(Role).GetField(Enum.GetName(typeof(Role), Model.Role)).GetCustomAttributes(false).OfType<DisplayAttribute>().Single().Name)"/>
 
     <view-group
-        name="NeedNotify"
-        label="Оповещения об опозданиях"
-        value="@(Model.NeedNotify? "Да" : "Нет")"/>
+        name="Email"
+        label="Электронная почта"
+        value="@Model.Email"/>
+    
+    @if (Model is AdministratorViewModel _)
+    {
+        <view-group
+            name="NeedNotify"
+            label="Оповещения об опозданиях"
+            value="@(Model.NeedNotify? "Да" : "Нет")"/>
+    }
     
     @if (Model is SecurityGuardViewModel securityGuard)
     {
         <view-group
             name="Entrance"
             label="Здание (вход)"
-            value="@securityGuard.Entrance.Building.Address (@securityGuard.Entrance.Name)"/>
+            value="@securityGuard.Entrance?.Building.Address (@securityGuard.Entrance?.Name)"/>
     }
+    
+    @if (Model is ManagerViewModel manager)
+    {
+        <view-group
+            name="Department"
+            label="Отдел"
+            value="@(manager.Department?.Name)"/>
+    }
+</form>
 
+<form asp-action="Delete">
+    <input type="hidden" name="Id" value="@Model.Id">
+
+    <a class="btn btn-primary lower-button" href="@(Url.Action<UserController>(c => c.Edit(Model.Id)))">Редактировать</a>
+
+    <input type="submit" class="btn btn-primary lower-button" value="Удалить">
 </form>

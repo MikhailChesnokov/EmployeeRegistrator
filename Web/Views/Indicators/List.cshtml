@@ -1,0 +1,79 @@
+@model Web.Application.Controllers.indicators.Forms.IndicatorsListForm
+
+@{ ViewBag.Title = "Список показателей"; }
+
+<h4>@ViewBag.Title</h4>
+
+<form method="post">
+
+    <root-errors/>
+
+    <date-group
+        name="DateFrom"
+        label="Начальная дата"
+        invalid-feedback="Некорректная начальная дата"
+        value="@Model.DateFrom?.ToShortDateString()"/>
+
+    <date-group
+        name="DateTo"
+        label="Конечная дата"
+        invalid-feedback="Некорректная конечная дата"
+        value="@Model.DateTo?.ToShortDateString()"/>
+
+    <input type="submit" class="btn btn-primary mb-4" value="Применить"/>
+</form>
+
+@if (Model.DayIndicators?.Any() != true)
+{
+    <p>Список показателей пуст</p>
+}
+else
+{
+        <table class="table table-bordered table-sm">
+        <thead style="display: table-header-group">
+            <tr>
+                <th>День</th>
+                <th>Всего пришло</th>
+                <th>Всего ушло</th>
+                <th>Всего на рабочих местах</th>
+                <th>Сотрудники на рабочих местах</th>
+            </tr>
+        </thead>
+
+        <tbody style="display: table-row-group">
+        
+        @foreach (var dayIndicator in Model.DayIndicators)
+        {
+            <tr>
+                <td>@dayIndicator.DateTime.ToString("dd.MM.yyyy")</td>
+                <td>@dayIndicator.TotalCameCount</td>
+                <td>@dayIndicator.TotalGoneCount</td>
+                <td>@dayIndicator.TotalInCount</td>
+                <td>
+                    @foreach (var employee in dayIndicator.In)
+                    {
+                        <a href="@(Url.Action<EmployeeController>(x => x.View(employee.Id)))">@employee.Fio</a>
+                    }
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+
+@section Scripts
+{
+    <script type="text/javascript">
+        window.$('#EmployeeId').select2();
+
+        $(function () {
+            $('#datetimepicker4-DateFrom').datetimepicker({
+                format: 'L'
+            });
+
+            $('#datetimepicker4-DateTo').datetimepicker({
+                format: 'L'
+            });
+        });
+    </script>
+}

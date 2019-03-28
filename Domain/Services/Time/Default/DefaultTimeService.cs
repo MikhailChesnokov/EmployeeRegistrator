@@ -8,6 +8,9 @@
 
     public sealed class DefaultTimeService : ITimeService
     {
+        private readonly DateTime? _now;
+
+
         public DefaultTimeService(DefaultTimeServiceSettings settings)
         {
             WorkDayStartsAt = settings.WorkDayStartsAt;
@@ -15,13 +18,14 @@
             Notification = new NotificationSettings(
                 settings.Notification.RevisionPeriod,
                 settings.Notification.NotifyAfter.Select(x => new NotificationLatenessSettings(x.LatenessTimeSpan)));
+            _now = settings.Now;
         }
         
         
         
-        public DateTime Now => DateTime.Today;
+        public DateTime Now => _now ?? DateTime.Today;
 
-        public TimeSpan TimeNow => DateTime.Now.TimeOfDay;
+        public TimeSpan TimeNow => _now?.TimeOfDay ?? DateTime.Now.TimeOfDay;
 
         public TimeSpan WorkDayStartsAt { get; }
 

@@ -27,7 +27,7 @@
 
 
         
-        protected internal void ChangeEntrance(Entrance entrance)
+        public void ChangeEntrance(Entrance entrance)
         {
             Entrance = entrance ?? throw new ArgumentNullException(nameof(entrance));
         }

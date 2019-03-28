@@ -1,32 +1,22 @@
-﻿namespace Web.Application.Controllers.User.Forms
+namespace Web.Application.Controllers.User.Forms
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using Domain.Entities.User;
+    using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Rendering;
 
-
-
-    public class CreateUserForm : IForm
+    public class EditUserForm : IForm
     {
         private const int MaxStringLength = 64;
 
-
+        [HiddenInput]
+        public int Id { get; set; }
 
         [Required(AllowEmptyStrings = false)]
         [MaxLength(MaxStringLength)]
         [RegularExpression("^.+$")]
         public string Login { get; set; }
-
-        [Required(AllowEmptyStrings = false)]
-        [MaxLength(MaxStringLength)]
-        [RegularExpression("^.+$")]
-        public string Password { get; set; }
-
-        [Required(AllowEmptyStrings = false)]
-        [MaxLength(MaxStringLength)]
-        [RegularExpression("^.+$")]
-        public string ConfirmPassword { get; set; }
 
         [Required]
         [EnumDataType(typeof(Role))]
@@ -37,8 +27,9 @@
 
         public bool NeedNotify { get; set; }
 
+        
         public int? EntranceId { get; set; }
-
+        
         public int? DepartmentId { get; set; }
 
         public IEnumerable<SelectListItem> Entrances { get; set; }

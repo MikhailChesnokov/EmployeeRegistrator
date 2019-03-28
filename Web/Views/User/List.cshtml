@@ -4,6 +4,8 @@
 
 <h4>Список пользователей</h4>
 
+<root-errors/>
+
 @if (Model?.Any() != true)
 {
     <p>Список пользователей пуст</p>
@@ -14,7 +16,7 @@ else
         <thead>
             <tr>
                 <th scope="col">Логин</th>
-                <th scope="col">Роль</th>
+                <th scope="col" style="width: 170px">Роль</th>
             </tr>
         </thead>
         <tbody>

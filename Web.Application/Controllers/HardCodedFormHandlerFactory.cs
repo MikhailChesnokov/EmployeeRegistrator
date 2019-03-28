@@ -6,6 +6,7 @@
     using System;
     using Account.Forms;
     using Account.Forms.Handlers;
+    using Authorization.UserProviders;
     using Departments.Forms;
     using Departments.Forms.Handlers;
     using Domain.Infrastructure.Authentication;
@@ -36,6 +37,7 @@
         private readonly IDepartmentService _departmentService;
         private readonly IBuildingService _buildingService;
         private readonly IEntranceService _entranceService;
+        private readonly IUserProvider<Domain.Entities.User.User> _userProvider;
 
 
         public HardCodedFormHandlerFactory(
@@ -46,7 +48,8 @@
             IRepository<Domain.Entities.User.User> userRepository,
             IDepartmentService departmentService,
             IBuildingService buildingService,
-            IEntranceService entranceService)
+            IEntranceService entranceService,
+            IUserProvider<Domain.Entities.User.User> userProvider)
         {
             _employeeService = employeeService;
             _registrationService = registrationService;
@@ -56,6 +59,7 @@
             _departmentService = departmentService;
             _buildingService = buildingService;
             _entranceService = entranceService;
+            _userProvider = userProvider;
         }
 
 
@@ -63,6 +67,11 @@
         public IFormHandler<TForm> Create<TForm>()
             where TForm : IForm
         {
+            if (typeof(TForm) == typeof(EditUserForm))
+                return new EditUserFormHandler(_userService, _entranceService, _departmentService) as IFormHandler<TForm>;
+            if (typeof(TForm) == typeof(DeleteUserForm))
+                return new DeleteUserFormHandler(_userService, _userProvider) as IFormHandler<TForm>;
+            
             if (typeof(TForm) == typeof(EditEmployeeForm))
                 return new EditEmployeeFormHandler(_employeeService, _departmentService) as IFormHandler<TForm>;
             if (typeof(TForm) == typeof(DeleteEmployeeForm))

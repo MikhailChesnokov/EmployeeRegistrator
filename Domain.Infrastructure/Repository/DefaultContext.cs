@@ -75,7 +75,7 @@
                     throw new InvalidOperationException("Unexpected \"Database\" parameter in appsettings.json.");
             }
 
-            optionsBuilder.UseLoggerFactory(_loggerFactory);
+            //optionsBuilder.UseLoggerFactory(_loggerFactory);
 
             base.OnConfiguring(optionsBuilder);
         }

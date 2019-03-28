@@ -126,14 +126,14 @@
                 var file = _pdfGenerator.GenerateAsync(htmlContent).GetAwaiter().GetResult();
 
                 return File(file, "application/json",
-                    $"Отчет_{DateTime.Now.ToShortDateString()}_{DateTime.Now.ToShortTimeString()}.pdf");
+                    $"Отчет_{_timeService.Now.ToShortDateString()}_{_timeService.Now.ToShortTimeString()}.pdf");
             }
             else
             {
                 var file = _excelGenerator.GenerateAsync(viewModel).GetAwaiter().GetResult();
 
                 return File(file, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                    $"Отчет_{DateTime.Now.ToShortDateString()}_{DateTime.Now.ToShortTimeString()}.xlsx");
+                    $"Отчет_{_timeService.Now.ToShortDateString()}_{_timeService.Now.ToShortTimeString()}.xlsx");
             }
         }
 

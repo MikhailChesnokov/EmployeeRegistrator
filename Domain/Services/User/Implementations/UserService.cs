@@ -3,6 +3,8 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Department;
+    using Domain.Exceptions;
     using Entities.User;
     using Entrance;
     using Exceptions;
@@ -17,6 +19,7 @@
         private readonly IRepository<Administrator> _administratorRepository;
         private readonly IRepository<Manager> _managerRepository;
         private readonly IEntranceService _entranceService;
+        private readonly IDepartmentService _departmentService;
 
 
 
@@ -25,13 +28,15 @@
             IEntranceService entranceService,
             IRepository<SecurityGuard> securityGuardRepository,
             IRepository<Administrator> administratorRepository,
-            IRepository<Manager> managerRepository)
+            IRepository<Manager> managerRepository,
+            IDepartmentService departmentService)
         {
             _userRepository = userRepository;
             _entranceService = entranceService;
             _securityGuardRepository = securityGuardRepository;
             _administratorRepository = administratorRepository;
             _managerRepository = managerRepository;
+            _departmentService = departmentService;
         }
 
 
@@ -51,7 +56,14 @@
             _userRepository.Add(user);
         }
 
-        public User Create(string login, string password, Role role, string email = null, bool needNotify = false, int? entranceId = null)
+        public User Create(
+            string login,
+            string password,
+            Role role,
+            string email = null,
+            bool needNotify = false,
+            int? entranceId = null,
+            int? departmentId = null)
         {
             if (string.IsNullOrWhiteSpace(login))
                 throw new ArgumentException("Value cannot be null or whitespace.", nameof(login));
@@ -69,8 +81,15 @@
                     user = new Administrator(login, password, email, needNotify);
                     break;
                 case Role.Manager:
-                    user = new Manager(login, password);
-                    break;
+                {
+                    if (!departmentId.HasValue)
+                        throw new InvalidOperationException("Department not chosen.");
+                    
+                    var department = _departmentService.GetById(departmentId.Value);
+                    
+                    user = new Manager(login, password, department, email);
+                    break;                    
+                }
                 case Role.SecurityGuard:
                 {
                     if (!entranceId.HasValue)
@@ -79,6 +98,9 @@
                     var entrance = _entranceService.GetById(entranceId.Value);
                     
                     user = new SecurityGuard(login, password, entrance);
+                    
+                    entrance.ChangeSecurityGuard((SecurityGuard) user);
+                    
                     break;
                 }
                 default: throw new ArgumentOutOfRangeException(nameof(role));
@@ -92,11 +114,18 @@
         public User GetById(int id)
         {
             var user = _userRepository.FindById(id);
-
-            if (user is SecurityGuard guard)
-                return _securityGuardRepository.FindByIdInclude(id, x => x.Entrance.Building);
-
-            return user;
+            
+            switch (user)
+            {
+                case SecurityGuard _:
+                    return _securityGuardRepository.FindByIdInclude(id, x => x.Entrance.Building);
+                case Manager _:
+                    return _managerRepository.FindByIdInclude(id, x => x.Department);
+                case Administrator _ :
+                    return _administratorRepository.FindById(id);
+                default:
+                    throw new IndexOutOfRangeException(nameof(user));
+            }
         }
 
         public User GetByLogin(string login)
@@ -104,9 +133,22 @@
             return _userRepository.AllActive().SingleOrDefault(x => x.Login.Equals(login));
         }
 
+        public void ChangeLogin(User user, string login)
+        {
+            if (GetByLogin(login) is User otherUser && user.Id != otherUser.Id)
+                throw new EntityAlreadyExistsException($"Пользователь с логином '{login}' уже существует.");
+            
+            user.ChangeLogin(login);
+        }
+
         public IEnumerable<User> GetAllActive()
         {
             return _userRepository.AllActive();
+        }
+
+        public void Delete(User user)
+        {
+            _userRepository.Delete(user);
         }
     }
 }

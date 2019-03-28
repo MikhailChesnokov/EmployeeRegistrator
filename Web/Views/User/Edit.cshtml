@@ -1,33 +1,20 @@
-﻿@model CreateUserForm
+@model EditUserForm
 
-@{ ViewBag.Title = "Новый пользователь"; }
+@{ ViewBag.Title = "Редактировать пользователя"; }
 
-<h4>Новый пользователь</h4>
+<h4>@ViewBag.Title</h4>
 
 <form method="post" id="employee-form">
 
     <root-errors/>
 
+    <input asp-for="Id">
+    
     <input-group
         name="Login"
         label="Логин"
         value="@Model.Login"/>
 
-    <input-group
-        name="Password"
-        label="Пароль"
-        invalid-feedback="Некорректное имя сотрудника"
-        is-password="true"
-        value="@Model.Password"/>
-
-    <input-group
-        name="ConfirmPassword"
-        label="Подтверждение пароля"
-        placeholder="Подтвердите пароль ..."
-        invalid-feedback="Некорректное подтверждение пароля"
-        is-password="true"
-        value="@Model.ConfirmPassword"/>
-    
     <select-group
         name="Role"
         label="Роль"
@@ -43,7 +30,7 @@
         items="@Model.Entrances"
         value="@Model.EntranceId"
         grouping="true"/>
-        
+    
     <select-group
         id="department-form-group"
         name="DepartmentId"
@@ -63,9 +50,10 @@
     
     <div class="form-check" id="need-notify-group">
         <input class="form-check-input" asp-for="NeedNotify">
-        <label class="form-check-label" asp-for="NeedNotify">
+        <label class="form-check-label" for="NeedNotify">
             Присылать уведомления об опозданиях
         </label>
+        <span asp-validation-for="NeedNotify"></span>
     </div>
 
     <button type="submit" class="btn btn-primary lower-button">Сохранить</button>

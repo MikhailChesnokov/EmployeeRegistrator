@@ -35,7 +35,7 @@ namespace Web.Application.Infrastructure.ScheduledTasks.Tasks.EmailNotifications
 
         public async Task ExecuteAsync(CancellationToken cancellationToken)
         {
-            var currentTime = DateTime.Now.TimeOfDay;
+            var currentTime = _timeService.Now.TimeOfDay;
 
             foreach (var notifyAfterSpan in _timeService.NotifyAfter)
             {

@@ -129,7 +129,17 @@ namespace Web.Application.Controllers.Departments
             return Form(
                 form,
                 () => this.RedirectToAction(x => x.List()),
-                () => this.RedirectToAction(x => x.List()));
+                () =>
+                {
+                    var department = _departmentService.GetById(form.Id ?? 0);
+
+                    if (department is null)
+                        return NotFound();
+
+                    var departmentViewModel = _mapper.Map<DepartmentViewModel>(department);
+            
+                    return View("View", departmentViewModel);
+                });
         }
     }
 }
